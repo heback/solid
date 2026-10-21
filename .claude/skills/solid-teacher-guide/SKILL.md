@@ -33,3 +33,9 @@ description: SOLID 개념기반탐구학습지의 교사 가이드(차시별 운
 
 ## 검증
 정답 코드는 `python3`로 실행해 학습지 시작 코드의 `assert`가 모두 통과함을 확인한다. 정답 파일 내용이 학습지 활동 번호/문항 수와 어긋나면 누락 목록을 qa-reviewer에게 알린다.
+
+## 학생 제출 모아보기 (교사 뷰어)
+- 학생은 학습지 하단 `💾 JSON 저장`으로 `session_N_학번_이름.json`(학습지당 파일 하나)을 내려받아 제출하고, `📂 JSON 불러오기`로 이어서 작업한다. 형식: `{format:"solid-worksheet", version:1, page, savedAt, fields:{data-k: 값}}`.
+- 교사는 `solid_course/teacher/student_viewer.html`에 여러 파일을 끌어다 놓아 전체 현황(진행도), 활동별 나란히 비교, 학생별 보기, CSV 내보내기를 쓴다. 화면 공유용 "이름 숨기기" 제공. 파일은 브라우저 안에서만 처리된다.
+- 뷰어는 `scripts/build_student_viewer.js`가 학습지에서 활동·입력칸 메타를 뽑아 `assets/student_viewer.template.html`에 넣어 생성한다. **학습지의 data-k나 활동 제목을 바꾸면 반드시 다시 빌드한다**: 임시 폴더에서 `npm i jsdom` 후 `NODE_PATH=<그 폴더>/node_modules node .claude/skills/solid-teacher-guide/scripts/build_student_viewer.js solid_course`.
+- 학습지 `data-k`는 입력칸마다 고유해야 하며 저장 JSON의 키가 된다(바꾸면 기존 제출 파일과 호환이 깨진다).

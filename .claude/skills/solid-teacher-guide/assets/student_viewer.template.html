@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>학생 학습지 모아보기 (교사용)</title>
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/teacher.css">
+<style>
+main.wide{max-width:1200px;margin:0 auto;padding:0 16px 80px}
+#drop{margin:16px 0;padding:22px;border:2px dashed var(--line);border-radius:12px;text-align:center;background:var(--card)}
+#drop.over{border-color:var(--accent);background:var(--concept)}
+button.b{cursor:pointer;border:1px solid var(--accent);background:transparent;color:var(--accent);padding:6px 12px;border-radius:6px;font:inherit;font-size:14px}
+button.b.on{background:var(--accent);color:#fff}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}
+.bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:10px 0}
+select,.bar input[type=text]{padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:var(--card);color:var(--fg);font:inherit}
+.tablewrap{overflow:auto;max-height:75vh;border:1px solid var(--line);border-radius:8px}
+table.v{border-collapse:separate;border-spacing:0;margin:0;font-size:14px;width:max-content;min-width:100%}
+table.v th,table.v td{border:0;border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:6px 10px;vertical-align:top;max-width:340px}
+table.v thead th{position:sticky;top:0;background:var(--card);z-index:2}
+table.v td.rowh,table.v th.rowh{position:sticky;left:0;background:var(--card);z-index:1;min-width:200px;max-width:260px}
+table.v thead th.rowh{z-index:3}
+td.ans{white-space:pre-wrap;word-break:break-word;min-width:160px}
+td.empty{color:var(--muted)}
+.pct{display:inline-block;min-width:44px;text-align:center;padding:1px 6px;border-radius:4px;font-weight:700}
+.p0{background:var(--bad)}.p1{background:var(--tip)}.p2{background:var(--good)}
+.muted{color:var(--muted);font-size:13px}
+.log{font-size:13px;margin:6px 0}.log .e{color:#b3261e}
+a.link{color:var(--accent);cursor:pointer;text-decoration:underline}
+.sc{margin:18px 0;padding:10px 14px;border:1px solid var(--line);border-radius:8px}
+.sc h4{margin:0 0 6px}
+.kv{display:grid;grid-template-columns:minmax(160px,260px) 1fr;gap:4px 12px;font-size:14px}
+.kv .k{color:var(--muted)}.kv .v{white-space:pre-wrap;word-break:break-word}
+@media print{#drop,.tabs,.bar{display:none}}
+</style>
+</head>
+<body>
+<div class="teacher-banner">교사 전용 · 학생 정보가 들어 있습니다. 화면 공유 시 "이름 숨기기"를 켜세요. 파일은 이 브라우저 안에서만 처리되며 어디에도 전송되지 않습니다.</div>
+<header class="top"><h1>학생 학습지 모아보기</h1>
+<p class="lead">학생들이 학습지에서 <b>💾 JSON 저장</b>으로 낸 파일을 한꺼번에 불러와 진행도를 보고, 활동별로 학생 답을 나란히 비교합니다.</p></header>
+<main class="wide">
+
+<div id="drop">
+  <p><b>학생 JSON 파일을 여기에 끌어다 놓거나</b> <button class="b" id="pick">파일 선택(여러 개)</button> <button class="b" id="clear">모두 비우기</button></p>
+  <p class="muted">같은 학생(이름+학번)의 1·2·3차시 파일은 합쳐지고, 같은 차시 파일이 여러 개면 저장 시각이 늦은 것을 씁니다.</p>
+  <input type="file" id="files" accept="application/json,.json" multiple hidden>
+  <div class="log" id="log"></div>
+</div>
+
+<div class="tabs" id="tabs" hidden>
+  <button class="b on" data-tab="overview">전체 현황</button>
+  <button class="b" data-tab="activity">활동별 비교</button>
+  <button class="b" data-tab="student">학생별 보기</button>
+  <span style="flex:1"></span>
+  <button class="b" id="anon">이름 숨기기</button>
+</div>
+
+<section id="overview" hidden></section>
+<section id="activity" hidden></section>
+<section id="student" hidden></section>
+</main>
+
+<script>
+const META = /*META*/null;
+const PAGES = Object.keys(META);
+const $ = s => document.querySelector(s);
+const el = (t, props, ...kids) => { const e = document.createElement(t); if (props) Object.assign(e, props); kids.flat().forEach(k => e.append(k == null ? "" : k)); return e; };
+let students = new Map();   // key -> {name,no,group,pages:{page:{savedAt,fields,file}}}
+let anon = false, tab = "overview", curPage = PAGES[0], curAct = null, curStu = null;
+
+// ---------- 파일 불러오기 ----------
+function addLog(msg, err) { $("#log").append(el("div", { className: err ? "e" : "" }, (err ? "⚠ " : "✓ ") + msg)); }
+function ingest(name, text) {
+  let d; try { d = JSON.parse(text); } catch (e) { return addLog(name + ": JSON 형식 오류", 1); }
+  if (!d || d.format !== "solid-worksheet" || typeof d.fields !== "object" || !META[d.page]) return addLog(name + ": 학습지 저장 파일이 아닙니다", 1);
+  const f = d.fields, nm = String(f["id-name"] || "").trim(), no = String(f["id-no"] || "").trim();
+  const key = (nm || no) ? nm + "|" + no : "?|" + name;
+  if (!nm && !no) addLog(name + ": 이름·학번이 비어 있어 파일명으로 구분합니다", 1);
+  let s = students.get(key);
+  if (!s) { s = { key, name: nm || "(이름 없음)", no, group: "", pages: {} }; students.set(key, s); }
+  if (f["id-group"]) s.group = String(f["id-group"]);
+  const old = s.pages[d.page];
+  if (old && String(old.savedAt) > String(d.savedAt)) return addLog(`${s.name} ${d.page}: 더 늦게 저장된 파일이 있어 ${name}은 건너뜀`, 1);
+  s.pages[d.page] = { savedAt: d.savedAt || "", fields: f, file: name };
+  addLog(`${s.name}${s.no ? " (" + s.no + ")" : ""} · ${d.page} ← ${name}`);
+}
+async function loadFiles(list) {
+  for (const f of list) ingest(f.name, await f.text());
+  render();
+}
+$("#pick").onclick = () => $("#files").click();
+$("#files").onchange = e => { loadFiles(Array.from(e.target.files)); e.target.value = ""; };
+$("#clear").onclick = () => { if (!students.size || confirm("불러온 학생 데이터를 모두 지울까요?")) { students = new Map(); $("#log").textContent = ""; render(); } };
+const drop = $("#drop");
+["dragenter", "dragover"].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.add("over"); }));
+["dragleave", "drop"].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.remove("over"); }));
+drop.addEventListener("drop", e => loadFiles(Array.from(e.dataTransfer.files)));
+
+// ---------- 값·진행도 계산 ----------
+const sorted = () => Array.from(students.values()).sort((a, b) => (a.no || "￿").localeCompare(b.no || "￿", "ko", { numeric: true }) || a.name.localeCompare(b.name, "ko"));
+const dispName = (s, i) => anon ? "학생 " + (i + 1) : s.name + (s.no ? " (" + s.no + ")" : "");
+const idx = s => sorted().indexOf(s);
+// 활동의 입력 단위: 라디오는 그룹 하나, 체크박스는 개별(진행도 분모 제외), 나머지는 칸 하나
+function units(act) {
+  const out = [], seen = {};
+  act.fields.forEach(f => {
+    if (f.type === "radio") {
+      const g = f.group || f.k;
+      if (!seen[g]) { seen[g] = { kind: "radio", id: g, label: "선택 (" + g + ")", fields: [] }; out.push(seen[g]); }
+      seen[g].fields.push(f);
+    } else out.push({ kind: f.type === "checkbox" ? "check" : "text", id: f.k, label: f.label || f.k, fields: [f] });
+  });
+  return out;
+}
+function unitValue(u, fl) {
+  if (u.kind === "radio") { const on = u.fields.filter(f => fl[f.k] === true); return on.length ? on.map(f => f.label || f.value || f.k).join(", ") : ""; }
+  if (u.kind === "check") return fl[u.fields[0].k] === true ? "✔" : "";
+  const v = fl[u.fields[0].k]; return v == null ? "" : String(v).trim();
+}
+function progress(s, page, act) {
+  const p = s.pages[page]; if (!p) return null;
+  const us = units(act).filter(u => u.kind !== "check");
+  if (!us.length) return null;
+  return us.filter(u => unitValue(u, p.fields) !== "").length / us.length;
+}
+const pctCell = v => v == null ? el("td", { className: "empty" }, "—") : el("td", {}, el("span", { className: "pct " + (v >= .8 ? "p2" : v >= .3 ? "p1" : "p0") }, Math.round(v * 100) + "%"));
+const avg = a => a.length ? a.reduce((x, y) => x + y, 0) / a.length : null;
+const pageProg = (s, page) => avg(META[page].activities.map(a => progress(s, page, a)).filter(v => v != null));
+
+// ---------- 화면 ----------
+function render() {
+  $("#tabs").hidden = !students.size;
+  $("#anon").classList.toggle("on", anon);
+  ["overview", "activity", "student"].forEach(t => { $("#" + t).hidden = !students.size || t !== tab; });
+  document.querySelectorAll("#tabs [data-tab]").forEach(b => b.classList.toggle("on", b.dataset.tab === tab));
+  if (!students.size) return;
+  ({ overview, activity, student })[tab]();
+}
+document.querySelectorAll("#tabs [data-tab]").forEach(b => b.onclick = () => { tab = b.dataset.tab; render(); });
+$("#anon").onclick = () => { anon = !anon; render(); };
+const go = (t, o) => { tab = t; Object.assign(window, o || {}); if (o && o.page) curPage = o.page; render(); window.scrollTo(0, 0); };
+
+function overview() {
+  const root = $("#overview"); root.replaceChildren();
+  const ss = sorted();
+  root.append(el("h2", {}, `불러온 학생 ${ss.length}명`));
+  const head = el("tr", {}, el("th", { className: "rowh" }, "학생"), el("th", {}, "모둠"), PAGES.map(p => el("th", {}, META[p].title.split(".")[0] + "차시 진행도")));
+  const tb = el("tbody");
+  ss.forEach((s, i) => {
+    const tr = el("tr", {}, el("td", { className: "rowh" }, el("a", { className: "link", onclick: () => { curStu = s.key; go("student"); } }, dispName(s, i))), el("td", {}, anon ? "" : s.group));
+    PAGES.forEach(p => { const v = s.pages[p] ? pageProg(s, p) : null; const td = pctCell(v); if (s.pages[p] && !anon) td.append(el("div", { className: "muted" }, (s.pages[p].savedAt || "").slice(0, 16).replace("T", " "))); tr.append(td); });
+    tb.append(tr);
+  });
+  root.append(el("div", { className: "tablewrap" }, el("table", { className: "v" }, el("thead", {}, head), tb)));
+  root.append(el("h3", {}, "활동별 평균 진행도 (불러온 학생 기준, 클릭하면 비교 화면)"));
+  const t2 = el("tbody");
+  PAGES.forEach(p => META[p].activities.forEach(a => {
+    const vals = ss.map(s => progress(s, p, a)).filter(v => v != null);
+    const tr = el("tr", {}, el("td", { className: "rowh" }, el("a", { className: "link", onclick: () => { curAct = a.id; go("activity", { curAct: a.id, page: p }); } }, a.id === "etc" ? "기타" : "활동 " + a.id + ". " + a.title)), pctCell(avg(vals)), el("td", {}, `${vals.length}명 응답`));
+    t2.append(tr);
+  }));
+  root.append(el("div", { className: "tablewrap" }, el("table", { className: "v" }, el("thead", {}, el("tr", {}, el("th", { className: "rowh" }, "활동"), el("th", {}, "평균"), el("th", {}, "응답"))), t2)));
+}
+
+function activity() {
+  const root = $("#activity"); root.replaceChildren();
+  const m = META[curPage], acts = m.activities;
+  if (!acts.find(a => a.id === curAct)) curAct = acts[0].id;
+  const act = acts.find(a => a.id === curAct);
+  const selP = el("select", { onchange: e => { curPage = e.target.value; curAct = null; render(); } }, PAGES.map(p => el("option", { value: p, selected: p === curPage }, META[p].title)));
+  const selA = el("select", { onchange: e => { curAct = e.target.value; render(); } }, acts.map(a => el("option", { value: a.id, selected: a.id === curAct }, a.id === "etc" ? "기타" : "활동 " + a.id + ". " + a.title)));
+  const hideEmpty = el("input", { type: "checkbox", id: "hideempty", checked: window._hideEmpty !== false, onchange: e => { window._hideEmpty = e.target.checked; render(); } });
+  root.append(el("div", { className: "bar" }, selP, selA, el("label", {}, hideEmpty, " 아무도 안 쓴 칸 숨기기"),
+    el("button", { className: "b", onclick: () => csvActivity(act) }, "이 활동 CSV"), el("button", { className: "b", onclick: csvPage }, "이 차시 전체 CSV")));
+  const ss = sorted().filter(s => s.pages[curPage]);
+  if (!ss.length) return root.append(el("p", { className: "muted" }, "이 차시 파일을 낸 학생이 없습니다."));
+  const us = units(act);
+  const head = el("tr", {}, el("th", { className: "rowh" }, "문항 / 칸"), ss.map(s => el("th", {}, dispName(s, idx(s)))));
+  const tb = el("tbody");
+  us.forEach(u => {
+    const vals = ss.map(s => unitValue(u, s.pages[curPage].fields));
+    if (window._hideEmpty !== false && vals.every(v => v === "")) return;
+    const tr = el("tr", {}, el("td", { className: "rowh" }, u.label, el("div", { className: "muted" }, u.fields[0].k)));
+    vals.forEach(v => tr.append(el("td", { className: "ans" + (v === "" ? " empty" : "") }, v === "" ? "—" : v)));
+    tb.append(tr);
+  });
+  root.append(el("p", { className: "muted" }, `${act.type ? "유형: " + act.type + " · " : ""}학생 ${ss.length}명 · 입력칸 ${us.length}개`));
+  root.append(el("div", { className: "tablewrap" }, el("table", { className: "v" }, el("thead", {}, head), tb)));
+}
+
+function student() {
+  const root = $("#student"); root.replaceChildren();
+  const ss = sorted();
+  if (!ss.find(s => s.key === curStu)) curStu = ss[0].key;
+  const s = students.get(curStu);
+  root.append(el("div", { className: "bar" }, el("select", { onchange: e => { curStu = e.target.value; render(); } }, ss.map((x, i) => el("option", { value: x.key, selected: x.key === curStu }, dispName(x, i)))),
+    el("button", { className: "b", onclick: () => window.print() }, "🖨 인쇄")));
+  PAGES.forEach(p => {
+    const pg = s.pages[p];
+    if (!pg) return root.append(el("div", { className: "sc" }, el("h4", {}, META[p].title), el("p", { className: "muted" }, "파일 없음")));
+    const box = el("div", { className: "sc" }, el("h4", {}, META[p].title), el("div", { className: "muted" }, `저장 ${(pg.savedAt || "").slice(0, 16).replace("T", " ")} · ${pg.file}`));
+    META[p].activities.forEach(a => {
+      const us = units(a).map(u => [u, unitValue(u, pg.fields)]).filter(([u, v]) => v !== "" && !(u.kind === "check" && v === ""));
+      const pr = progress(s, p, a);
+      box.append(el("h4", { style: "margin-top:14px" }, a.id === "etc" ? "기타" : `활동 ${a.id}. ${a.title}`, " ", pr == null ? "" : el("span", { className: "pct " + (pr >= .8 ? "p2" : pr >= .3 ? "p1" : "p0") }, Math.round(pr * 100) + "%")));
+      if (!us.length) return box.append(el("div", { className: "muted" }, "(작성한 내용 없음)"));
+      const kv = el("div", { className: "kv" });
+      us.forEach(([u, v]) => kv.append(el("div", { className: "k" }, u.label), el("div", { className: "v" }, v)));
+      box.append(kv);
+    });
+    root.append(box);
+  });
+}
+
+// ---------- CSV ----------
+function download(name, rows) {
+  const q = v => '"' + String(v).replace(/"/g, '""') + '"';
+  const blob = new Blob(["﻿" + rows.map(r => r.map(q).join(",")).join("\r\n")], { type: "text/csv;charset=utf-8" });
+  const a = el("a", { href: URL.createObjectURL(blob), download: name }); document.body.append(a); a.click(); a.remove();
+}
+function csvActivity(act) {
+  const ss = sorted().filter(s => s.pages[curPage]);
+  download(`활동${act.id}.csv`, [["칸", "키", ...ss.map((s, i) => dispName(s, i))], ...units(act).map(u => [u.label, u.fields[0].k, ...ss.map(s => unitValue(u, s.pages[curPage].fields))])]);
+}
+function csvPage() {
+  const ss = sorted().filter(s => s.pages[curPage]); const all = [];
+  META[curPage].activities.forEach(a => units(a).forEach(u => all.push(u)));
+  download(curPage.replace(".html", "") + ".csv", [["학생", "학번", "모둠", ...all.map(u => u.fields[0].k)], ...ss.map((s, i) => [anon ? "학생 " + (idx(s) + 1) : s.name, anon ? "" : s.no, anon ? "" : s.group, ...all.map(u => unitValue(u, s.pages[curPage].fields))])]);
+}
+render();
+</script>
+</body>
+</html>
