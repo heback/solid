@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>파이썬 SOLID 수업</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="top">
+  <nav><a href="index.html">목차</a><a href="final_check.html">종합 진단표</a></nav>
+  <h1>파이썬으로 탐구하는 SOLID 원칙</h1>
+  <p class="lead">개념기반탐구학습지 · 3차시(차시당 45~50분). 설명을 읽는 수업이 아니라, 예측하고 · 실행하고 · 분류하고 · 토론하고 · 직접 규칙을 말해 보는 수업입니다.</p>
+</header>
+<main>
+
+<section id="audience">
+  <h2>이 자료는</h2>
+  <ul>
+    <li><b>대상</b>: 파이썬 클래스(<code>class</code>, <code>__init__</code>, 메서드, 상속)를 써 본 학습자</li>
+    <li><b>환경</b>: Python 3.10 이상, 표준 라이브러리만 사용. 인터넷 없이 동작합니다.</li>
+    <li><b>학습지 사용법</b>: 입력칸에 쓰면 이 브라우저에 자동 저장됩니다. 인쇄(PDF)도 가능합니다. 정답은 학습지에 없습니다. 먼저 스스로 써 보세요.</li>
+  </ul>
+</section>
+
+<section id="toc">
+  <h2>3차시 탐구학습지</h2>
+  <ul class="cards">
+    <li><a href="worksheets/session_1.html"><b>1차시. 변경에 강한 코드</b><br><small>렌즈: 변경 · SRP, OCP · 카페 주문과 할인 정책</small></a></li>
+    <li><a href="worksheets/session_2.html"><b>2차시. 코드 사이의 약속</b><br><small>렌즈: 약속 · LSP, ISP · 새와 펭귄, 복합기</small></a></li>
+    <li><a href="worksheets/session_3.html"><b>3차시. 의존의 방향과 설계 프로젝트</b><br><small>렌즈: 의존 · DIP, 종합 · 알림 서비스, 도서관 대출</small></a></li>
+  </ul>
+</section>
+
+<section id="pre">
+  <h2>사전 읽기·참고 (교재형 자료)</h2>
+  <p>학습지 활동을 하다가 개념이 더 필요하면 참고하세요. 수업 전에는 0장(OOP 복습)을 읽어 오면 좋습니다.</p>
+  <ul class="cards">
+    <li><a href="chapter_00_oop_review.html"><b>0장. OOP 복습</b><br><small>사전 읽기 권장 · 추상화, 상속, 다형성, ABC</small></a></li>
+    <li><a href="chapter_01_srp.html"><b>1장. SRP</b></a></li>
+    <li><a href="chapter_02_ocp.html"><b>2장. OCP</b></a></li>
+    <li><a href="chapter_03_lsp.html"><b>3장. LSP</b></a></li>
+    <li><a href="chapter_04_isp.html"><b>4장. ISP</b></a></li>
+    <li><a href="chapter_05_dip.html"><b>5장. DIP</b></a></li>
+    <li><a href="chapter_06_summary.html"><b>6장. 종합</b></a></li>
+    <li><a href="final_check.html"><b>종합 진단표</b><br><small>수업 후 자기 점검</small></a></li>
+  </ul>
+</section>
+
+<section id="teacher">
+  <h2>교사용</h2>
+  <p>수업 운영 안내는 <a href="teacher/teacher_guide.html">교사 가이드</a>, 정답은 <code>teacher/answer_key.html</code>에 별도로 있습니다. 학생에게 화면을 공유할 때는 열지 않도록 주의하세요.</p>
+</section>
+
+<section id="run">
+  <h2>시작 코드 실행법</h2>
+  <p>터미널에서 이 폴더(<code>solid_course</code>)로 이동한 뒤 학습지가 안내하는 파일을 실행하고, <code># TODO(학생)</code> 부분을 직접 고칩니다.</p>
+<pre><code>cd solid_course
+python3 worksheets/code/s1_cafe_order.py</code></pre>
+  <aside class="box tip">
+    <h4>💡 핵심 포인트</h4>
+    <p>실행 결과를 먼저 <b>예측</b>하고, 틀렸다면 왜 틀렸는지 적어 보세요. 그 차이가 배움입니다.</p>
+  </aside>
+</section>
+
+</main>
+<nav class="pager"><span></span><a href="worksheets/session_1.html">1차시 시작하기 →</a></nav>
+</body>
+</html>

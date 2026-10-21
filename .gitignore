@@ -1,0 +1,7 @@
+.DS_Store
+# 교사용 정답·가이드 (공개 저장소 노출 방지)
+solid_course/teacher/
+# 작업 중간 산출물(임시 정답 풀이 포함)
+_workspace/
+_workspace_prev/
+__pycache__/
