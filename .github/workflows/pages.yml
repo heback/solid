@@ -18,6 +18,8 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+      - name: 시작 코드 zip 만들기
+        run: cd solid_course/worksheets/code && zip -j ../../solid_starter_code.zip *.py
       - uses: actions/upload-pages-artifact@v3
         with:
           path: solid_course
