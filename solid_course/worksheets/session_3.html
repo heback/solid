@@ -124,6 +124,177 @@ class OrderService:
   </table>
 
   <p><b>1) 먼저 실행</b> <code>python3 s3_notifier.py</code> 를 실행해 점검 결과를 적는다.</p>
+<!--pyedit:s3_notifier.py-->
+<div class="pyedit" data-name="s3_notifier.py"><script type="text/x-python">
+"""
+3차시 활동 3-1, 3-2 시작 코드: 한입카페 주문 완료 알림
+
+상황:
+    한입카페 주문 프로그램은 음료가 준비되면 고객에게 알림을 보낸다.
+    지금은 OrderService(주문 완료 처리)가 EmailSender(이메일 발송)를 직접 만들어 쓴다.
+
+    - 사장님: "손님들이 메일을 잘 안 봐요. 카카오톡 알림으로 바꿉시다."
+    - 개발자: "테스트를 돌릴 때마다 진짜 메일이 나가요. 가짜 발송기로 시험하고 싶어요."
+
+활동 3-1 (예측): 코드를 실행하지 말고 먼저 읽는다.
+    누가 누구를 알고 있는지 화살표를 학습지에 그리고, 두 요구에서 고칠 위치를 예측한다.
+    코드 안의 [A], [B], [C] 표시를 학습지에서 위치 이름으로 사용한다.
+
+활동 3-2 (짝 프로그래밍): 아래 TODO(학생) 1~3을 채운 뒤 다시 실행한다.
+    맨 아래 점검 결과가 모두 [통과]가 되면 완료.
+
+실행 방법:
+    python3 s3_notifier.py
+"""
+
+from typing import Protocol  # TODO(학생) 1에서 사용할 수 있다
+
+
+# ---------------------------------------------------------------------
+# 수단 쪽: 메시지를 "어떻게" 보내는가
+# ---------------------------------------------------------------------
+class EmailSender:
+    """이메일 발송기(실제 발송 대신 print로 흉내 낸다)."""
+
+    def send(self, to: str, msg: str) -> None:
+        print(f"  [EMAIL -> {to}] {msg}")
+
+
+# ---------------------------------------------------------------------
+# TODO(학생) 1: OrderService가 필요로 하는 "보내기 약속"을 Protocol로 정의한다.
+#   - 이름: MessageSender
+#   - OrderService가 실제로 부르는 메서드 모양만 담는다.
+#   - 이 자리(OrderService 위)에 쓴다. 아래 OrderService의 타입 힌트가
+#     이 이름을 쓰므로, 먼저 정의되어 있어야 실행된다.
+# ---------------------------------------------------------------------
+
+
+# ---------------------------------------------------------------------
+# 업무 규칙 쪽: 주문이 완료되면 "무엇을" 하는가
+# ---------------------------------------------------------------------
+class OrderService:
+    """주문 완료 처리: 주문을 완료 상태로 바꾸고 고객에게 알린다."""
+
+    def __init__(self) -> None:
+        self.completed: list[int] = []
+        self.sender = EmailSender()  # [A]
+
+    def complete_order(self, order_id: int, customer: str) -> None:
+        self.completed.append(order_id)  # [B] 업무 규칙: 완료 목록에 기록
+        self.sender.send(customer, f"주문 {order_id}번 음료가 준비되었습니다.")  # [C]
+
+
+# ---------------------------------------------------------------------
+# TODO(학생) 2: 위의 OrderService를 직접 고친다.
+#   - [A]에서 EmailSender를 직접 만들지 않고, 생성자 매개변수로 발송기를 받는다.
+#   - 매개변수 타입 힌트는 구체 클래스가 아니라 TODO 1의 약속으로 쓴다.
+#     (점검 5가 이 타입 힌트를 확인한다)
+# ---------------------------------------------------------------------
+
+
+# ---------------------------------------------------------------------
+# TODO(학생) 3: 발송기 두 개를 추가한다. (OrderService 코드는 건드리지 않는다)
+#   - FakeSender: 실제로 보내지 않고, 보낸 메시지를 self.sent 리스트에 기록한다.
+#   - KakaoSender: "[KAKAO -> 받는사람] 메시지" 형태로 출력한다.
+# ---------------------------------------------------------------------
+
+
+# =====================================================================
+# 실행 및 점검 (이 아래는 고치지 않는다)
+# =====================================================================
+def _check(name: str, fn) -> bool:
+    try:
+        fn()
+        print(f"[통과] {name}")
+        return True
+    except AssertionError as e:
+        print(f"[미완성] {name}\n        -> {e}")
+    except TypeError as e:
+        print(f"[미완성] {name}\n        -> 생성자 모양이 아직 맞지 않습니다 ({e})")
+    except NameError as e:
+        print(f"[미완성] {name}\n        -> 아직 정의되지 않은 이름을 쓰고 있습니다 ({e})")
+    return False
+
+
+def _need(class_name: str):
+    obj = globals().get(class_name)
+    assert obj is not None, f"{class_name}이(가) 아직 없습니다. TODO를 확인하세요."
+    return obj
+
+
+def check_protocol() -> None:
+    import abc
+
+    sender_cls = _need("MessageSender")
+    assert isinstance(sender_cls, type), "MessageSender는 클래스(약속)로 만들어야 합니다."
+    is_promise = getattr(sender_cls, "_is_protocol", False) or isinstance(sender_cls, abc.ABCMeta)
+    assert is_promise, (
+        "MessageSender가 보통 클래스입니다. 2차시처럼 Protocol(또는 ABC)을 상속해 '약속'으로 만드세요."
+    )
+    assert hasattr(sender_cls, "send"), (
+        "MessageSender에 OrderService가 부르는 메서드 모양이 아직 없습니다. [C] 줄을 보세요."
+    )
+
+
+def check_hint() -> None:
+    import typing
+
+    sender_cls = _need("MessageSender")
+    hints = typing.get_type_hints(OrderService.__init__)
+    hints.pop("return", None)
+    assert hints, "OrderService.__init__에 발송기 매개변수(와 타입 힌트)가 아직 없습니다."
+    for name, hint in hints.items():
+        allowed = (hint,) + typing.get_args(hint)  # 'X | None' 같은 경우도 살핀다
+        assert sender_cls in allowed, (
+            f"매개변수 '{name}'의 타입 힌트가 {getattr(hint, '__name__', hint)}입니다. "
+            "구체 클래스가 아니라 약속(MessageSender)으로 써야 의존 방향이 바뀝니다."
+        )
+
+
+def check_fake() -> None:
+    fake_cls = _need("FakeSender")
+    fake = fake_cls()
+    service = OrderService(fake)  # 발송기를 바깥에서 넣어 준다
+    service.complete_order(7, "minji@example.com")
+    assert hasattr(fake, "sent"), "FakeSender에 sent 리스트가 필요합니다."
+    assert len(fake.sent) == 1, f"메시지가 1건 기록되어야 하는데 {len(fake.sent)}건입니다."
+    assert "7" in str(fake.sent[0]), "기록된 메시지에 주문 번호 7이 보이지 않습니다."
+    assert service.completed == [7], "업무 규칙(완료 목록 기록)이 사라졌습니다."
+
+
+def check_kakao() -> None:
+    kakao_cls = _need("KakaoSender")
+    service = OrderService(kakao_cls())
+    service.complete_order(8, "010-1234-5678")
+    assert service.completed == [8], "카카오 발송기로도 주문 완료가 기록되어야 합니다."
+
+
+def check_no_direct_creation() -> None:
+    import inspect
+
+    src = inspect.getsource(OrderService)
+    assert "EmailSender(" not in src, "OrderService 안에서 아직 EmailSender를 직접 만들고 있습니다."
+
+
+if __name__ == "__main__":
+    print("== 현재 동작 ==")
+    try:
+        service = OrderService()  # 처음 코드: 인자 없이 만든다
+    except TypeError:
+        service = OrderService(EmailSender())  # TODO 2 이후: 발송기를 바깥에서 넣는다
+    service.complete_order(1, "minji@example.com")
+
+    print("\n== 점검 ==")
+    results = [
+        _check("TODO 1: MessageSender 약속(Protocol/ABC, 보내기 메서드)이 있다", check_protocol),
+        _check("TODO 2+3: FakeSender를 주입하면 메시지 1건이 기록된다", check_fake),
+        _check("TODO 3: KakaoSender를 주입해도 OrderService는 그대로 동작한다", check_kakao),
+        _check("TODO 2: OrderService가 구체 발송기를 직접 만들지 않는다", check_no_direct_creation),
+        _check("TODO 2: 발송기 매개변수의 타입 힌트가 약속(MessageSender)이다", check_hint),
+    ]
+    print(f"\n{sum(results)}/{len(results)} 통과")
+</script></div>
+<!--/pyedit-->
   <table>
     <tr><th></th><th>통과 수 (/5)</th><th>가장 먼저 해결할 [미완성] 메시지</th></tr>
     <tr><td>수정 전</td><td><input type="text" data-k="3-2-before-n"></td><td><input type="text" data-k="3-2-before-msg"></td></tr>
@@ -283,6 +454,202 @@ class OrderService:
   </table>
 
   <p><b>2단계 (8분) 구현</b> 카드를 1장 이상 골라 구현하고 <code>python3 s3_library_project.py</code>로 점검한다. 맨 아래 점검 구역과 <code>build_library</code>의 매개변수 이름은 바꾸지 않는다.</p>
+<!--pyedit:s3_library_project.py-->
+<div class="pyedit" data-name="s3_library_project.py"><script type="text/x-python">
+"""
+3차시 활동 3-4 시작 코드: 종합 설계 프로젝트 - 학교 도서관 대출 시스템
+
+상황:
+    학교 도서관 프로그램은 LibrarySystem 한 클래스가 대출 규칙, 연체료 계산,
+    이메일 알림, JSON 파일 저장을 모두 맡고 있다. 이번 학기에 요구 변경 카드 3장이 들어왔다.
+
+    요구 변경 카드 ① (도서관 운영위원회)
+        교직원(staff) 회원을 새로 만든다. 교직원은 최대 10권, 30일 대출, 연체료는 면제(0원).
+    요구 변경 카드 ② (학생회)
+        이메일 대신 문자(SMS) 알림을 받을 수 있게 해 달라.
+        문자 발송기 클래스 이름은 SmsNotifier, 출력은 "[SMS -> 받는사람] 메시지" 형태.
+    요구 변경 카드 ③ (정보부 선생님)
+        테스트할 때 loans.json 파일이 생기지 않도록, 메모리에만 저장하는 저장소로 바꿔 끼우고 싶다.
+        메모리 저장소 클래스 이름은 MemoryRepository.
+
+모둠 활동 순서:
+    1) 학습지에 원칙-근거 표(카드 -> 원칙 -> 새 클래스/Protocol)와 의존 화살표를 먼저 그린다.
+    2) 카드 1장 이상을 골라 실제로 구현한다. 구조는 모둠이 정한다.
+    3) 실행해서 구현한 카드의 점검이 [통과]인지 확인한다. 점검 3개는 서로 독립이다.
+
+규칙:
+    - 맨 아래 "점검" 구역과 build_library의 매개변수 이름(data_dir, notifier, repository)은 바꾸지 않는다.
+    - build_library 함수 몸통과 그 위의 코드는 자유롭게 바꾸고 나눠도 된다.
+
+실행 방법:
+    python3 s3_library_project.py
+"""
+
+import json
+import tempfile
+from datetime import date, timedelta
+from pathlib import Path
+from typing import Protocol  # 필요하면 사용한다
+
+
+class LibrarySystem:
+    """대출 규칙 + 연체료 + 알림 + 저장을 모두 혼자 맡은 클래스."""
+
+    def __init__(self, data_path: Path) -> None:
+        self.data_path = data_path
+        # 대출 기록: {"member": 회원ID, "book": 책ID, "due": "YYYY-MM-DD"}
+        self.loans: list[dict] = []
+
+    # ----- 대출 규칙 ---------------------------------------------------
+    def borrow(self, member_id: str, member_type: str, book_id: str, today: date) -> bool:
+        if member_type == "student":
+            limit, days = 3, 14
+        elif member_type == "teacher":
+            limit, days = 5, 30
+        else:
+            raise ValueError(f"알 수 없는 회원 유형: {member_type}")
+        # TODO(학생) 카드①: 교직원(staff) 규칙이 들어갈 곳은 어디가 좋을까?
+
+        current = sum(1 for loan in self.loans if loan["member"] == member_id)
+        if current >= limit:
+            print(f"  [거절] {member_id}: 대출 한도 {limit}권 초과")
+            return False
+
+        due = today + timedelta(days=days)
+        self.loans.append({"member": member_id, "book": book_id, "due": due.isoformat()})
+        self._save_json()  # TODO(학생) 카드③: 저장 방법이 이 클래스에 묶여 있다
+        self._send_email(member_id, f"'{book_id}' 반납일은 {due}입니다.")  # TODO(학생) 카드②
+        return True
+
+    def return_book(self, member_id: str, member_type: str, book_id: str, today: date) -> int:
+        """반납 처리 후 연체료(원)를 돌려준다."""
+        for loan in self.loans:
+            if loan["member"] == member_id and loan["book"] == book_id:
+                self.loans.remove(loan)
+                self._save_json()
+                days_late = (today - date.fromisoformat(loan["due"])).days
+                fee = self.late_fee(member_type, days_late)
+                if fee > 0:
+                    self._send_email(member_id, f"연체료 {fee}원이 부과되었습니다.")
+                return fee
+        raise ValueError(f"{member_id}의 '{book_id}' 대출 기록이 없습니다.")
+
+    # ----- 연체료 ------------------------------------------------------
+    def late_fee(self, member_type: str, days_late: int) -> int:
+        if days_late <= 0:
+            return 0
+        if member_type == "student":
+            return days_late * 100
+        elif member_type == "teacher":
+            return days_late * 50
+        raise ValueError(f"알 수 없는 회원 유형: {member_type}")
+
+    # ----- 알림 --------------------------------------------------------
+    def _send_email(self, member_id: str, msg: str) -> None:
+        print(f"  [EMAIL -> {member_id}] {msg}")
+
+    # ----- 저장 --------------------------------------------------------
+    def _save_json(self) -> None:
+        self.data_path.write_text(json.dumps(self.loans, ensure_ascii=False), encoding="utf-8")
+
+
+def build_library(data_dir: Path, notifier=None, repository=None):
+    """조립 지점: 도서관 객체를 만들어 돌려준다.
+
+    TODO(학생) 카드②③: notifier, repository를 받아 쓰도록 바꾼다.
+    지금은 두 값을 무시하고 항상 이메일 + JSON 파일 저장으로 만든다.
+    """
+    return LibrarySystem(data_dir / "loans.json")
+
+
+# =====================================================================
+# 점검 (이 아래는 고치지 않는다) - 카드마다 독립적으로 결과를 출력한다
+# =====================================================================
+import contextlib
+import io
+
+D = date(2026, 3, 2)
+
+
+def _need(class_name: str):
+    obj = globals().get(class_name)
+    assert obj is not None, f"{class_name} 클래스가 아직 없습니다."
+    return obj
+
+
+def check_card1(tmp: Path) -> None:
+    lib = build_library(tmp)
+    try:
+        for i in range(10):
+            assert lib.borrow("T01", "staff", f"B{i}", D), f"교직원의 {i + 1}번째 대출이 거절되었습니다."
+    except ValueError as e:
+        raise AssertionError(f"교직원(staff) 회원을 아직 처리하지 못합니다 ({e})")
+    assert not lib.borrow("T01", "staff", "B10", D), "교직원의 11번째 대출은 거절되어야 합니다."
+    fee = lib.return_book("T01", "staff", "B0", D + timedelta(days=35))
+    assert fee == 0, f"교직원 연체료는 0원이어야 하는데 {fee}원입니다."
+    fee = lib.return_book("T01", "staff", "B1", D + timedelta(days=30))
+    assert fee == 0, "30일째 반납은 연체가 아닙니다."
+    # 기존 회원 규칙이 그대로인지
+    assert lib.borrow("S01", "student", "B20", D)
+    assert lib.return_book("S01", "student", "B20", D + timedelta(days=16)) == 200, "학생 연체료 규칙이 바뀌었습니다."
+
+
+def check_card2(tmp: Path) -> None:
+    sms_cls = _need("SmsNotifier")
+    lib = build_library(tmp, notifier=sms_cls())
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        lib.borrow("S02", "student", "B1", D)
+    out = buf.getvalue()
+    assert "[SMS" in out, "대출할 때 [SMS ...] 알림이 출력되지 않았습니다. build_library가 notifier를 쓰나요?"
+    assert "[EMAIL" not in out, "SMS를 넣었는데 이메일도 함께 나갔습니다."
+
+
+def check_card3(tmp: Path) -> None:
+    repo_cls = _need("MemoryRepository")
+    lib = build_library(tmp, repository=repo_cls())
+    with contextlib.redirect_stdout(io.StringIO()):
+        for i in range(3):
+            lib.borrow("S03", "student", f"B{i}", D)
+        fourth = lib.borrow("S03", "student", "B3", D)
+    assert not fourth, "메모리 저장소에서도 학생 한도 3권이 지켜져야 합니다(대출 기록이 유지되나요?)."
+    files = list(tmp.iterdir())
+    assert not files, f"메모리 저장소를 넣었는데 파일이 생겼습니다: {[f.name for f in files]}"
+
+
+def _run(name: str, fn) -> bool:
+    with tempfile.TemporaryDirectory() as d:
+        try:
+            with contextlib.redirect_stdout(io.StringIO()):  # 점검 중 출력은 숨긴다
+                fn(Path(d))
+            print(f"[통과] {name}")
+            return True
+        except AssertionError as e:
+            print(f"[미완성] {name}\n        -> {e}")
+        except Exception as e:  # 구조를 바꾸는 중 생긴 오류도 카드별로만 보여 준다
+            print(f"[오류] {name}\n        -> {type(e).__name__}: {e}")
+    return False
+
+
+if __name__ == "__main__":
+    print("== 현재 동작 ==")
+    with tempfile.TemporaryDirectory() as d:
+        lib = build_library(Path(d))
+        lib.borrow("S01", "student", "파이썬 입문", D)
+        fee = lib.return_book("S01", "student", "파이썬 입문", D + timedelta(days=17))
+        print(f"  연체료: {fee}원")
+        print(f"  임시 폴더 파일: {[p.name for p in Path(d).iterdir()]}")
+
+    print("\n== 카드별 점검 (구현한 카드만 통과하면 된다) ==")
+    passed = [
+        _run("카드 ① 교직원 10권, 연체료 면제", check_card1),
+        _run("카드 ② 문자(SMS) 알림", check_card2),
+        _run("카드 ③ 메모리 저장소로 바꿔 끼우기", check_card3),
+    ]
+    print(f"\n{sum(passed)}/3 카드 통과")
+    print("통과 방법을 다시 보자: 기존 클래스를 고쳤는가, 새 코드를 추가했는가? 학습지 원칙-근거 표에 근거를 적는다.")
+</script></div>
+<!--/pyedit-->
   <table>
     <tr><th>카드</th><th>구현했나</th><th>점검 결과</th><th>기존 코드에서 고친 줄 수</th><th>새로 추가한 줄 수</th></tr>
     <tr><td>①</td><td><input type="checkbox" data-k="3-4-i1"></td><td><select data-k="3-4-i1-res"><option value=""></option><option>통과</option><option>미완성</option><option>오류</option></select></td><td><input type="text" data-k="3-4-i1-mod"></td><td><input type="text" data-k="3-4-i1-add"></td></tr>
@@ -315,6 +682,196 @@ class OrderService:
   </div>
 
   <p><span class="q-level fact">사실</span> ① 실행해서 표를 채운다.</p>
+<!--pyedit:s3_yagni_compare.py-->
+<div class="pyedit" data-name="s3_yagni_compare.py"><script type="text/x-python">
+"""
+3차시 활동 3-5 시작 코드: 설계안 A와 B 비교 (읽고 실행만 한다)
+
+요구 (2학년 3반 학급 문고):
+    "누가 어떤 책을 빌려 갔는지 기록하고, 목록을 출력해 주세요.
+     반장이 쉬는 시간에 쓰는 프로그램이고, 책은 30권 정도입니다."
+
+같은 요구를 두 모둠이 다르게 설계했다. 두 설계는 같은 출력을 낸다.
+실행하면 두 결과와 각 설계의 클래스 수, 줄 수를 보여 준다.
+어느 쪽이 "더 좋은 설계"인지는 학습지에서 논쟁한다.
+
+실행 방법:
+    python3 s3_yagni_compare.py
+"""
+
+import inspect
+from abc import ABC, abstractmethod
+from dataclasses import dataclass
+from typing import Protocol
+
+
+# =====================================================================
+# 설계안 A (모둠 가): 클래스 2개
+# =====================================================================
+@dataclass
+class Entry:
+    student: str
+    title: str
+    day: str
+
+
+class ClassLibraryLog:
+    def __init__(self) -> None:
+        self.entries: list[Entry] = []
+
+    def borrow(self, student: str, title: str, day: str) -> None:
+        self.entries.append(Entry(student, title, day))
+
+    def report(self) -> str:
+        return "\n".join(f"{e.day} {e.student} - {e.title}" for e in self.entries)
+
+
+DESIGN_A = [Entry, ClassLibraryLog]
+
+
+# =====================================================================
+# 설계안 B (모둠 나): Protocol 6개 + 구현 + 전략 4개 + 팩토리
+# =====================================================================
+@dataclass
+class LogEntry:
+    student: str
+    title: str
+    day: str
+
+
+class LogRepository(Protocol):
+    def add(self, entry: LogEntry) -> None: ...
+    def all(self) -> list[LogEntry]: ...
+
+
+class Clock(Protocol):
+    def today(self, given: str) -> str: ...
+
+
+class Formatter(Protocol):
+    def format(self, entry: LogEntry) -> str: ...
+
+
+class Joiner(Protocol):
+    def join(self, lines: list[str]) -> str: ...
+
+
+class Validator(Protocol):
+    def validate(self, entry: LogEntry) -> None: ...
+
+
+class Sorter(Protocol):
+    def sort(self, entries: list[LogEntry]) -> list[LogEntry]: ...
+
+
+class ListLogRepository:
+    def __init__(self) -> None:
+        self._items: list[LogEntry] = []
+
+    def add(self, entry: LogEntry) -> None:
+        self._items.append(entry)
+
+    def all(self) -> list[LogEntry]:
+        return list(self._items)
+
+
+class GivenDayClock:
+    def today(self, given: str) -> str:
+        return given
+
+
+class LineFormatStrategy(ABC):
+    @abstractmethod
+    def format(self, entry: LogEntry) -> str: ...
+
+
+class DayFirstFormat(LineFormatStrategy):
+    def format(self, entry: LogEntry) -> str:
+        return f"{entry.day} {entry.student} - {entry.title}"
+
+
+class NewlineJoiner:
+    def join(self, lines: list[str]) -> str:
+        return "\n".join(lines)
+
+
+class NoOpValidator:
+    def validate(self, entry: LogEntry) -> None:
+        return None
+
+
+class InsertionOrderSorter:
+    def sort(self, entries: list[LogEntry]) -> list[LogEntry]:
+        return entries
+
+
+class BorrowService:
+    def __init__(self, repo: LogRepository, clock: Clock, validator: Validator) -> None:
+        self.repo, self.clock, self.validator = repo, clock, validator
+
+    def borrow(self, student: str, title: str, day: str) -> None:
+        entry = LogEntry(student, title, self.clock.today(day))
+        self.validator.validate(entry)
+        self.repo.add(entry)
+
+
+class ReportService:
+    def __init__(self, repo: LogRepository, fmt: Formatter, joiner: Joiner, sorter: Sorter) -> None:
+        self.repo, self.fmt, self.joiner, self.sorter = repo, fmt, joiner, sorter
+
+    def report(self) -> str:
+        entries = self.sorter.sort(self.repo.all())
+        return self.joiner.join([self.fmt.format(e) for e in entries])
+
+
+class ClassLibraryFactory:
+    @staticmethod
+    def create() -> tuple[BorrowService, ReportService]:
+        repo = ListLogRepository()
+        borrow = BorrowService(repo, GivenDayClock(), NoOpValidator())
+        report = ReportService(repo, DayFirstFormat(), NewlineJoiner(), InsertionOrderSorter())
+        return borrow, report
+
+
+DESIGN_B = [
+    LogEntry, LogRepository, Clock, Formatter, Joiner, Validator, Sorter,
+    ListLogRepository, GivenDayClock, LineFormatStrategy, DayFirstFormat,
+    NewlineJoiner, NoOpValidator, InsertionOrderSorter,
+    BorrowService, ReportService, ClassLibraryFactory,
+]
+
+
+# =====================================================================
+# 실행: 같은 기록을 두 설계에 넣고 결과와 크기를 비교한다
+# =====================================================================
+RECORDS = [("김하늘", "어린 왕자", "3/4"), ("박도윤", "모모", "3/4"), ("이서연", "갈매기의 꿈", "3/5")]
+
+
+def size(classes: list) -> tuple[int, int]:
+    lines = sum(len(inspect.getsource(c).splitlines()) for c in classes)
+    return len(classes), lines
+
+
+if __name__ == "__main__":
+    a = ClassLibraryLog()
+    for r in RECORDS:
+        a.borrow(*r)
+
+    b_borrow, b_report = ClassLibraryFactory.create()
+    for r in RECORDS:
+        b_borrow.borrow(*r)
+
+    print("== 설계안 A 출력 ==")
+    print(a.report())
+    print("\n== 설계안 B 출력 ==")
+    print(b_report.report())
+    print(f"\n두 출력이 같은가? {a.report() == b_report.report()}")
+
+    for name, classes in (("A", DESIGN_A), ("B", DESIGN_B)):
+        n, lines = size(classes)
+        print(f"설계안 {name}: 클래스(Protocol 포함) {n}개, 클래스 코드 {lines}줄")
+</script></div>
+<!--/pyedit-->
   <table>
     <tr><th></th><th>클래스(Protocol 포함) 수</th><th>클래스 코드 줄 수</th><th>책 대출 1건을 기록할 때 거치는 클래스 이름</th></tr>
     <tr><td>설계안 A</td><td><input type="text" data-k="3-5-a-n"></td><td><input type="text" data-k="3-5-a-lines"></td><td><input type="text" data-k="3-5-a-path"></td></tr>
@@ -378,6 +935,67 @@ class WeatherStation:
         status = "경고" if temp &gt;= self.HOT else "정상"
         self.writer.write([hour, temp, status])</code></pre>
   <p>전체 코드: <code>code/s3_transfer_weather.py</code> (코드는 고치지 않는다)</p>
+<!--pyedit:s3_transfer_weather.py-->
+<div class="pyedit" data-name="s3_transfer_weather.py"><script type="text/x-python">
+"""
+3차시 활동 3-6 시작 코드: 기상 관측소 (읽기 중심, 코드를 고치지 않는다)
+
+상황 (판단 근거로 사용):
+    - 학교 옥상 기상 관측소 프로그램이다. 매시간 기온을 읽어 기록한다.
+    - 센서: 지금은 ThermoSensorV2. 다음 학기에 ThermoSensorV3로 교체할 예정이다.
+      V3는 read() 대신 measure_celsius()라는 이름의 메서드를 제공한다고 한다.
+    - 저장: CSV 파일. 과학부 선생님이 엑셀로 열어 보며, CSV 외 저장 방식은 계획이 없다.
+    - 시험: 센서가 옥상에 있어서 교실에서는 실제 기온을 읽을 수 없다.
+
+활동:
+    학습지에 의존 화살표를 그리고, [A]~[E] 표시를 근거로
+    "역전할 의존 1개"와 "지금은 역전하지 않을 의존 1개"를 고른다.
+
+실행 방법:
+    python3 s3_transfer_weather.py
+"""
+
+
+class ThermoSensorV2:  # [A]
+    """옥상 온도 센서 2세대(실제 장치 대신 고정 값을 돌려준다)."""
+
+    def read(self) -> float:
+        return 18.5
+
+
+class CsvWriter:  # [B]
+    """한 줄씩 CSV 형식으로 기록한다(실제 파일 대신 리스트에 모은다)."""
+
+    def __init__(self) -> None:
+        self.rows: list[str] = []
+
+    def write(self, row: list) -> None:
+        line = ",".join(str(v) for v in row)
+        self.rows.append(line)
+        print(f"  CSV 기록: {line}")
+
+
+class WeatherStation:
+    """관측 정책: 정해진 시각에 기온을 읽어, 기준을 넘으면 '경고'를 붙여 기록한다."""
+
+    HOT = 30.0
+
+    def __init__(self) -> None:
+        self.sensor = ThermoSensorV2()  # [C]
+        self.writer = CsvWriter()  # [D]
+
+    def record(self, hour: int) -> None:
+        temp = self.sensor.read()  # [E]
+        status = "경고" if temp >= self.HOT else "정상"
+        self.writer.write([hour, temp, status])
+
+
+if __name__ == "__main__":
+    station = WeatherStation()
+    for h in (9, 10, 11):
+        station.record(h)
+</script></div>
+<!--/pyedit-->
 
   <p>① 의존 화살표를 그리고, 고수준과 저수준을 구분해 표시한다.</p>
   <textarea class="tall" data-k="3-6-arrow"></textarea>
@@ -450,6 +1068,7 @@ class WeatherStation:
   <a href="session_2.html">← 2차시 학습지</a>
   <a href="../index.html">목차 →</a>
 </nav>
+<script src="../assets/pyedit.js"></script>
 <script src="../assets/worksheet.js"></script>
 </body>
 </html>

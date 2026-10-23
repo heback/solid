@@ -6,6 +6,7 @@
 <title>2차시 약속 탐구 학습지</title>
 <link rel="stylesheet" href="../assets/style.css">
 <link rel="stylesheet" href="../assets/worksheet.css">
+<script src="../assets/pyedit.js" defer></script>
 <script src="../assets/worksheet.js" defer></script>
 </head>
 <body>
@@ -19,7 +20,7 @@
   <p class="lead">"펭귄은 새다." 맞는 말입니다. 그런데 새를 날리는 프로그램에 펭귄을 넣어도 될까요? 오늘은 코드를 <b>쓰는 쪽이 무엇을 믿고 있는지</b>를 따라가 봅니다.</p>
   <div class="ws-meta">
     <span>2차시 / 3차시</span><span>50분</span><span>개념적 렌즈: 약속(Contract)</span>
-    <span>시작 코드: <code>code/s2_birds.py</code> · <code>code/s2_office_machine.py</code> · <code>code/s2_transfer_smarthome.py</code> <a href="../index.html#run">(내려받기)</a></span>
+    <span>시작 코드: <code>code/s2_birds.py</code> · <code>code/s2_office_machine.py</code> · <code>code/s2_transfer_smarthome.py</code> <a href="../index.html#run">(내려받기)</a> · 활동 안의 편집기에서 바로 실행·수정 가능</span>
   </div>
 </header>
 
@@ -131,6 +132,104 @@ def launch_all(birds: list[Bird], altitude: int = 5):
   <div class="tags"><span class="t-type">실행·관찰</span><span>7분</span><span>짝</span><span>목표 2-a</span></div>
 
   <p><b>① 실행.</b> 터미널에서 <code>python3 s2_birds.py</code>를 실행하고, 실제 결과를 예측과 나란히 적으세요.</p>
+<!--pyedit:s2_birds.py-->
+<div class="pyedit" data-name="s2_birds.py"><script type="text/x-python">
+"""2차시 시작 코드: 생물 시뮬레이션 동아리의 '새 날리기' 프로그램 (활동 2-1, 2-2)
+
+사용법
+    python3 s2_birds.py
+
+순서
+    1. 실행하기 전에 학습지 활동 2-1 예측표를 먼저 채운다.
+    2. 실행해서 출력을 학습지 활동 2-2 관찰 칸에 옮겨 적는다.
+    3. 이 파일의 클래스 구조는 고치지 않는다. (읽고 실행하는 활동)
+
+표준 라이브러리만 사용, Python 3.12 이상.
+"""
+from abc import ABC, abstractmethod
+
+
+class Bird(ABC):
+    """동아리 프로그램의 모든 새가 따라야 하는 '쓰는 쪽과의 약속'.
+
+    fly(altitude) 의 약속
+        - 받는 조건  : altitude 는 0보다 큰 정수이면 된다.
+        - 끝난 뒤 보장: 호출이 끝나면 self.altitude == altitude 이다.
+        - 항상 참    : self.altitude 는 언제나 0 이상이다.
+    """
+
+    def __init__(self, name: str) -> None:
+        self.name = name
+        self.altitude = 0          # 처음에는 땅 위(고도 0)
+
+    @abstractmethod
+    def fly(self, altitude: int) -> None:
+        """altitude 높이까지 날아오른다."""
+
+
+class Sparrow(Bird):
+    """참새: 낮게, 빠르게 난다."""
+
+    def fly(self, altitude: int) -> None:
+        self.altitude = altitude
+        print(f"  {self.name}: 파닥파닥 {altitude}m")
+
+
+class Eagle(Bird):
+    """독수리: 높이 올라가며 날개를 크게 편다."""
+
+    def fly(self, altitude: int) -> None:
+        print(f"  {self.name}: 날개를 활짝 편다")
+        self.altitude = altitude
+        print(f"  {self.name}: 활공하며 {altitude}m")
+
+
+class Penguin(Bird):
+    """펭귄: 현실에서도 분명히 새다."""
+
+    def fly(self, altitude: int) -> None:
+        # 펭귄은 날 수 없으니 그냥 넘어간다.
+        print(f"  {self.name}: (뒤뚱뒤뚱 걷기만 한다)")
+
+
+class RubberDuckToy(Bird):
+    """동아리 부원이 만든 오리 모양 장난감 드론.
+    프로펠러가 커서 너무 낮게 뜨면 바닥에 부딪힌다.
+    """
+
+    def fly(self, altitude: int) -> None:
+        if altitude <= 10:
+            raise ValueError("장난감 드론은 10m보다 높게만 뜰 수 있어요")
+        self.altitude = altitude
+        print(f"  {self.name}: 위이잉 {altitude}m")
+
+
+def launch_all(birds: list[Bird], altitude: int = 5) -> None:
+    """동아리 프로그램의 핵심 기능: 모든 새를 같은 높이로 날리고 고도를 기록한다.
+
+    이 함수는 어떤 새가 들어오는지 모른다. Bird 의 약속만 믿는다.
+    """
+    print(f"[launch_all] 모두 {altitude}m 로 날린다")
+    for bird in birds:
+        try:
+            bird.fly(altitude)
+        except Exception as e:  # 예외도 결과로 기록한다
+            print(f"  -> {bird.name}: 예외 발생 ({type(e).__name__}: {e})")
+            continue
+        kept = bird.altitude == altitude and bird.altitude >= 0
+        mark = "약속 지킴" if kept else "약속 깨짐"
+        print(f"  -> {bird.name}: 기록된 고도 {bird.altitude}m  [{mark}]")
+
+
+if __name__ == "__main__":
+    # TODO(학생) 실행 전에 학습지 활동 2-1 예측표를 먼저 채웠는지 확인하세요.
+    birds = [Sparrow("참새"), Eagle("독수리"), Penguin("펭귄"), RubberDuckToy("오리드론")]
+    launch_all(birds)
+
+    # TODO(학생) 아래 줄의 주석(#)을 지우고 높이를 바꿔 다시 실행해 보세요. (활동 2-2 질문 ④)
+    # launch_all([Sparrow("참새2"), RubberDuckToy("오리드론2")], altitude=20)
+</script></div>
+<!--/pyedit-->
   <table class="sort-table">
     <thead><tr><th>새</th><th>실제 출력(핵심만)</th><th>예측과 같았나?</th></tr></thead>
     <tbody>
@@ -235,6 +334,178 @@ def launch_all(birds: list[Bird], altitude: int = 5):
   </table>
 
   <p><b>② 고치기(7분).</b> 파일 안의 <code># TODO(학생) 1 → 2 → 3</code> 순서로 고치고, 하나 고칠 때마다 다시 실행해 점검 결과를 기록하세요. 점검 코드는 고치지 않습니다.</p>
+<!--pyedit:s2_office_machine.py-->
+<div class="pyedit" data-name="s2_office_machine.py"><script type="text/x-python">
+"""2차시 시작 코드: 동아리방 사무기기 관리 프로그램 (활동 2-4)
+
+사용법
+    python3 s2_office_machine.py
+
+처음 실행하면 아래쪽 '점검' 결과가 [미완성]으로 나온다. 정상이다.
+TODO(학생) 1 -> 2 -> 3 순서로 고치면서 다시 실행해 [통과]를 늘려 간다.
+
+규칙
+    - 점검 코드(맨 아래 check_* 함수)는 고치지 않는다.
+    - SmartMFP 와 OldPrinter 가 출력하는 문자열은 바꾸지 않는다.
+
+표준 라이브러리만 사용, Python 3.12 이상.
+"""
+from abc import ABC, abstractmethod
+from typing import Protocol, runtime_checkable, get_type_hints  # noqa: F401 (TODO에서 사용)
+
+
+# ---------------------------------------------------------------
+# 지금의 설계: 모든 기기가 지켜야 하는 '큰 약속' 하나
+# ---------------------------------------------------------------
+class Machine(ABC):
+    """사무기기 약속: 출력, 스캔, 팩스, 스테이플을 모두 할 수 있다."""
+
+    @abstractmethod
+    def print_doc(self, doc: str) -> str: ...
+
+    @abstractmethod
+    def scan_doc(self, doc: str) -> str: ...
+
+    @abstractmethod
+    def fax_doc(self, doc: str, number: str) -> str: ...
+
+    @abstractmethod
+    def staple_doc(self, doc: str) -> str: ...
+
+
+# TODO(학생) 1: 여기에 쓰는 쪽(클라이언트)이 실제로 필요한 만큼의 작은 약속을 정의하세요.
+#   - 이름은 Printer, Scanner, Faxer 로 한다. (스테이플은 어디에 둘지 스스로 정한다.)
+#   - typing.Protocol 을 사용하고, isinstance 로 검사할 수 있게 @runtime_checkable 을 붙인다.
+#   - Protocol 안의 메서드 몸체는 ... 로 둔다.
+
+
+class SmartMFP(Machine):
+    """학교에서 새로 들여온 복합기: 모든 기능이 있다."""
+
+    def print_doc(self, doc: str) -> str:
+        return f"[복합기] 출력: {doc}"
+
+    def scan_doc(self, doc: str) -> str:
+        return f"[복합기] 스캔 파일: {doc}.pdf"
+
+    def fax_doc(self, doc: str, number: str) -> str:
+        return f"[복합기] 팩스 {number} 로 전송: {doc}"
+
+    def staple_doc(self, doc: str) -> str:
+        return f"[복합기] 스테이플 완료: {doc}"
+
+
+# TODO(학생) 2: OldPrinter 를 정리하세요.
+#   - 할 수 없는 기능을 억지로 '구현'한 메서드를 없앤다.
+#   - 메서드를 없애면 Machine 을 상속한 채로는 객체를 만들 수 없다. 왜 그런지 생각해 보고 해결한다.
+class OldPrinter(Machine):
+    """동아리방 구석의 구형 흑백 프린터: 출력만 할 수 있다."""
+
+    def print_doc(self, doc: str) -> str:
+        return f"[구형 프린터] 출력: {doc}"
+
+    def scan_doc(self, doc: str) -> str:
+        raise NotImplementedError("구형 프린터는 스캔을 못 해요")
+
+    def fax_doc(self, doc: str, number: str) -> str:
+        raise NotImplementedError("구형 프린터는 팩스를 못 해요")
+
+    def staple_doc(self, doc: str) -> str:
+        raise NotImplementedError("구형 프린터는 스테이플을 못 해요")
+
+
+# ---------------------------------------------------------------
+# 기기를 '쓰는 쪽'(클라이언트) 함수들
+# ---------------------------------------------------------------
+# TODO(학생) 3: 각 함수가 실제로 부르는 메서드를 보고, 타입 힌트 Machine 을 알맞은 작은 Protocol 로 바꾸세요.
+def print_report(m: Machine) -> str:
+    """동아리 활동 보고서를 출력한다."""
+    return m.print_doc("동아리 활동 보고서")
+
+
+def archive_scan(m: Machine) -> str:
+    """지난 실험 노트를 스캔해 보관한다."""
+    return m.scan_doc("실험노트_3월")
+
+
+def send_permission_fax(m: Machine) -> str:
+    """대회 참가 동의서를 팩스로 보낸다."""
+    return m.fax_doc("참가 동의서", "02-123-4567")
+
+
+# ---------------------------------------------------------------
+# 점검 (고치지 마세요)
+# ---------------------------------------------------------------
+def _try(label: str, fn) -> bool:
+    try:
+        ok, msg = fn()
+    except Exception as e:  # 미완성 상태의 오류를 안내 메시지로 바꾼다
+        ok, msg = False, f"{type(e).__name__}: {e}"
+    print(f"  [{'통과' if ok else '미완성'}] {label}" + ("" if ok else f"  -> {msg}"))
+    return ok
+
+
+def check_protocols():
+    names = [n for n in ("Printer", "Scanner", "Faxer") if n not in globals()]
+    if names:
+        return False, f"{', '.join(names)} 가 아직 없어요 (TODO 1)"
+    if not isinstance(SmartMFP(), globals()["Scanner"]):
+        return False, "isinstance(SmartMFP(), Scanner) 가 False 예요. @runtime_checkable 을 확인하세요"
+    return True, ""
+
+
+def check_old_printer():
+    p = OldPrinter()  # Machine 을 상속한 채 메서드를 지우면 여기서 TypeError
+    left = [n for n in ("scan_doc", "fax_doc", "staple_doc") if hasattr(p, n)]
+    if left:
+        return False, f"OldPrinter 에 아직 {', '.join(left)} 가 있어요 (TODO 2)"
+    return print_report(p) == "[구형 프린터] 출력: 동아리 활동 보고서", "print_report 결과가 달라졌어요"
+
+
+def check_hints():
+    want = {print_report: "Printer", archive_scan: "Scanner", send_permission_fax: "Faxer"}
+    for fn, proto in want.items():
+        hint = get_type_hints(fn)["m"]
+        if hint is not globals().get(proto):
+            return False, f"{fn.__name__} 의 m 이 아직 {getattr(hint, '__name__', hint)} 예요 (TODO 3)"
+    return True, ""
+
+
+def check_smart_mfp_still_works():
+    m = SmartMFP()
+    got = (print_report(m), archive_scan(m), send_permission_fax(m))
+    want = ("[복합기] 출력: 동아리 활동 보고서",
+            "[복합기] 스캔 파일: 실험노트_3월.pdf",
+            "[복합기] 팩스 02-123-4567 로 전송: 참가 동의서")
+    return got == want, f"SmartMFP 결과가 달라졌어요: {got}"
+
+
+if __name__ == "__main__":
+    print("== 지금 상태 그대로 실행해 보기 ==")
+    for client in (print_report, archive_scan, send_permission_fax):
+        for cls in (SmartMFP, OldPrinter):
+            try:
+                machine = cls()  # 객체를 만들 수 없는 상태도 메시지로 보여 준다
+            except Exception as e:
+                print(f"  {cls.__name__}() 객체를 만들 수 없음 -> {type(e).__name__}: {e}")
+                continue
+            try:
+                print(f"  {client.__name__}({cls.__name__}) -> {client(machine)}")
+            except Exception as e:
+                print(f"  {client.__name__}({cls.__name__}) -> 예외 {type(e).__name__}: {e}")
+
+    print("\n== 점검 ==")
+    results = [
+        _try("TODO 1: Printer/Scanner/Faxer Protocol 정의", check_protocols),
+        _try("TODO 2: OldPrinter 에 못 하는 기능이 남아 있지 않다", check_old_printer),
+        _try("TODO 3: 클라이언트가 작은 Protocol 에만 의존한다", check_hints),
+        _try("기존 기능 유지: SmartMFP 는 여전히 모든 클라이언트에 쓸 수 있다", check_smart_mfp_still_works),
+    ]
+    print(f"\n통과 {sum(results)} / {len(results)}")
+    if all(results):
+        print("모두 통과! 학습지 활동 2-4의 질문에 답하세요.")
+</script></div>
+<!--/pyedit-->
   <table class="sort-table">
     <thead><tr><th>시점</th><th>통과 수 (/4)</th><th>새로 본 메시지나 오류</th></tr></thead>
     <tbody>
@@ -337,6 +608,131 @@ class Greeter(Protocol):
   <div class="tags"><span class="t-type">전이</span><span>6분</span><span>개인</span><span>목표 2-c</span></div>
   <p class="situation">스마트홈 앱은 거실 전구, 방 스피커, 현관 도어락을 모두 <code>Device</code>(<code>turn_on</code> · <code>set_volume</code> · <code>set_color</code> · <code>lock</code>)로 다룹니다. '외출 모드' 버튼을 누르면 앱이 모든 기기에 모든 명령을 보냅니다.</p>
   <p><b>①</b> <code>code/s2_transfer_smarthome.py</code>의 <code>Device</code> 약속(docstring)을 읽고 실행하세요. 코드는 고치지 않습니다.</p>
+<!--pyedit:s2_transfer_smarthome.py-->
+<div class="pyedit" data-name="s2_transfer_smarthome.py"><script type="text/x-python">
+"""2차시 시작 코드: 스마트홈 앱의 기기 제어 (활동 2-7, 낯선 도메인 전이)
+
+사용법
+    python3 s2_transfer_smarthome.py
+
+이 파일은 '읽고 실행하는' 활동이다. 코드를 고치지 말고,
+# [A] ~ # [F] 표시가 붙은 곳을 학습지에서 판정한다.
+(표시가 붙었다고 모두 문제가 있는 것은 아니다.)
+
+표준 라이브러리만 사용, Python 3.12 이상.
+"""
+from abc import ABC, abstractmethod
+
+
+class Device(ABC):
+    """스마트홈 앱이 모든 기기에 기대하는 약속.
+
+    turn_on()           : 끝나면 is_on 이 True 이고, 기기를 바로 쓸 수 있는 상태다.
+    set_volume(level)   : level 은 0~100. 끝나면 volume == level.
+    set_color(name)     : name 은 색 이름. 끝나면 color == name.
+    lock()              : 끝나면 locked 가 True.
+    """
+
+    def __init__(self, name: str) -> None:
+        self.name = name
+        self.is_on = False
+        self.volume = 0
+        self.color = "white"
+        self.locked = False
+
+    @abstractmethod
+    def turn_on(self) -> None: ...
+
+    @abstractmethod
+    def set_volume(self, level: int) -> None: ...
+
+    @abstractmethod
+    def set_color(self, name: str) -> None: ...
+
+    @abstractmethod
+    def lock(self) -> None: ...
+
+
+class SmartBulb(Device):
+    """거실 전구"""
+
+    def __init__(self, name: str) -> None:
+        super().__init__(name)
+        self.brightness = 0
+
+    def turn_on(self) -> None:          # [A]
+        self.is_on = True
+        self.brightness = 0             # 밝기는 사용자가 나중에 올린다
+
+    def set_volume(self, level: int) -> None:   # [B]
+        raise NotImplementedError("전구에는 스피커가 없어요")
+
+    def set_color(self, name: str) -> None:
+        self.color = name
+
+    def lock(self) -> None:             # [C]
+        pass                            # 전구는 잠글 게 없으니 아무것도 안 한다
+
+
+class SmartSpeaker(Device):
+    """방 스피커"""
+
+    def turn_on(self) -> None:          # [D]
+        self.is_on = True
+        print(f"    (로그) {self.name} 전원 켜짐 - 부팅 음 재생")
+
+    def set_volume(self, level: int) -> None:   # [E]
+        if not 10 <= level <= 50:
+            raise ValueError("이 스피커는 10~50 사이만 받아요")
+        self.volume = level
+
+    def set_color(self, name: str) -> None:
+        raise NotImplementedError("스피커에는 조명이 없어요")
+
+    def lock(self) -> None:
+        raise NotImplementedError("스피커는 잠글 수 없어요")
+
+
+class DoorLock(Device):
+    """현관 도어락"""
+
+    def turn_on(self) -> None:
+        self.is_on = True
+
+    def set_volume(self, level: int) -> None:   # [F]
+        raise NotImplementedError("도어락에는 볼륨이 없어요")
+
+    def set_color(self, name: str) -> None:
+        raise NotImplementedError("도어락에는 조명이 없어요")
+
+    def lock(self) -> None:
+        self.locked = True
+
+
+def run(device: Device, action: str, call) -> None:
+    try:
+        call()
+        print(f"  {device.name:<8} {action:<16} -> 성공")
+    except Exception as e:
+        print(f"  {device.name:<8} {action:<16} -> 예외 {type(e).__name__}: {e}")
+
+
+if __name__ == "__main__":
+    # '외출 모드' 버튼: 앱은 모든 기기에 모든 명령을 보낸다.
+    devices: list[Device] = [SmartBulb("거실전구"), SmartSpeaker("방스피커"), DoorLock("도어락")]
+    print("== 외출 모드: 모든 기기에 모든 명령 보내기 ==")
+    for d in devices:
+        run(d, "turn_on()", d.turn_on)
+        run(d, "set_volume(0)", lambda d=d: d.set_volume(0))
+        run(d, "set_color('red')", lambda d=d: d.set_color("red"))
+        run(d, "lock()", d.lock)
+
+    print("\n== 명령 뒤 기기 상태 ==")
+    for d in devices:
+        extra = f", brightness={d.brightness}" if isinstance(d, SmartBulb) else ""
+        print(f"  {d.name:<8} is_on={d.is_on}, volume={d.volume}, color={d.color}, locked={d.locked}{extra}")
+</script></div>
+<!--/pyedit-->
   <p><b>②</b> <code># [A]</code>~<code># [F]</code> 표시 위치를 판정하세요. <b>표시가 있다고 모두 문제인 것은 아닙니다.</b></p>
   <table class="sort-table">
     <thead><tr><th>위치</th><th>판정</th><th>너무 큰 약속 탓인가?</th><th>근거 (약속의 어느 부분, 실행 결과의 어느 줄)</th></tr></thead>

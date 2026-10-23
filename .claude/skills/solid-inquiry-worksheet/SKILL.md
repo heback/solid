@@ -34,7 +34,7 @@ OOP 복습(추상화·상속·다형성·ABC)은 별도 차시 없이 1차시 �
 예측하기 / 코드 실행·관찰 기록 / 코드 직접 수정(TODO 채우기) / 사례 카드 분류 / 짝 코드 리뷰 / 찬반·논쟁 / 자기 말로 일반화 / 낯선 도메인 전이 / 오개념 반박(틀린 학생 진술 고치기) / 퇴장권·자기 점검.
 
 ## 학습지(HTML) 규칙
-- 파일: `solid_course/worksheets/session_N.html`, 공통 `assets/style.css`·`assets/worksheet.css`·`assets/worksheet.js` 상대경로 링크, 외부 CDN 금지.
+- 파일: `solid_course/worksheets/session_N.html`, 공통 `assets/style.css`·`assets/worksheet.css`·`assets/worksheet.js` 상대경로 링크, 외부 CDN 금지(단, 파이썬 편집기가 쓰는 Pyodide는 예외: `assets/pyedit.js`가 jsDelivr 고정 버전을 Web Worker로 불러온다).
 - 활동은 `<section class="activity" data-type="predict|observe|code|sort|pair|debate|generalize|transfer|reflect">` 로 번호(활동 1-1…) 매기고 모두 `<textarea>`/선택지/표 입력칸을 둔다. 입력은 localStorage 자동 저장(`worksheet.js`), 인쇄(A4) 시 입력칸 높이·테두리 유지.
 - **학습지에 정답·힌트 해설을 절대 넣지 않는다.** 막힌 학생용 힌트는 `<details class="hint">` 단계 힌트(1단계 방향, 2단계 구조)까지만, 정답 코드는 금지.
 - 각 활동에 예상 시간, 활동 형태(개인/짝/모둠), 대응 학습목표 번호를 표기.
