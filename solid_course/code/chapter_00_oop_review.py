@@ -58,7 +58,8 @@ def perimeter(shape: dict) -> float:
 #          뽑아낸다. 어떻게 계산하는지는 감춘다.
 # [해결 2] 추상 클래스(ABC): @abstractmethod로 그 약속을 코드로 못 박는다.
 #          Shape()를 직접 만들 수 없고, 하위 클래스가 area/perimeter를
-#          빠뜨리면 인스턴스를 만드는 순간 TypeError가 난다.
+#          빠뜨리면 인스턴스화(Square(...) 호출) 때 __init__이 실행되기
+#          전에 TypeError가 난다.
 class Shape(ABC):
     @abstractmethod
     def area(self) -> float:

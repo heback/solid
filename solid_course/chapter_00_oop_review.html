@@ -177,7 +177,8 @@ def perimeter(shape: dict) -&gt; float:
 #          뽑아낸다. 어떻게 계산하는지는 감춘다.
 # [해결 2] 추상 클래스(ABC): @abstractmethod로 그 약속을 코드로 못 박는다.
 #          Shape()를 직접 만들 수 없고, 하위 클래스가 area/perimeter를
-#          빠뜨리면 인스턴스를 만드는 순간 TypeError가 난다.
+#          빠뜨리면 인스턴스화(Square(...) 호출) 때 __init__이 실행되기
+#          전에 TypeError가 난다.
 class Shape(ABC):
     @abstractmethod
     def area(self) -&gt; float:
@@ -318,7 +319,7 @@ Shape() 생성 실패 → TypeError</code></pre>
     <h4>Q2. [개념 확인] (학습목표 2)</h4>
     <p><code>Shape(ABC)</code>에 <code>@abstractmethod perimeter</code>가 있는데, <code>class Square(Shape)</code>가 <code>area</code>만 구현했습니다. <code>Square(2)</code>는 정상적으로 만들어지고, <code>perimeter()</code>를 호출할 때 비로소 에러가 난다. (O/X)</p>
     <ol class="options"><li>O</li><li>X</li></ol>
-    <div class="explain"><b>정답: X</b><br>추상 메서드를 하나라도 구현하지 않은 클래스는 <b>인스턴스를 만드는 순간</b> <code>TypeError: Can't instantiate abstract class ...</code>가 납니다. 호출 시점까지 기다리지 않는 것이 ABC의 장점입니다.<br><b>왜 O가 매력적인가?</b> 일반 클래스에서 없는 메서드를 부르면 호출 시점에 <code>AttributeError</code>가 나기 때문에, ABC도 그럴 것이라 착각하기 쉽습니다.</div>
+    <div class="explain"><b>정답: X</b><br>추상 메서드를 하나라도 구현하지 않은 클래스는 <b>클래스를 호출해 인스턴스를 생성할 때</b>(<code>Square(2)</code>) <code>__init__</code>이 실행되기도 전에 <code>TypeError: Can't instantiate abstract class ...</code>가 발생하고 인스턴스가 만들어지지 않습니다. <code>perimeter()</code>를 호출할 때까지 기다리지 않고 인스턴스화 단계에서 막는 것이 ABC의 장점입니다.<br><b>왜 O가 매력적인가?</b> 일반 클래스에서 없는 메서드를 부르면 호출 시점에 <code>AttributeError</code>가 나기 때문에, ABC도 그럴 것이라 착각하기 쉽습니다.</div>
   </div>
 
   <div class="q" data-type="choice" data-answer="2">
