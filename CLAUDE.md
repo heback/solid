@@ -19,3 +19,4 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 | 2026-10-21 | 학습지 입력 JSON 저장/불러오기(학습지당 파일 하나, 고정 파일명) 추가, 교사용 학생 제출 뷰어(student_viewer) 추가 | assets/worksheet.js, skills/solid-teacher-guide(scripts·assets 추가) | 사용자 요청(학생 데이터 JSON 저장·불러오기, 교사가 학생 파일 불러오기) |
 | 2026-10-22 | 학습지 입력칸 전체(1~3차시)의 예시 정답 JSON 추가(학습지 `📂 JSON 불러오기`로 불러올 수 있는 형식, 교사용·비공개) | teacher/sample_answers/session_N_예시정답.json | 사용자 요청(교사 참조용 예시 정답, 학습지에서 불러오기) |
 | 2026-10-22 | 시작 코드 내려받기 링크(개별 파일 + 배포 시 생성되는 zip)와 실행 안내 수정, 학습지 머리말에 링크 추가 | index.html, worksheets/session_1~3.html, .github/workflows/pages.yml | 사용자 요청(학생에게 solid_course 폴더가 제공되지 않음) |
+| 2026-10-23 | 대상 Python 버전 3.10+ → 3.12+ 로 표기 통일(index, 학습지 머리말, 시작 코드 docstring, 교사 가이드·정답 파일, skills 3종). 3.12·3.13에서 시작 코드·정답 코드·교재 코드 전부 실행 확인 | index.html, worksheets/*, teacher/*, skills/solid-lesson-writing·solid-inquiry-worksheet·solid-teacher-guide | 사용자 요청(Python 3.12 이상 기준) |

@@ -10,7 +10,7 @@ TODO(학생) 1 -> 2 -> 3 순서로 고치면서 다시 실행해 [통과]를 늘
     - 점검 코드(맨 아래 check_* 함수)는 고치지 않는다.
     - SmartMFP 와 OldPrinter 가 출력하는 문자열은 바꾸지 않는다.
 
-표준 라이브러리만 사용, Python 3.10 이상.
+표준 라이브러리만 사용, Python 3.12 이상.
 """
 from abc import ABC, abstractmethod
 from typing import Protocol, runtime_checkable, get_type_hints  # noqa: F401 (TODO에서 사용)

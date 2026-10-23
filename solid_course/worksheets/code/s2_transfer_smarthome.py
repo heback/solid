@@ -7,7 +7,7 @@
 # [A] ~ # [F] 표시가 붙은 곳을 학습지에서 판정한다.
 (표시가 붙었다고 모두 문제가 있는 것은 아니다.)
 
-표준 라이브러리만 사용, Python 3.10 이상.
+표준 라이브러리만 사용, Python 3.12 이상.
 """
 from abc import ABC, abstractmethod
 
