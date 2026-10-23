@@ -55,8 +55,13 @@ details.defs > summary{cursor:pointer;color:var(--accent)}
 .pyedit-out{margin:0;padding:8px 12px;min-height:44px;max-height:320px;overflow:auto;border-top:1px solid var(--line);background:#111827;color:#e5e7eb;font-size:13px;white-space:pre-wrap}
 .pyedit-out.err{color:#fca5a5}
 @media print{.pyedit-bar,.pyedit-out{display:none}.pyedit{border:0}}
-.pyedit-sol{border-top:1px solid var(--line);padding:8px 12px;background:var(--concept)}
-.pyedit-sol-head{display:flex;gap:8px;align-items:center;font-size:13px}
-.pyedit-sol-head button{margin-left:auto;cursor:pointer;border:1px solid var(--accent);background:transparent;color:var(--accent);padding:2px 10px;border-radius:6px;font:inherit;font-size:12px}
-.pyedit-sol pre{margin:6px 0 0;max-height:420px;overflow:auto;font-size:13px;white-space:pre}
-@media print{.pyedit-sol{display:none}}
+.pyedit-pop{width:min(900px,94vw);max-height:88vh;padding:0;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--fg);box-shadow:0 12px 40px rgba(0,0,0,.35)}
+.pyedit-pop::backdrop{background:rgba(0,0,0,.5)}
+.pyedit-pop[open]{display:flex;flex-direction:column}
+.pyedit-pop-head{display:flex;gap:8px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg)}
+.pyedit-pop-head b{margin-right:auto}
+.pyedit-pop-head button{cursor:pointer;border:1px solid var(--accent);background:transparent;color:var(--accent);padding:3px 12px;border-radius:6px;font:inherit;font-size:13px}
+.pyedit-pop-head button[data-a=close]{background:var(--accent);color:#fff}
+.pyedit-pop-note{margin:8px 14px 0;font-size:13px;color:var(--muted)}
+.pyedit-pop pre{margin:8px 14px 14px;overflow:auto;font-size:13px;white-space:pre}
+@media print{.pyedit-pop{display:none!important}}

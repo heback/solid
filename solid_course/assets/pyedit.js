@@ -42,15 +42,9 @@
     ready = false;
   }
 
-  // 암호문 목록은 한 번만 내려받는다(없거나 file:// 에서 막히면 null → 예시 정답 버튼 없음).
+  // 예시 코드 목록(solutions.json)은 한 번만 내려받는다(없거나 file:// 에서 막히면 null → 예시 코드 버튼 없음).
   let solPromise = null;
-  const loadSolutions = () => solPromise || (solPromise = fetch("solutions.enc.json").then(r => r.ok ? r.json() : null).catch(() => null));
-  const b64 = t => Uint8Array.from(atob(t), ch => ch.charCodeAt(0));
-  async function decrypt(e, pw) {
-    const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(pw), "PBKDF2", false, ["deriveKey"]);
-    const key = await crypto.subtle.deriveKey({ name: "PBKDF2", salt: b64(e.salt), iterations: 200000, hash: "SHA-256" }, base, { name: "AES-GCM", length: 256 }, false, ["decrypt"]);
-    return new TextDecoder().decode(await crypto.subtle.decrypt({ name: "AES-GCM", iv: b64(e.iv) }, key, b64(e.data)));
-  }
+  const loadSolutions = () => solPromise || (solPromise = fetch("solutions.json").then(r => r.ok ? r.json() : null).catch(() => null));
 
   function build(box) {
     const name = box.dataset.name;
@@ -70,7 +64,7 @@
       + '<button type="button" data-a="stop" hidden>■ 중지</button>'
       + '<button type="button" data-a="reset">↺ 처음 코드로</button>'
       + '<button type="button" data-a="dl">⬇ .py 저장</button>'
-      + '<button type="button" data-a="sol" hidden>💡 예시 정답</button>'
+      + '<button type="button" data-a="sol" hidden>💡 예시 코드</button>'
       + '<span class="pyedit-status"></span>';
     const out = document.createElement("pre");
     out.className = "pyedit-out";
@@ -147,24 +141,23 @@
       a.download = name; document.body.appendChild(a); a.click(); a.remove();
       setTimeout(() => URL.revokeObjectURL(a.href), 1000);
     };
-    // 예시 정답: solutions.enc.json(암호문)에 이 파일의 항목이 있을 때만 버튼을 보인다. 비밀번호로 브라우저에서 푼다.
-    const panel = document.createElement("div");
-    panel.className = "pyedit-sol"; panel.hidden = true;
-    box.append(panel);
+    // 예시 코드: solutions.json에 이 파일의 항목이 있을 때만 버튼을 보이고, 누르면 팝업(dialog)으로 연다.
+    const dlg = document.createElement("dialog");
+    dlg.className = "pyedit-pop";
+    dlg.setAttribute("aria-label", name + " 예시 코드");
+    document.body.append(dlg);
+    dlg.addEventListener("click", e => { if (e.target === dlg) dlg.close(); }); // 바깥(어두운 배경) 클릭으로도 닫힘
     loadSolutions().then(all => { if (all && all[name]) $("sol").hidden = false; });
     $("sol").onclick = async () => {
-      if (!panel.hidden) { panel.hidden = true; return; }
-      const entry = (await loadSolutions() || {})[name];
-      if (!entry) return;
-      const pw = prompt("예시 정답 비밀번호를 입력하세요.");
-      if (pw === null) return;
-      try {
-        const code = await decrypt(entry, pw);
-        panel.innerHTML = '<div class="pyedit-sol-head"><b>예시 정답</b> — 먼저 스스로 풀어 본 뒤 비교하세요.<button type="button">복사</button></div><pre></pre>';
-        panel.querySelector("pre").textContent = code;
-        panel.querySelector("button").onclick = e => { navigator.clipboard && navigator.clipboard.writeText(code); e.target.textContent = "복사됨"; };
-        panel.hidden = false;
-      } catch (e) { alert("비밀번호가 맞지 않습니다."); }
+      const code = (await loadSolutions() || {})[name];
+      if (code == null) return;
+      dlg.innerHTML = '<div class="pyedit-pop-head"><b></b><button type="button" data-a="copy">복사</button><button type="button" data-a="close">✕ 닫기</button></div>'
+        + '<p class="pyedit-pop-note">먼저 스스로 풀어 본 뒤 비교하세요.</p><pre></pre>';
+      dlg.querySelector("b").textContent = name + " 예시 코드";
+      dlg.querySelector("pre").textContent = code;
+      dlg.querySelector('[data-a="close"]').onclick = () => dlg.close();
+      dlg.querySelector('[data-a="copy"]').onclick = e => { navigator.clipboard && navigator.clipboard.writeText(code); e.target.textContent = "복사됨"; };
+      dlg.showModal();
     };
     // 학습지의 '입력 지우기'·'JSON 불러오기'가 값을 바꾼 뒤에도 높이와 빈 칸을 맞춘다.
     document.addEventListener("click", e => {
