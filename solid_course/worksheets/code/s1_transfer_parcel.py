@@ -59,7 +59,7 @@ class ParcelService:  # [A]
 
     def save_log(self, folder: Path) -> Path:  # [F]
         """접수 기록을 파일 끝에 한 줄 덧붙인다."""
-        path = folder / "parcel_log.txt"
+        path = folder / "parcel_log.txt"  # Path의 / 는 경로를 이어 붙인다
         with path.open("a", encoding="utf-8") as f:
             f.write(f"{self.sender},{self.receiver},{self.carrier},{self.weight_kg},{self.fee()}\n")
         return path
