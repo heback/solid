@@ -75,3 +75,5 @@ details.defs > summary{cursor:pointer;color:var(--accent)}
 .tk-cm{color:var(--tk-cm);font-style:italic}.tk-str{color:var(--tk-str)}.tk-num{color:var(--tk-num)}.tk-kw{color:var(--tk-kw);font-weight:600}
 .tk-bi{color:var(--tk-bi)}.tk-def{color:var(--tk-def);font-weight:600}.tk-deco{color:var(--tk-deco)}.tk-self{color:var(--tk-self)}
 @media print{.pyedit-hl{display:none}.activity textarea.pyedit-code{color:#000;-webkit-text-fill-color:#000;background:#fff}}
+.tk-ln{color:var(--tk-cm);user-select:none}
+pre>code{font-variant-ligatures:none}

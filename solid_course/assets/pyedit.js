@@ -73,6 +73,21 @@
     return out + esc(code.slice(last));
   }
 
+  // 학습지 본문의 코드 블록(<pre><code>)도 같은 규칙으로 칠한다. "25  코드"처럼 줄 번호가 붙은 블록은 번호를 칠하지 않고 흐리게 둔다.
+  function highlightBlocks() {
+    document.querySelectorAll("pre > code").forEach(code => {
+      if (code.dataset.hl) return;
+      code.dataset.hl = "1";
+      const text = code.textContent, lines = text.split("\n");
+      const numbered = lines.filter(l => l.trim()).every(l => /^\d+(?: {2}|$)/.test(l));
+      if (!numbered) { code.innerHTML = highlight(text); return; }
+      const nums = lines.map(l => (l.match(/^\d+(?: {2}|$)/) || [""])[0]);
+      const body = highlight(lines.map((l, i) => l.slice(nums[i].length)).join("\n")).split("\n");
+      code.innerHTML = body.map((h, i) => '<span class="tk-ln">' + nums[i] + "</span>" + h).join("\n");
+    });
+  }
+  document.addEventListener("DOMContentLoaded", highlightBlocks);
+
   function build(box) {
     const name = box.dataset.name;
     const src = box.querySelector("script").textContent.replace(/^\n/, "");

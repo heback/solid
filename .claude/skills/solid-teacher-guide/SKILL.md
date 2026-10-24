@@ -39,3 +39,7 @@ description: SOLID 개념기반탐구학습지의 교사 가이드(차시별 운
 - 교사는 `solid_course/teacher/student_viewer.html`에 여러 파일을 끌어다 놓아 전체 현황(진행도), 활동별 나란히 비교, 학생별 보기, CSV 내보내기를 쓴다. 화면 공유용 "이름 숨기기" 제공. 파일은 브라우저 안에서만 처리된다.
 - 뷰어는 `scripts/build_student_viewer.js`가 학습지에서 활동·입력칸 메타를 뽑아 `assets/student_viewer.template.html`에 넣어 생성한다. **학습지의 data-k나 활동 제목을 바꾸면 반드시 다시 빌드한다**: 임시 폴더에서 `npm i jsdom` 후 `NODE_PATH=<그 폴더>/node_modules node .claude/skills/solid-teacher-guide/scripts/build_student_viewer.js solid_course`.
 - 학습지 `data-k`는 입력칸마다 고유해야 하며 저장 JSON의 키가 된다(바꾸면 기존 제출 파일과 호환이 깨진다).
+
+## 코드 신택스 하이라이팅 (필수)
+
+교사 가이드·정답 파일에 나오는 코드도 신택스 하이라이팅이 되어야 한다. `solid-inquiry-worksheet` 스킬의 '코드 신택스 하이라이팅' 규칙을 따른다.
