@@ -46,6 +46,33 @@
   let solPromise = null;
   const loadSolutions = () => solPromise || (solPromise = fetch("solutions.json").then(r => r.ok ? r.json() : null).catch(() => null));
 
+  // 파이썬 신택스 하이라이팅: 주석·문자열·숫자·키워드·내장 함수·데코레이터·정의 이름을 <span class="tk-…">로 감싼다.
+  const KW = new Set("False None True and as assert async await break class continue def del elif else except finally for from global if import in is lambda nonlocal not or pass raise return try while with yield match case".split(" "));
+  const BUILTIN = new Set("print len range int str float bool list dict set tuple type isinstance issubclass super object property staticmethod classmethod sorted sum min max abs round enumerate zip map filter any all open input repr id hasattr getattr setattr iter next format NotImplementedError ValueError TypeError Exception KeyError AttributeError".split(" "));
+  const TOKEN = /(#[^\n]*)|([rRbBfFuU]{0,2}(?:"""[\s\S]*?(?:"""|$)|\'\'\'[\s\S]*?(?:\'\'\'|$)|"(?:\\.|[^"\\\n])*"?|\'(?:\\.|[^\'\\\n])*\'?))|(@[A-Za-z_][\w.]*)|(\b\d[\d_]*(?:\.\d+)?(?:[eE][+-]?\d+)?\b)|([A-Za-z_]\w*)/g;
+  const esc = t => t.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  function highlight(code) {
+    let out = "", last = 0, prev = "", m;
+    TOKEN.lastIndex = 0;
+    while ((m = TOKEN.exec(code))) {
+      out += esc(code.slice(last, m.index));
+      const t = m[0];
+      let cls = "";
+      if (m[1]) cls = "cm";
+      else if (m[2]) cls = "str";
+      else if (m[3]) cls = "deco";
+      else if (m[4]) cls = "num";
+      else if (KW.has(t)) cls = "kw";
+      else if (prev === "def" || prev === "class") cls = "def";
+      else if (t === "self" || t === "cls") cls = "self";
+      else if (BUILTIN.has(t)) cls = "bi";
+      out += cls ? '<span class="tk-' + cls + '">' + esc(t) + "</span>" : esc(t);
+      if (m[5]) prev = t; else if (!/^\s*$/.test(t)) prev = "";
+      last = TOKEN.lastIndex;
+    }
+    return out + esc(code.slice(last));
+  }
+
   function build(box) {
     const name = box.dataset.name;
     const src = box.querySelector("script").textContent.replace(/^\n/, "");
@@ -69,15 +96,26 @@
     const out = document.createElement("pre");
     out.className = "pyedit-out";
     out.textContent = "▶ 실행을 누르면 결과가 여기에 나옵니다. (Ctrl/⌘+Enter)";
-    box.append(bar, ta, out);
+    // 하이라이트 층(pre)을 아래에 깔고, 글자가 투명한 textarea를 그 위에 겹쳐 입력은 그대로 textarea가 받는다.
+    const wrap = document.createElement("div");
+    wrap.className = "pyedit-wrap";
+    const hl = document.createElement("pre");
+    hl.className = "pyedit-hl";
+    hl.setAttribute("aria-hidden", "true");
+    wrap.append(hl, ta);
+    box.append(bar, wrap, out);
 
     const $ = a => bar.querySelector('[data-a="' + a + '"]');
     const status = t => { bar.querySelector(".pyedit-status").textContent = t; };
     let timer = null, runId = 0;
 
-    const fit = () => { ta.style.height = "auto"; ta.style.height = Math.min(ta.scrollHeight + 4, 560) + "px"; };
+    const paint = () => { hl.innerHTML = highlight(ta.value) + "\n"; hl.scrollTop = ta.scrollTop; hl.scrollLeft = ta.scrollLeft; };
+    const fit = () => { ta.style.height = "auto"; ta.style.height = Math.min(ta.scrollHeight + 4, 560) + "px"; paint(); };
     ta.addEventListener("input", fit);
+    ta.addEventListener("scroll", () => { hl.scrollTop = ta.scrollTop; hl.scrollLeft = ta.scrollLeft; });
+    paint();
     requestAnimationFrame(fit);
+    window.addEventListener("load", fit); // worksheet.js가 저장된 내용을 복원한 뒤 다시 그린다.
 
     // Tab = 공백 4칸, Shift+Tab = 내어쓰기(선택한 줄 전체). Enter는 앞 줄의 들여쓰기를 이어 간다.
     ta.addEventListener("keydown", e => {
@@ -154,7 +192,7 @@
       dlg.innerHTML = '<div class="pyedit-pop-head"><b></b><button type="button" data-a="copy">복사</button><button type="button" data-a="close">✕ 닫기</button></div>'
         + '<p class="pyedit-pop-note">먼저 스스로 풀어 본 뒤 비교하세요.</p><pre></pre>';
       dlg.querySelector("b").textContent = name + " 예시 코드";
-      dlg.querySelector("pre").textContent = code;
+      dlg.querySelector("pre").innerHTML = highlight(code);
       dlg.querySelector('[data-a="close"]').onclick = () => dlg.close();
       dlg.querySelector('[data-a="copy"]').onclick = e => { navigator.clipboard && navigator.clipboard.writeText(code); e.target.textContent = "복사됨"; };
       dlg.showModal();
