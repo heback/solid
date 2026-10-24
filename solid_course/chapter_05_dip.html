@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>05. DIP 의존 역전 원칙</title>
 <link rel="stylesheet" href="assets/style.css">
+<script src="assets/highlight.js" defer></script>
 </head>
 <body>
 <header class="top">
@@ -41,7 +42,7 @@
   </aside>
 
   <p>보통 코드를 짜면 의존 방향은 자연스럽게 <b>위(업무) → 아래(세부)</b>로 흐릅니다. DIP는 그 사이에 <b>추상</b>을 두고, 저수준 모듈이 그 추상을 "구현"하게 만들어 화살표 하나를 <b>거꾸로(아래 → 추상)</b> 돌립니다. 이것이 "역전"이라는 이름의 뜻입니다.</p>
-  <pre><code>적용 전:  OrderNotifier ──▶ SmtpEmailSender          (업무가 세부에 의존)
+  <pre><code class="out">적용 전:  OrderNotifier ──▶ SmtpEmailSender          (업무가 세부에 의존)
 
 적용 후:  OrderNotifier ──▶ MessageSender(추상) ◀── EmailSender
                                               ◀── SmsSender     (세부가 추상에 의존)</code></pre>
@@ -229,7 +230,7 @@ if __name__ == "__main__":
     print(f"보낸 기록: {fake.sent}")
     print("테스트 통과: 실제 메일 서버 없이 알림 동작을 확인했습니다.")</code></pre>
   <p>실행 결과(<code>python3 code/chapter_05_dip.py</code>):</p>
-  <pre><code>=== 나쁜 코드: 이메일에 고정 ===
+  <pre><code class="out">=== 나쁜 코드: 이메일에 고정 ===
 [EMAIL via smtp.cafe-shop.kr] to=kim@example.com | 주문 완료 | 주문 #101 이(가) 완료되었습니다.
 
 === 개선 코드: 같은 OrderNotifier에 구현만 바꿔 끼우기 ===

@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>04. ISP 인터페이스 분리 원칙</title>
 <link rel="stylesheet" href="assets/style.css">
+<script src="assets/highlight.js" defer></script>
 <script src="assets/quiz.js" defer></script>
 </head>
 <body>
@@ -300,7 +301,7 @@ if __name__ == "__main__":
     <li><b>스테이플 기능 추가</b>: <code>Stapler</code> Protocol과 <code>OfficePrinter</code>만 추가. 기존 클래스·클라이언트 수정 0줄.</li>
   </ul>
   <p>실행 결과:</p>
-<pre><code>=== 나쁜 코드: 뚱뚱한 Machine 인터페이스 ===
+<pre><code class="out">=== 나쁜 코드: 뚱뚱한 Machine 인터페이스 ===
   [복합기] 인쇄: 보고서
   [복합기] 스캔: 계약서.pdf
   [프린터] 인쇄: 보고서

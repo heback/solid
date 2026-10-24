@@ -6,6 +6,7 @@
 <title>02. OCP 개방-폐쇄 원칙</title>
 <link rel="stylesheet" href="assets/style.css">
 <script src="assets/quiz.js" defer></script>
+<script src="assets/highlight.js" defer></script>
 </head>
 <body>
 <header class="top">
@@ -199,7 +200,7 @@ if __name__ == "__main__":
     for kind, policy in policies.items():
         print(f"{kind:&gt;11}: {Checkout(policy).final_price(price):,}원")</code></pre>
   <p>실행 결과(<code>python3 code/chapter_02_ocp.py</code>):</p>
-  <pre><code>--- 나쁜 코드 ---
+  <pre><code class="out">--- 나쁜 코드 ---
     none: 60,000원
   member: 54,000원
      vip: 48,000원

@@ -51,4 +51,4 @@ description: 파이썬 SOLID 수업자료의 장(chapter) 구조, 박스 설명�
 
 ## 코드 신택스 하이라이팅 (필수)
 
-수업자료(교재·학습지·교사용)에 들어가는 **모든 코드는 신택스 하이라이팅**이 되어야 한다. 새 HTML 산출물에 코드 블록을 넣을 때 하이라이팅 스크립트·색 변수(`solid_course/assets/pyedit.js`의 `highlight()`, `worksheet.css`의 `--tk-*`)를 연결하고, 색이 입혀지는지 확인한 뒤 완료로 본다. 학습지는 `solid-inquiry-worksheet` 스킬의 규칙을 따른다.
+수업자료(교재·학습지·교사용)에 들어가는 **모든 코드는 신택스 하이라이팅**이 되어야 한다. 새 HTML 산출물에 코드 블록을 넣을 때 공용 스크립트 `solid_course/assets/highlight.js`(`<script src="…/highlight.js" defer>`, 페이지 경로에 맞게)를 연결하고, 실행 결과·그림 블록은 `<code class="out">`으로 표시하고, 색이 입혀지는지 확인한 뒤 완료로 본다. 학습지는 `solid-inquiry-worksheet` 스킬의 규칙을 따른다.

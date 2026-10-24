@@ -6,6 +6,7 @@
 <title>01. SRP 단일 책임 원칙</title>
 <link rel="stylesheet" href="assets/style.css">
 <script src="assets/quiz.js" defer></script>
+<script src="assets/highlight.js" defer></script>
 </head>
 <body>
 <header class="top">
@@ -233,7 +234,7 @@ if __name__ == "__main__":
         assert order.total() == 15000  # 계산만 독립적으로 검증
         print("계산 검증 통과: 15,000원")</code></pre>
   <p>실행 결과(<code>python3 code/chapter_01_srp.py</code>):</p>
-  <pre><code>--- 나쁜 코드 ---
+  <pre><code class="out">--- 나쁜 코드 ---
 [영수증] 민수님
   아메리카노 x2  9,000원
   치즈케이크 x1  6,000원

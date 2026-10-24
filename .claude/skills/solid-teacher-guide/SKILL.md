@@ -42,4 +42,4 @@ description: SOLID 개념기반탐구학습지의 교사 가이드(차시별 운
 
 ## 코드 신택스 하이라이팅 (필수)
 
-교사 가이드·정답 파일에 나오는 코드도 신택스 하이라이팅이 되어야 한다. `solid-inquiry-worksheet` 스킬의 '코드 신택스 하이라이팅' 규칙을 따른다.
+교사 가이드·정답 파일에 나오는 코드도 신택스 하이라이팅이 되어야 한다. `solid-inquiry-worksheet` 스킬의 '코드 신택스 하이라이팅' 규칙을 따른다. 교사용 HTML은 `<script src="../assets/highlight.js" defer></script>`를 포함한다.

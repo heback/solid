@@ -6,6 +6,7 @@
 <title>00. OOP 복습</title>
 <link rel="stylesheet" href="assets/style.css">
 <script src="assets/quiz.js" defer></script>
+<script src="assets/highlight.js" defer></script>
 </head>
 <body>
 <header class="top">
@@ -268,7 +269,7 @@ if __name__ == "__main__":
         # 추상 클래스는 직접 만들 수 없다: '약속'일 뿐 실체가 아니기 때문
         print("Shape() 생성 실패 →", type(e).__name__)</code></pre>
   <p>실행 결과(<code>python3 code/chapter_00_oop_review.py</code>):</p>
-  <pre><code>--- 나쁜 코드 ---
+  <pre><code class="out">--- 나쁜 코드 ---
 circle 넓이=3.14 둘레=6.28
 rect 넓이=6.00 둘레=10.00
 삼각형 추가 실패 → 모르는 도형: triangle

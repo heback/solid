@@ -6,6 +6,7 @@
 <title>03. LSP 리스코프 치환 원칙</title>
 <link rel="stylesheet" href="assets/style.css">
 <script src="assets/quiz.js" defer></script>
+<script src="assets/highlight.js" defer></script>
 </head>
 <body>
 <header class="top">
@@ -375,7 +376,7 @@ if __name__ == "__main__":
     </ul>
   </aside>
   <p>실행 결과:</p>
-<pre><code>=== 나쁜 코드: Bird 자리에 하위 타입을 넣으면 ===
+<pre><code class="out">=== 나쁜 코드: Bird 자리에 하위 타입을 넣으면 ===
   참새: 고도 100m OK
   펭귄: (펭귄은 건너뜀)
   타조: 고도 0m &lt;- 사후조건 위반!

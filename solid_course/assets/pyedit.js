@@ -46,47 +46,7 @@
   let solPromise = null;
   const loadSolutions = () => solPromise || (solPromise = fetch("solutions.json").then(r => r.ok ? r.json() : null).catch(() => null));
 
-  // 파이썬 신택스 하이라이팅: 주석·문자열·숫자·키워드·내장 함수·데코레이터·정의 이름을 <span class="tk-…">로 감싼다.
-  const KW = new Set("False None True and as assert async await break class continue def del elif else except finally for from global if import in is lambda nonlocal not or pass raise return try while with yield match case".split(" "));
-  const BUILTIN = new Set("print len range int str float bool list dict set tuple type isinstance issubclass super object property staticmethod classmethod sorted sum min max abs round enumerate zip map filter any all open input repr id hasattr getattr setattr iter next format NotImplementedError ValueError TypeError Exception KeyError AttributeError".split(" "));
-  const TOKEN = /(#[^\n]*)|([rRbBfFuU]{0,2}(?:"""[\s\S]*?(?:"""|$)|\'\'\'[\s\S]*?(?:\'\'\'|$)|"(?:\\.|[^"\\\n])*"?|\'(?:\\.|[^\'\\\n])*\'?))|(@[A-Za-z_][\w.]*)|(\b\d[\d_]*(?:\.\d+)?(?:[eE][+-]?\d+)?\b)|([A-Za-z_]\w*)/g;
-  const esc = t => t.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-  function highlight(code) {
-    let out = "", last = 0, prev = "", m;
-    TOKEN.lastIndex = 0;
-    while ((m = TOKEN.exec(code))) {
-      out += esc(code.slice(last, m.index));
-      const t = m[0];
-      let cls = "";
-      if (m[1]) cls = "cm";
-      else if (m[2]) cls = "str";
-      else if (m[3]) cls = "deco";
-      else if (m[4]) cls = "num";
-      else if (KW.has(t)) cls = "kw";
-      else if (prev === "def" || prev === "class") cls = "def";
-      else if (t === "self" || t === "cls") cls = "self";
-      else if (BUILTIN.has(t)) cls = "bi";
-      out += cls ? '<span class="tk-' + cls + '">' + esc(t) + "</span>" : esc(t);
-      if (m[5]) prev = t; else if (!/^\s*$/.test(t)) prev = "";
-      last = TOKEN.lastIndex;
-    }
-    return out + esc(code.slice(last));
-  }
-
-  // 학습지 본문의 코드 블록(<pre><code>)도 같은 규칙으로 칠한다. "25  코드"처럼 줄 번호가 붙은 블록은 번호를 칠하지 않고 흐리게 둔다.
-  function highlightBlocks() {
-    document.querySelectorAll("pre > code").forEach(code => {
-      if (code.dataset.hl) return;
-      code.dataset.hl = "1";
-      const text = code.textContent, lines = text.split("\n");
-      const numbered = lines.filter(l => l.trim()).every(l => /^\d+(?: {2}|$)/.test(l));
-      if (!numbered) { code.innerHTML = highlight(text); return; }
-      const nums = lines.map(l => (l.match(/^\d+(?: {2}|$)/) || [""])[0]);
-      const body = highlight(lines.map((l, i) => l.slice(nums[i].length)).join("\n")).split("\n");
-      code.innerHTML = body.map((h, i) => '<span class="tk-ln">' + nums[i] + "</span>" + h).join("\n");
-    });
-  }
-  document.addEventListener("DOMContentLoaded", highlightBlocks);
+  const highlight = window.pyHighlight; // assets/highlight.js (이 파일보다 먼저 불러온다)
 
   function build(box) {
     const name = box.dataset.name;

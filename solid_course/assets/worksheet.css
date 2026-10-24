@@ -65,15 +65,8 @@ details.defs > summary{cursor:pointer;color:var(--accent)}
 .pyedit-pop-note{margin:8px 14px 0;font-size:13px;color:var(--muted)}
 .pyedit-pop pre{margin:8px 14px 14px;overflow:auto;font-size:13px;white-space:pre}
 @media print{.pyedit-pop{display:none!important}}
-/* 신택스 하이라이팅 */
-:root{--tk-cm:#6b7280;--tk-str:#0a7d3c;--tk-num:#b45309;--tk-kw:#c026d3;--tk-bi:#0b6bcb;--tk-def:#b91c1c;--tk-deco:#a16207;--tk-self:#7c3aed}
-@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--tk-cm:#8b95a8;--tk-str:#7ee2a0;--tk-num:#fbbf72;--tk-kw:#f0a3ff;--tk-bi:#7cc4ff;--tk-def:#ff9b8f;--tk-deco:#f2d16b;--tk-self:#c4b0ff}}
-:root[data-theme=dark]{--tk-cm:#8b95a8;--tk-str:#7ee2a0;--tk-num:#fbbf72;--tk-kw:#f0a3ff;--tk-bi:#7cc4ff;--tk-def:#ff9b8f;--tk-deco:#f2d16b;--tk-self:#c4b0ff}
+/* 신택스 하이라이팅 색은 assets/highlight.js 가 넣는다 */
 .pyedit-wrap{position:relative}
 .pyedit-hl{position:absolute;inset:0;margin:0;padding:10px 12px;border:0;border-radius:0;background:transparent;overflow:hidden;pointer-events:none;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13.5px;line-height:1.55;white-space:pre;tab-size:4;color:var(--fg)}
 .pyedit-pop pre,.pyedit-hl{font-variant-ligatures:none}
-.tk-cm{color:var(--tk-cm);font-style:italic}.tk-str{color:var(--tk-str)}.tk-num{color:var(--tk-num)}.tk-kw{color:var(--tk-kw);font-weight:600}
-.tk-bi{color:var(--tk-bi)}.tk-def{color:var(--tk-def);font-weight:600}.tk-deco{color:var(--tk-deco)}.tk-self{color:var(--tk-self)}
 @media print{.pyedit-hl{display:none}.activity textarea.pyedit-code{color:#000;-webkit-text-fill-color:#000;background:#fff}}
-.tk-ln{color:var(--tk-cm);user-select:none}
-pre>code{font-variant-ligatures:none}
