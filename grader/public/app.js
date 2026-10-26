@@ -1,6 +1,8 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-auth.js";
 import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-functions.js";
+import { getFirestore, collection, doc, setDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-firestore.js";
+import { getStorage, ref as sref, uploadBytes, deleteObject } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-storage.js";
 import { firebaseConfig } from "./firebase-config.js";
 
 const DOMAIN = "@ts.hs.kr";
@@ -9,7 +11,9 @@ const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": 
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const grade = httpsCallable(getFunctions(app, "asia-northeast3"), "gradeWorksheet", { timeout: 190000 });
+const db = getFirestore(app);
+const storage = getStorage(app);
+const gradeFn = httpsCallable(getFunctions(app, "asia-northeast3"), "gradeSubmission", { timeout: 190000 });
 
 /* ---------- 로그인 ---------- */
 $("#loginBtn").onclick = async () => {
@@ -20,6 +24,7 @@ $("#loginBtn").onclick = async () => {
   catch (e) { if (e.code !== "auth/popup-closed-by-user") $("#loginMsg").textContent = "로그인에 실패했습니다: " + e.code; }
 };
 $("#logout").onclick = () => signOut(auth);
+let unsub = null;
 onAuthStateChanged(auth, async user => {
   if (user && !(user.emailVerified && (user.email || "").toLowerCase().endsWith(DOMAIN))) {
     await signOut(auth);
@@ -30,91 +35,140 @@ onAuthStateChanged(auth, async user => {
   $("#app").hidden = !user;
   $("#user").hidden = !user;
   $("#who").textContent = user ? user.email : "";
-});
-
-/* ---------- 파일 목록 ---------- */
-let files = [];   // { id, name, data, session, student, status, result, error, selected }
-let seq = 0;
-const total = r => { const m = r.items.reduce((a, i) => a + i.max, 0); return m ? Math.round(r.items.reduce((a, i) => a + i.score, 0) / m * 100) : 0; };
-
-async function addFiles(list) {
-  for (const f of list) {
-    const row = { id: ++seq, name: f.name, status: "대기", selected: true };
-    try {
-      if (f.size > 400000) throw new Error("파일이 너무 큽니다.");
-      const d = JSON.parse(await f.text());
-      const m = d && d.format === "solid-worksheet" && d.fields && /session_(\d)\.html$/.exec(d.page || "");
-      if (!m) throw new Error("학습지 JSON이 아닙니다.");
-      row.data = d; row.session = Number(m[1]);
-      row.student = { name: d.fields["id-name"] || "", no: d.fields["id-no"] || d.fields["id-num"] || "" };
-    } catch (e) { row.status = "오류"; row.error = e.message; row.selected = false; }
-    files.push(row);
+  if (unsub) { unsub(); unsub = null; }
+  rows = []; selected.clear();
+  if (user) {
+    unsub = onSnapshot(query(collection(db, "submissions"), orderBy("uploadedAt", "desc")),
+      snap => { rows = snap.docs.map(d => ({ id: d.id, ...d.data() })); render(); },
+      err => { $("#upMsg").textContent = "목록을 불러오지 못했습니다: " + err.code; });
   }
   render();
+});
+
+/* ---------- 상태 ---------- */
+let rows = [];            // Firestore submissions
+const selected = new Set();
+const grading = new Set();
+let tab = "all";          // "all" | 1 | 2 | 3
+const total = r => { const m = r.items.reduce((a, i) => a + i.max, 0); return m ? Math.round(r.items.reduce((a, i) => a + i.score, 0) / m * 100) : 0; };
+const visible = () => rows.filter(r => tab === "all" || r.session === tab)
+  .sort((a, b) => a.session - b.session || String(a.studentNo).localeCompare(String(b.studentNo), "ko", { numeric: true }) || String(a.studentName).localeCompare(String(b.studentName), "ko"));
+const fmtDate = t => t?.toDate ? t.toDate().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" }) : "";
+const statusOf = r => grading.has(r.id) ? "채점중" : r.error ? "오류" : r.status === "graded" ? "완료" : "미채점";
+
+/* ---------- 업로드 ---------- */
+async function docId(session, key) {
+  const buf = await crypto.subtle.digest("SHA-1", new TextEncoder().encode(key));
+  return `s${session}_` + [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, "0")).join("").slice(0, 20);
 }
-$("#pick").onchange = e => { addFiles([...e.target.files]); e.target.value = ""; };
+async function upload(list) {
+  const items = [], skipped = [];
+  for (const f of list) {
+    try {
+      if (f.size > 400000) throw new Error("파일이 너무 큽니다");
+      const text = await f.text();
+      const d = JSON.parse(text);
+      const m = d && d.format === "solid-worksheet" && d.fields && /session_(\d)\.html$/.exec(d.page || "");
+      if (!m || !["1", "2", "3"].includes(m[1])) throw new Error("학습지 JSON이 아닙니다");
+      const session = Number(m[1]);
+      const name = String(d.fields["id-name"] || "").trim(), no = String(d.fields["id-no"] || d.fields["id-num"] || "").trim();
+      const id = await docId(session, no || name ? `${no}|${name}` : `file|${f.name}`);
+      items.push({ id, session, text, file: f, name, no, group: String(d.fields["id-group"] || d.fields["id-team"] || "").trim() });
+    } catch (e) { skipped.push(`${f.name}(${e.message})`); }
+  }
+  const dup = items.filter(i => rows.some(r => r.id === i.id));
+  if (dup.length && !confirm(`이미 올라온 ${dup.length}건(같은 학생·같은 차시)을 덮어쓰고 기존 채점 결과를 지웁니다. 계속할까요?`)) return;
+  let ok = 0;
+  for (const i of items) {
+    $("#upMsg").textContent = `업로드 중… ${ok}/${items.length}`;
+    try {
+      const path = `submissions/session_${i.session}/${i.id}.json`;
+      await uploadBytes(sref(storage, path), new Blob([i.text], { type: "application/json" }), { contentType: "application/json" });
+      await setDoc(doc(db, "submissions", i.id), {
+        session: i.session, studentName: i.name, studentNo: i.no, studentGroup: i.group, fileName: i.file.name,
+        storagePath: path, status: "uploaded", result: null, total: null, edited: false,
+        uploadedAt: serverTimestamp(), uploaderEmail: auth.currentUser.email,
+      });
+      ok++;
+    } catch (e) { skipped.push(`${i.file.name}(${e.code || e.message})`); }
+  }
+  $("#upMsg").textContent = `${ok}건 업로드 완료` + (skipped.length ? ` · 제외 ${skipped.length}건: ${skipped.join(", ")}` : "");
+}
+$("#pick").onchange = e => { upload([...e.target.files]); e.target.value = ""; };
 const drop = $("#drop");
 drop.ondragover = e => { e.preventDefault(); drop.classList.add("over"); };
 drop.ondragleave = () => drop.classList.remove("over");
-drop.ondrop = e => { e.preventDefault(); drop.classList.remove("over"); addFiles([...e.dataTransfer.files].filter(f => /\.json$/i.test(f.name))); };
+drop.ondrop = e => { e.preventDefault(); drop.classList.remove("over"); upload([...e.dataTransfer.files].filter(f => /\.json$/i.test(f.name))); };
 
+/* ---------- 목록 ---------- */
 function render() {
-  $("#list tbody").innerHTML = files.map(r => `<tr data-id="${r.id}">
-    <td><input type="checkbox" class="sel" ${r.selected ? "checked" : ""} ${r.data ? "" : "disabled"} aria-label="선택"></td>
-    <td>${esc(r.name)}</td><td>${esc(r.student?.name)}</td><td>${esc(r.student?.no)}</td><td>${r.session ? r.session + "차시" : ""}</td>
-    <td class="st-${r.status}">${r.status}${r.error ? " · " + esc(r.error) : ""}</td>
-    <td>${r.result ? total(r.result) + "점" : ""}</td>
-    <td>${r.status === "완료" ? `<button type="button" class="ghost view">결과 보기</button> <button type="button" class="ghost pdf">PDF</button>`
-      : r.data && r.status !== "채점중" ? `<button type="button" class="ghost one">채점</button>` : ""}</td></tr>`).join("");
-  const done = files.filter(r => r.status === "완료").length;
-  $("#summary").textContent = files.length ? `${files.length}개 중 ${done}개 완료` : "";
+  $("#tabs").innerHTML = [["all", "전체"], [1, "1차시"], [2, "2차시"], [3, "3차시"]].map(([k, label]) =>
+    `<button type="button" data-tab="${k}" aria-pressed="${tab === k}" class="ghost">${label} (${k === "all" ? rows.length : rows.filter(r => r.session === k).length})</button>`).join("");
+  const list = visible();
+  $("#list tbody").innerHTML = list.map(r => { const st = statusOf(r); return `<tr data-id="${r.id}">
+    <td><input type="checkbox" class="sel" ${selected.has(r.id) ? "checked" : ""} aria-label="선택"></td>
+    <td>${r.session}차시</td><td>${esc(r.studentName)}</td><td>${esc(r.studentNo)}</td><td>${fmtDate(r.uploadedAt)}</td>
+    <td class="st-${st === "미채점" ? "대기" : st}">${st}${r.edited ? " (수정됨)" : ""}${r.error ? " · " + esc(r.error) : ""}</td>
+    <td>${r.status === "graded" && r.result ? r.total + "점" : ""}</td>
+    <td>${r.status === "graded" && r.result ? `<button type="button" class="ghost view">결과 보기</button> <button type="button" class="ghost pdf">PDF</button> <button type="button" class="ghost one">재채점</button>`
+      : st === "채점중" ? "" : `<button type="button" class="ghost one">채점</button>`}</td></tr>`; }).join("");
+  const done = list.filter(r => r.status === "graded").length;
+  $("#summary").textContent = list.length ? `${list.length}건 중 ${done}건 채점 완료` : "올린 파일이 없습니다";
   $("#pdfAll").disabled = !done;
 }
+$("#tabs").addEventListener("click", e => { const b = e.target.closest("[data-tab]"); if (b) { tab = b.dataset.tab === "all" ? "all" : Number(b.dataset.tab); render(); } });
 $("#list").addEventListener("click", e => {
   const tr = e.target.closest("tr[data-id]"); if (!tr) return;
-  const r = files.find(x => x.id === +tr.dataset.id);
-  if (e.target.classList.contains("sel")) r.selected = e.target.checked;
+  const r = rows.find(x => x.id === tr.dataset.id);
+  if (e.target.classList.contains("sel")) e.target.checked ? selected.add(r.id) : selected.delete(r.id);
   else if (e.target.classList.contains("one")) runBatch([r]);
   else if (e.target.classList.contains("view")) openDetail(r);
   else if (e.target.classList.contains("pdf")) downloadPdf([r]);
 });
-$("#selAll").onchange = e => { files.forEach(r => { if (r.data) r.selected = e.target.checked; }); render(); };
-$("#clear").onclick = () => { if (!files.some(r => r.status === "채점중")) { files = []; render(); } };
+$("#selAll").onchange = e => { visible().forEach(r => e.target.checked ? selected.add(r.id) : selected.delete(r.id)); render(); };
+
+$("#delSel").onclick = async () => {
+  const del = rows.filter(r => selected.has(r.id));
+  if (!del.length || !confirm(`선택한 ${del.length}건의 파일과 채점 결과를 삭제합니다. 되돌릴 수 없습니다.`)) return;
+  for (const r of del) {
+    try { await deleteObject(sref(storage, r.storagePath)).catch(e => { if (e.code !== "storage/object-not-found") throw e; }); await deleteDoc(doc(db, "submissions", r.id)); selected.delete(r.id); }
+    catch (e) { $("#upMsg").textContent = `삭제 실패: ${r.studentName} (${e.code})`; }
+  }
+};
 
 /* ---------- 채점 ---------- */
 async function gradeOne(r) {
-  r.status = "채점중"; r.error = ""; render();
+  grading.add(r.id); r.error = ""; render();
   for (let attempt = 0; ; attempt++) {
-    try {
-      r.result = (await grade({ worksheet: r.data })).data;
-      r.status = "완료"; break;
-    } catch (e) {
+    try { await gradeFn({ id: r.id }); break; }
+    catch (e) {
       const retry = ["functions/unavailable", "functions/resource-exhausted", "functions/deadline-exceeded"].includes(e.code);
       if (retry && attempt < 2) { await new Promise(res => setTimeout(res, 2500 * (attempt + 1))); continue; }
-      r.status = "오류"; r.error = e.message || "채점 실패"; break;
+      r.error = e.message || "채점 실패"; break;
     }
   }
-  render();
+  grading.delete(r.id); render();
 }
 let running = false;
-async function runBatch(rows) {
-  rows = rows.filter(r => r.data && r.status !== "채점중");
-  if (running || !rows.length) return;
+async function runBatch(list) {
+  list = list.filter(r => !grading.has(r.id));
+  if (running || !list.length) return;
   running = true; setBusy(true);
-  const queue = [...rows];
+  const queue = [...list];
   await Promise.all(Array.from({ length: Math.min(3, queue.length) }, async () => { while (queue.length) await gradeOne(queue.shift()); }));
   running = false; setBusy(false);
 }
 const setBusy = b => ["#gradeAll", "#gradeSel"].forEach(s => $(s).disabled = b);
-$("#gradeAll").onclick = () => runBatch(files.filter(r => r.status !== "완료"));
-$("#gradeSel").onclick = () => runBatch(files.filter(r => r.selected));
+$("#gradeAll").onclick = () => runBatch(visible().filter(r => r.status !== "graded"));
+$("#gradeSel").onclick = () => runBatch(rows.filter(r => selected.has(r.id)));
 
 /* ---------- 결과 보기(수정 가능) ---------- */
-let current = null;
+let current = null;   // { id, result(복사본) }
 function openDetail(r) {
-  current = r;
-  const d = r.result;
-  $("#dTitle").textContent = `${r.student.name || r.name} (${r.student.no || "-"}) · ${d.session}차시`;
+  current = { id: r.id, student: r.studentName, no: r.studentNo, result: structuredClone(r.result) };
+  const d = current.result;
+  $("#dTitle").textContent = `${r.studentName || r.fileName} (${r.studentNo || "-"}) · ${d.session}차시`;
+  $("#dMsg").textContent = "";
   $("#dBody").innerHTML = `<p>총점 <b id="dTotal">${total(d)}</b>점 / 100 <small>(${esc(d.model)})</small></p>` +
     d.items.map((it, i) => `<div class="item" data-i="${i}"><h3>활동 ${esc(it.id)}. ${esc(it.title)} ${it.needsReview ? '<span class="flag">직접 확인 필요</span>' : ""}</h3>
       <label class="sc">점수 <input type="number" min="0" max="${it.max}" value="${it.score}"> / ${it.max}</label>
@@ -131,17 +185,25 @@ $("#dBody").addEventListener("input", e => {
     it.score = Math.max(0, Math.min(it.max, Math.round(+e.target.value || 0)));
     $("#dTotal").textContent = total(d);
   } else if (box) d.items[+box.dataset.i].feedback = e.target.value;
-  render();
+  $("#dMsg").textContent = "저장하지 않은 수정이 있습니다";
 });
-$("#dPdf").onclick = () => current && downloadPdf([current]);
+$("#dSave").onclick = async () => {
+  if (!current) return;
+  try {
+    await updateDoc(doc(db, "submissions", current.id), { result: current.result, total: total(current.result), edited: true });
+    $("#dMsg").textContent = "저장했습니다";
+  } catch (e) { $("#dMsg").textContent = "저장 실패: " + e.code; }
+};
+$("#dPdf").onclick = () => current && downloadPdf([{ studentName: current.student, studentNo: current.no, result: current.result }]);
 $("#detail").addEventListener("close", () => { current = null; });
 
 /* ---------- PDF ---------- */
 const reportHtml = (r, last) => {
   const d = r.result, t = total(d), today = new Date().toLocaleDateString("ko-KR");
+  const s = d.student || {};
   return `<div class="report ${last ? "" : "pb"}">
     <h1>SOLID 탐구학습지 ${d.session}차시 채점 결과</h1>
-    <div class="meta">이름 ${esc(d.student.name || "-")} · 학번 ${esc(d.student.no || "-")}${d.student.group ? " · 모둠 " + esc(d.student.group) : ""} · 채점일 ${today}</div>
+    <div class="meta">이름 ${esc(r.studentName || s.name || "-")} · 학번 ${esc(r.studentNo || s.no || "-")}${s.group ? " · 모둠 " + esc(s.group) : ""} · 채점일 ${today}</div>
     <div class="total">총점 ${t} / 100</div>
     <table><thead><tr><th style="width:42%">활동</th><th style="width:12%">점수</th><th>피드백</th></tr></thead><tbody>
     ${d.items.map(it => `<tr><td>활동 ${esc(it.id)}. ${esc(it.title)}</td><td>${it.score} / ${it.max}</td><td>${esc(it.feedback)}</td></tr>`).join("")}
@@ -149,15 +211,15 @@ const reportHtml = (r, last) => {
     ${d.overall ? `<div class="ov"><b>종합 평가</b><br>${esc(d.overall)}</div>` : ""}
   </div>`;
 };
-async function downloadPdf(rows) {
-  rows = rows.filter(r => r.result);
-  if (!rows.length) return;
+async function downloadPdf(list) {
+  list = list.filter(r => r.result);
+  if (!list.length) return;
   const host = $("#print");
-  host.innerHTML = rows.map((r, i) => reportHtml(r, i === rows.length - 1)).join("");
+  host.innerHTML = list.map((r, i) => reportHtml(r, i === list.length - 1)).join("");
   const safe = s => String(s).replace(/[\\/:*?"<>|\s]+/g, "_");
-  const name = rows.length === 1
-    ? `${safe(rows[0].student.no || "")}_${safe(rows[0].student.name || rows[0].name.replace(/\.json$/i, ""))}_${rows[0].result.session}차시_채점결과.pdf`
-    : `SOLID_채점결과_${rows.length}명.pdf`;
+  const name = list.length === 1
+    ? `${safe(list[0].studentNo || "")}_${safe(list[0].studentName || "학생")}_${list[0].result.session}차시_채점결과.pdf`
+    : `SOLID_채점결과_${tab === "all" ? "전체" : tab + "차시"}_${list.length}명.pdf`;
   try {
     await html2pdf().set({
       margin: [10, 0, 10, 0], filename: name, image: { type: "jpeg", quality: 0.95 },
@@ -166,5 +228,5 @@ async function downloadPdf(rows) {
     }).from(host).save();
   } finally { host.innerHTML = ""; }
 }
-$("#pdfAll").onclick = () => downloadPdf(files.filter(r => r.status === "완료"));
+$("#pdfAll").onclick = () => downloadPdf(visible().filter(r => r.status === "graded"));
 render();

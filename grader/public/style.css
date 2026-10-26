@@ -1,6 +1,7 @@
 :root{--bg:#f6f7f9;--fg:#1c2330;--card:#fff;--line:#d9dde5;--accent:#2f5fd0;--ok:#1f8a4c;--bad:#c0392b;--mute:#6b7280}
 @media (prefers-color-scheme:dark){:root{--bg:#14171d;--fg:#e6e9ef;--card:#1d222b;--line:#323947;--accent:#7aa2ff;--ok:#4cc38a;--bad:#ff7a6b;--mute:#98a2b3}}
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 "Pretendard","Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif}
 header{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 20px;border-bottom:1px solid var(--line);background:var(--card);flex-wrap:wrap}
 h1{font-size:1.15rem;margin:0}
@@ -8,9 +9,15 @@ main{max-width:1000px;margin:20px auto;padding:0 16px}
 button{font:inherit;padding:7px 14px;border:1px solid var(--accent);border-radius:8px;background:var(--accent);color:#fff;cursor:pointer}
 button.ghost{background:transparent;color:var(--accent)}
 button:disabled{opacity:.5;cursor:default}
+#login{text-align:center;margin-top:18vh}
+#login button{padding:12px 28px;font-size:1.05rem}
 #user{display:flex;gap:10px;align-items:center}
 #drop{border:2px dashed var(--line);border-radius:12px;padding:22px;text-align:center;background:var(--card)}
 #drop.over{border-color:var(--accent)}
+#tabs{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px}
+#tabs button{background:transparent;color:var(--accent)}
+#tabs button[aria-pressed=true]{background:var(--accent);color:#fff}
+button.danger{color:var(--bad);border-color:var(--bad)}
 .link{color:var(--accent);text-decoration:underline;cursor:pointer}
 .bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:14px 0}
 #summary{color:var(--mute);margin-left:auto}

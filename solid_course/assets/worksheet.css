@@ -18,10 +18,11 @@
 .activity[data-type=transfer],.activity[data-type=reflect]{border-left:6px solid #14a3b8}
 .q-level{display:inline-block;font-size:11px;font-weight:700;padding:1px 7px;border-radius:4px;margin-right:6px;color:#fff;vertical-align:middle}
 .q-level.fact{background:#6b7a99}.q-level.concept{background:var(--accent)}.q-level.debate{background:var(--badb)}
-.activity textarea{width:100%;min-height:84px;margin:6px 0 10px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--fg);font:inherit;line-height:1.6;resize:vertical}
-.activity textarea.tall{min-height:150px}
-.activity textarea.code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13.5px;min-height:170px;white-space:pre}
-.activity input[type=text]{padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:var(--card);color:var(--fg);font:inherit;min-width:140px}
+.activity textarea{width:100%;min-height:130px;margin:6px 0 12px;padding:12px 14px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--fg);font:inherit;line-height:1.6;resize:vertical}
+.activity textarea.tall{min-height:240px}
+.activity textarea.cell{min-height:64px;min-width:200px;margin:0;padding:8px 10px;line-height:1.5}
+.activity textarea.code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13.5px;min-height:300px;white-space:pre}
+.activity input[type=text]{padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:var(--card);color:var(--fg);font:inherit;min-width:180px}
 .activity select{padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:var(--card);color:var(--fg);font:inherit}
 .pool{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
 .card{padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--card);font-size:14px}
@@ -40,7 +41,7 @@ details.defs > summary{cursor:pointer;color:var(--accent)}
   details.defs > summary{display:none}
   .activity{border:1px solid #888;page-break-inside:avoid}
   .activity textarea{border:1px solid #888;background:#fff;color:#000;resize:none}
-  .activity textarea.code{min-height:200px}
+  .activity textarea.code{min-height:300px}
   body{font-size:13px}
 }
 /* 파이썬 편집기(pyedit.js) */

@@ -94,11 +94,11 @@ class OrderService:
   <table>
     <tr><th>요구</th><th>고칠 클래스</th><th>고칠 위치([A]/[B]/[C])</th><th>고칠 줄 수 예측</th></tr>
     <tr><td>카카오톡 알림으로 교체</td>
-      <td><input type="text" data-k="3-1-p1-class"></td>
+      <td><textarea class="cell" data-k="3-1-p1-class"></textarea></td>
       <td><input type="text" data-k="3-1-p1-pos" placeholder="예: [A]"></td>
       <td><input type="text" data-k="3-1-p1-n" inputmode="numeric" placeholder="숫자"></td></tr>
     <tr><td>테스트용 가짜 발송</td>
-      <td><input type="text" data-k="3-1-p2-class"></td>
+      <td><textarea class="cell" data-k="3-1-p2-class"></textarea></td>
       <td><input type="text" data-k="3-1-p2-pos" placeholder="예: [A], [B]"></td>
       <td><input type="text" data-k="3-1-p2-n" inputmode="numeric" placeholder="숫자"></td></tr>
   </table>
@@ -297,8 +297,8 @@ if __name__ == "__main__":
 <!--/pyedit-->
   <table>
     <tr><th></th><th>통과 수 (/5)</th><th>가장 먼저 해결할 [미완성] 메시지</th></tr>
-    <tr><td>수정 전</td><td><input type="text" data-k="3-2-before-n" inputmode="numeric" placeholder="0~5"></td><td><input type="text" data-k="3-2-before-msg"></td></tr>
-    <tr><td>수정 후</td><td><input type="text" data-k="3-2-after-n" inputmode="numeric" placeholder="0~5"></td><td><input type="text" data-k="3-2-after-msg" placeholder="남은 메시지가 있다면"></td></tr>
+    <tr><td>수정 전</td><td><input type="text" data-k="3-2-before-n" inputmode="numeric" placeholder="0~5"></td><td><textarea class="cell" data-k="3-2-before-msg"></textarea></td></tr>
+    <tr><td>수정 후</td><td><input type="text" data-k="3-2-after-n" inputmode="numeric" placeholder="0~5"></td><td><textarea class="cell" data-k="3-2-after-msg" placeholder="남은 메시지가 있다면"></textarea></td></tr>
   </table>
 
   <details class="hint"><summary>힌트 1단계 (방향)</summary>
@@ -319,8 +319,8 @@ if __name__ == "__main__":
   <p><span class="q-level concept">개념</span> 3-1과 비교해 <code>EmailSender</code>에 닿는 화살표의 방향은 어떻게 바뀌었는가? 그런데 프로그램이 실행될 때 "누가 누구의 메서드를 부르는가"(호출 순서)도 바뀌었는가?</p>
   <table>
     <tr><th></th><th>수정 전</th><th>수정 후</th></tr>
-    <tr><td>코드 안에서 누가 누구의 이름을 아는가</td><td><input type="text" data-k="3-2-know-before"></td><td><input type="text" data-k="3-2-know-after"></td></tr>
-    <tr><td>실행할 때 누가 누구를 부르는가</td><td><input type="text" data-k="3-2-call-before"></td><td><input type="text" data-k="3-2-call-after"></td></tr>
+    <tr><td>코드 안에서 누가 누구의 이름을 아는가</td><td><textarea class="cell" data-k="3-2-know-before"></textarea></td><td><textarea class="cell" data-k="3-2-know-after"></textarea></td></tr>
+    <tr><td>실행할 때 누가 누구를 부르는가</td><td><textarea class="cell" data-k="3-2-call-before"></textarea></td><td><textarea class="cell" data-k="3-2-call-after"></textarea></td></tr>
   </table>
 
   <p><span class="q-level concept">개념</span> 그렇다면 <code>EmailSender()</code>를 만드는 코드는 지금 어디로 갔는가? 그 자리가 프로그램에서 하는 역할을 한 줄로 쓴다.</p>
@@ -339,7 +339,7 @@ if __name__ == "__main__":
 
   <p><b>② 짝</b> 두 문장을 합쳐 하나로 만든다. 무엇을 남기고 무엇을 뺐는지도 적는다.</p>
   <textarea data-k="3-3-pair" placeholder="짝과 합친 문장"></textarea>
-  <input type="text" data-k="3-3-pair-why" placeholder="남긴 것 / 뺀 것" style="width:100%">
+  <textarea class="cell" data-k="3-3-pair-why" placeholder="남긴 것 / 뺀 것"></textarea>
 
   <p><span class="q-level concept">개념</span> ③ 오개념 카드에 반박한다.</p>
   <div class="pool"><div class="card">학생 진술: "생성자로 객체를 넣어 주기만 하면 의존 방향이 바뀐 거야. <code>def __init__(self, sender: EmailSender)</code> 처럼 써도 똑같아."</div></div>
@@ -874,8 +874,8 @@ if __name__ == "__main__":
 <!--/pyedit-->
   <table>
     <tr><th></th><th>클래스(Protocol 포함) 수</th><th>클래스 코드 줄 수</th><th>책 대출 1건을 기록할 때 거치는 클래스 이름</th></tr>
-    <tr><td>설계안 A</td><td><input type="text" data-k="3-5-a-n" inputmode="numeric" placeholder="출력된 값"></td><td><input type="text" data-k="3-5-a-lines" inputmode="numeric" placeholder="출력된 값"></td><td><input type="text" data-k="3-5-a-path"></td></tr>
-    <tr><td>설계안 B</td><td><input type="text" data-k="3-5-b-n" inputmode="numeric" placeholder="출력된 값"></td><td><input type="text" data-k="3-5-b-lines" inputmode="numeric" placeholder="출력된 값"></td><td><input type="text" data-k="3-5-b-path"></td></tr>
+    <tr><td>설계안 A</td><td><input type="text" data-k="3-5-a-n" inputmode="numeric" placeholder="출력된 값"></td><td><input type="text" data-k="3-5-a-lines" inputmode="numeric" placeholder="출력된 값"></td><td><textarea class="cell" data-k="3-5-a-path"></textarea></td></tr>
+    <tr><td>설계안 B</td><td><input type="text" data-k="3-5-b-n" inputmode="numeric" placeholder="출력된 값"></td><td><input type="text" data-k="3-5-b-lines" inputmode="numeric" placeholder="출력된 값"></td><td><textarea class="cell" data-k="3-5-b-path"></textarea></td></tr>
   </table>
   <p>두 출력은 같은가? <select data-k="3-5-same"><option value=""></option><option>같다</option><option>다르다</option></select></p>
 
@@ -898,7 +898,7 @@ if __name__ == "__main__":
   <p><span class="q-level debate">논쟁</span> ④ 우리 기준을 활동 3-4의 <b>우리 모둠 설계</b>에 적용한다. 지금 상황에서 과하다고 판단되는 부분 1곳(없다면 가장 과해 보일 수 있는 곳)을 표시하고, 그대로 둘지 없앨지 결정한다.</p>
   <table>
     <tr><th>과해 보이는 부분 (클래스/Protocol 이름)</th><th>결정</th><th>근거 (기준 1·2 중 무엇에 비춰)</th></tr>
-    <tr><td><input type="text" data-k="3-5-over-what"></td>
+    <tr><td><textarea class="cell" data-k="3-5-over-what"></textarea></td>
       <td><select data-k="3-5-over-dec"><option value=""></option><option>그대로 둔다</option><option>없앤다</option><option>나중에 필요해지면 만든다</option></select></td>
       <td><textarea data-k="3-5-over-why"></textarea></td></tr>
   </table>
@@ -1012,7 +1012,7 @@ if __name__ == "__main__":
   </table>
 
   <p>③ 역전할 의존에 쓸 약속의 이름과 메서드 모양을 한 줄로 쓴다. 이름은 V2/V3 중 누구 쪽이 아니라 <code>WeatherStation</code>이 필요로 하는 말로 짓는다.</p>
-  <input type="text" data-k="3-6-abstract" style="width:100%" placeholder="약속 이름과 메서드 모양">
+  <textarea class="cell" data-k="3-6-abstract" placeholder="약속 이름과 메서드 모양"></textarea>
 
   <p>④ "지금은 역전하지 않을" 의존을 나중에 역전해야 하는 상황이 생긴다면 어떤 일이 일어났을 때일까?</p>
   <textarea data-k="3-6-later"></textarea>
@@ -1027,7 +1027,7 @@ if __name__ == "__main__":
   <label class="check"><input type="radio" name="3-7-q1" data-k="3-7-q1-ga"> (가) <code>self.db = MySQLDB()</code></label>
   <label class="check"><input type="radio" name="3-7-q1" data-k="3-7-q1-na"> (나) <code>def __init__(self, db: Database)</code> 이고 <code>Database</code>는 Protocol</label>
   <label class="check"><input type="radio" name="3-7-q1" data-k="3-7-q1-da"> (다) <code>def __init__(self, db: MySQLDB)</code></label>
-  <input type="text" data-k="3-7-q1-why" style="width:100%" placeholder="이유">
+  <textarea class="cell" data-k="3-7-q1-why" placeholder="이유"></textarea>
 
   <p><b>퇴장권 2</b> (목표 3-a) "의존성 주입을 썼으니 DIP를 지켰다"가 항상 참이 아닌 경우를 위의 (다) 보기를 이용해 설명한다.</p>
   <textarea data-k="3-7-q2"></textarea>
@@ -1035,7 +1035,7 @@ if __name__ == "__main__":
   <p><b>퇴장권 3</b> (목표 3-c) "구현이 하나뿐이고, 바뀔 계획도 없으며, 테스트도 쉬운 클래스"에 추상을 만들겠는가?</p>
   <label class="check"><input type="radio" name="3-7-q3" data-k="3-7-q3-yes"> 만든다</label>
   <label class="check"><input type="radio" name="3-7-q3" data-k="3-7-q3-no"> 만들지 않는다</label>
-  <input type="text" data-k="3-7-q3-why" style="width:100%" placeholder="근거 1개">
+  <textarea class="cell" data-k="3-7-q3-why" placeholder="근거 1개"></textarea>
 
   <p><b>퇴장권 4</b> (목표 3-b) 변경·약속·의존 중 우리 모둠 프로젝트(활동 3-4)에서 가장 중요했던 렌즈 하나와 그 이유.</p>
   <select data-k="3-7-q4-lens"><option value=""></option><option>변경 (1차시)</option><option>약속 (2차시)</option><option>의존 (3차시)</option></select>

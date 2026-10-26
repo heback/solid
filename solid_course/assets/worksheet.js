@@ -4,6 +4,13 @@
   const ns = "solid-ws:" + location.pathname.split("/").pop();
   const fields = () => Array.from(document.querySelectorAll("main textarea, main input, main select"));
   const key = (el, i) => ns + ":" + (el.dataset.k || el.name || i);
+  // 입력 내용이 길어지면 글상자가 따라 늘어나 내용이 가려지지 않게 한다(편집기 제외).
+  const grow = el => {
+    if (el.tagName !== "TEXTAREA" || el.classList.contains("pyedit-code")) return;
+    el.style.height = "auto";
+    if (el.scrollHeight) el.style.height = (el.scrollHeight + 2) + "px";
+  };
+  const growAll = () => document.querySelectorAll("main textarea").forEach(grow);
   function save() {
     fields().forEach((el, i) => {
       try {
@@ -23,6 +30,7 @@
         if (el.type === "checkbox" || el.type === "radio") el.checked = !!v; else el.value = v;
       } catch (e) {}
     });
+    growAll();
   }
   const page = location.pathname.split("/").pop() || "index.html";
   const val = el => (el.type === "checkbox" || el.type === "radio") ? el.checked : el.value;
@@ -59,6 +67,7 @@
         const k = el.dataset.k || el.name || String(i);
         if (Object.prototype.hasOwnProperty.call(data.fields, k)) { setVal(el, data.fields[k]); n++; }
       });
+      growAll();
       save();
       status(n + "칸을 불러왔습니다 (" + (data.savedAt ? data.savedAt.slice(0, 16).replace("T", " ") : "") + " 저장본)");
     };
@@ -66,7 +75,10 @@
   }
   document.addEventListener("DOMContentLoaded", () => {
     load();
-    document.addEventListener("input", save);
+    document.addEventListener("input", e => { grow(e.target); save(); });
+    document.addEventListener("toggle", growAll, true);
+    window.addEventListener("resize", growAll);
+    window.addEventListener("load", growAll);
     document.addEventListener("change", save);
     const bar = document.createElement("div");
     bar.className = "ws-tools";
@@ -92,6 +104,7 @@
       if (!confirm("이 학습지의 입력을 모두 지울까요?")) return;
       fields().forEach((el, i) => { try { localStorage.removeItem(key(el, i)); } catch (e) {} });
       fields().forEach(el => { if (el.type === "checkbox" || el.type === "radio") el.checked = false; else el.value = ""; });
+      growAll();
     };
   });
 })();

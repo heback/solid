@@ -112,16 +112,16 @@ def launch_all(birds: list[Bird], altitude: int = 5):
     <tbody>
       <tr><td><code>Sparrow</code></td>
         <td><select data-k="a21-sp-r"><option></option><option>약속 지킴</option><option>약속 깨짐</option><option>예외 발생</option></select></td>
-        <td><input type="text" data-k="a21-sp-h" inputmode="numeric" placeholder="숫자 (예외면 없음)"></td><td><input type="text" data-k="a21-sp-w"></td></tr>
+        <td><input type="text" data-k="a21-sp-h" inputmode="numeric" placeholder="숫자 (예외면 없음)"></td><td><textarea class="cell" data-k="a21-sp-w"></textarea></td></tr>
       <tr><td><code>Eagle</code></td>
         <td><select data-k="a21-ea-r"><option></option><option>약속 지킴</option><option>약속 깨짐</option><option>예외 발생</option></select></td>
-        <td><input type="text" data-k="a21-ea-h" inputmode="numeric" placeholder="숫자 (예외면 없음)"></td><td><input type="text" data-k="a21-ea-w"></td></tr>
+        <td><input type="text" data-k="a21-ea-h" inputmode="numeric" placeholder="숫자 (예외면 없음)"></td><td><textarea class="cell" data-k="a21-ea-w"></textarea></td></tr>
       <tr><td><code>Penguin</code></td>
         <td><select data-k="a21-pe-r"><option></option><option>약속 지킴</option><option>약속 깨짐</option><option>예외 발생</option></select></td>
-        <td><input type="text" data-k="a21-pe-h" inputmode="numeric" placeholder="숫자 (예외면 없음)"></td><td><input type="text" data-k="a21-pe-w"></td></tr>
+        <td><input type="text" data-k="a21-pe-h" inputmode="numeric" placeholder="숫자 (예외면 없음)"></td><td><textarea class="cell" data-k="a21-pe-w"></textarea></td></tr>
       <tr><td><code>RubberDuckToy</code></td>
         <td><select data-k="a21-du-r"><option></option><option>약속 지킴</option><option>약속 깨짐</option><option>예외 발생</option></select></td>
-        <td><input type="text" data-k="a21-du-h" inputmode="numeric" placeholder="숫자 (예외면 없음)"></td><td><input type="text" data-k="a21-du-w"></td></tr>
+        <td><input type="text" data-k="a21-du-h" inputmode="numeric" placeholder="숫자 (예외면 없음)"></td><td><textarea class="cell" data-k="a21-du-w"></textarea></td></tr>
     </tbody>
   </table>
   <p><span class="q-level fact">사실적</span> 네 마리 중 <b>가장 늦게 발견될 것 같은</b> 문제는 어느 새의 것인가요? 왜 그렇게 생각하나요?</p>
@@ -234,10 +234,10 @@ if __name__ == "__main__":
   <table class="sort-table">
     <thead><tr><th>새</th><th>실제 출력(핵심만)</th><th>예측과 같았나?</th></tr></thead>
     <tbody>
-      <tr><td><code>Sparrow</code></td><td><input type="text" data-k="a22-sp-o"></td><td><select data-k="a22-sp-s"><option></option><option>같음</option><option>다름</option></select></td></tr>
-      <tr><td><code>Eagle</code></td><td><input type="text" data-k="a22-ea-o"></td><td><select data-k="a22-ea-s"><option></option><option>같음</option><option>다름</option></select></td></tr>
-      <tr><td><code>Penguin</code></td><td><input type="text" data-k="a22-pe-o"></td><td><select data-k="a22-pe-s"><option></option><option>같음</option><option>다름</option></select></td></tr>
-      <tr><td><code>RubberDuckToy</code></td><td><input type="text" data-k="a22-du-o"></td><td><select data-k="a22-du-s"><option></option><option>같음</option><option>다름</option></select></td></tr>
+      <tr><td><code>Sparrow</code></td><td><textarea class="cell" data-k="a22-sp-o"></textarea></td><td><select data-k="a22-sp-s"><option></option><option>같음</option><option>다름</option></select></td></tr>
+      <tr><td><code>Eagle</code></td><td><textarea class="cell" data-k="a22-ea-o"></textarea></td><td><select data-k="a22-ea-s"><option></option><option>같음</option><option>다름</option></select></td></tr>
+      <tr><td><code>Penguin</code></td><td><textarea class="cell" data-k="a22-pe-o"></textarea></td><td><select data-k="a22-pe-s"><option></option><option>같음</option><option>다름</option></select></td></tr>
+      <tr><td><code>RubberDuckToy</code></td><td><textarea class="cell" data-k="a22-du-o"></textarea></td><td><select data-k="a22-du-s"><option></option><option>같음</option><option>다름</option></select></td></tr>
     </tbody>
   </table>
 
@@ -259,12 +259,12 @@ if __name__ == "__main__":
         <td><input type="checkbox" data-k="a22-pe-1" aria-label="펭귄 받는 조건"></td>
         <td><input type="checkbox" data-k="a22-pe-2" aria-label="펭귄 끝난 뒤 보장"></td>
         <td><input type="checkbox" data-k="a22-pe-3" aria-label="펭귄 항상 참"></td>
-        <td><input type="text" data-k="a22-pe-e"></td></tr>
+        <td><textarea class="cell" data-k="a22-pe-e"></textarea></td></tr>
       <tr><td><code>RubberDuckToy</code></td>
         <td><input type="checkbox" data-k="a22-du-1" aria-label="오리드론 받는 조건"></td>
         <td><input type="checkbox" data-k="a22-du-2" aria-label="오리드론 끝난 뒤 보장"></td>
         <td><input type="checkbox" data-k="a22-du-3" aria-label="오리드론 항상 참"></td>
-        <td><input type="text" data-k="a22-du-e"></td></tr>
+        <td><textarea class="cell" data-k="a22-du-e"></textarea></td></tr>
     </tbody>
   </table>
 
@@ -300,12 +300,12 @@ if __name__ == "__main__":
   <table class="sort-table">
     <thead><tr><th>카드</th><th>분류</th><th>근거 한 줄 (쓰는 쪽이 무엇을 믿다가 놀라는가?)</th></tr></thead>
     <tbody>
-      <tr><td>A</td><td><select data-k="a23-A"><option></option><option>치환 가능</option><option>받는 조건을 좁힘</option><option>보장을 덜 지킴</option><option>항상 참을 깸</option></select></td><td><input type="text" data-k="a23-A-w"></td></tr>
-      <tr><td>B</td><td><select data-k="a23-B"><option></option><option>치환 가능</option><option>받는 조건을 좁힘</option><option>보장을 덜 지킴</option><option>항상 참을 깸</option></select></td><td><input type="text" data-k="a23-B-w"></td></tr>
-      <tr><td>C</td><td><select data-k="a23-C"><option></option><option>치환 가능</option><option>받는 조건을 좁힘</option><option>보장을 덜 지킴</option><option>항상 참을 깸</option></select></td><td><input type="text" data-k="a23-C-w"></td></tr>
-      <tr><td>D</td><td><select data-k="a23-D"><option></option><option>치환 가능</option><option>받는 조건을 좁힘</option><option>보장을 덜 지킴</option><option>항상 참을 깸</option></select></td><td><input type="text" data-k="a23-D-w"></td></tr>
-      <tr><td>E</td><td><select data-k="a23-E"><option></option><option>치환 가능</option><option>받는 조건을 좁힘</option><option>보장을 덜 지킴</option><option>항상 참을 깸</option></select></td><td><input type="text" data-k="a23-E-w"></td></tr>
-      <tr><td>F</td><td><select data-k="a23-F"><option></option><option>치환 가능</option><option>받는 조건을 좁힘</option><option>보장을 덜 지킴</option><option>항상 참을 깸</option></select></td><td><input type="text" data-k="a23-F-w"></td></tr>
+      <tr><td>A</td><td><select data-k="a23-A"><option></option><option>치환 가능</option><option>받는 조건을 좁힘</option><option>보장을 덜 지킴</option><option>항상 참을 깸</option></select></td><td><textarea class="cell" data-k="a23-A-w"></textarea></td></tr>
+      <tr><td>B</td><td><select data-k="a23-B"><option></option><option>치환 가능</option><option>받는 조건을 좁힘</option><option>보장을 덜 지킴</option><option>항상 참을 깸</option></select></td><td><textarea class="cell" data-k="a23-B-w"></textarea></td></tr>
+      <tr><td>C</td><td><select data-k="a23-C"><option></option><option>치환 가능</option><option>받는 조건을 좁힘</option><option>보장을 덜 지킴</option><option>항상 참을 깸</option></select></td><td><textarea class="cell" data-k="a23-C-w"></textarea></td></tr>
+      <tr><td>D</td><td><select data-k="a23-D"><option></option><option>치환 가능</option><option>받는 조건을 좁힘</option><option>보장을 덜 지킴</option><option>항상 참을 깸</option></select></td><td><textarea class="cell" data-k="a23-D-w"></textarea></td></tr>
+      <tr><td>E</td><td><select data-k="a23-E"><option></option><option>치환 가능</option><option>받는 조건을 좁힘</option><option>보장을 덜 지킴</option><option>항상 참을 깸</option></select></td><td><textarea class="cell" data-k="a23-E-w"></textarea></td></tr>
+      <tr><td>F</td><td><select data-k="a23-F"><option></option><option>치환 가능</option><option>받는 조건을 좁힘</option><option>보장을 덜 지킴</option><option>항상 참을 깸</option></select></td><td><textarea class="cell" data-k="a23-F-w"></textarea></td></tr>
     </tbody>
   </table>
 
@@ -328,9 +328,9 @@ if __name__ == "__main__":
   <table class="sort-table">
     <thead><tr><th>쓰는 쪽(클라이언트) 함수</th><th>실제로 부르는 메서드</th><th>이 함수가 믿어야 하는 최소한의 약속</th></tr></thead>
     <tbody>
-      <tr><td><code>print_report</code></td><td><input type="text" data-k="a24-c1-m"></td><td><input type="text" data-k="a24-c1-p"></td></tr>
-      <tr><td><code>archive_scan</code></td><td><input type="text" data-k="a24-c2-m"></td><td><input type="text" data-k="a24-c2-p"></td></tr>
-      <tr><td><code>send_permission_fax</code></td><td><input type="text" data-k="a24-c3-m"></td><td><input type="text" data-k="a24-c3-p"></td></tr>
+      <tr><td><code>print_report</code></td><td><textarea class="cell" data-k="a24-c1-m"></textarea></td><td><textarea class="cell" data-k="a24-c1-p"></textarea></td></tr>
+      <tr><td><code>archive_scan</code></td><td><textarea class="cell" data-k="a24-c2-m"></textarea></td><td><textarea class="cell" data-k="a24-c2-p"></textarea></td></tr>
+      <tr><td><code>send_permission_fax</code></td><td><textarea class="cell" data-k="a24-c3-m"></textarea></td><td><textarea class="cell" data-k="a24-c3-p"></textarea></td></tr>
     </tbody>
   </table>
 
@@ -510,10 +510,10 @@ if __name__ == "__main__":
   <table class="sort-table">
     <thead><tr><th>시점</th><th>통과 수 (/4)</th><th>새로 본 메시지나 오류</th></tr></thead>
     <tbody>
-      <tr><td>처음</td><td><input type="text" data-k="a24-r0" inputmode="numeric" placeholder="0~4"></td><td><input type="text" data-k="a24-r0m"></td></tr>
-      <tr><td>TODO 1 뒤</td><td><input type="text" data-k="a24-r1" inputmode="numeric" placeholder="0~4"></td><td><input type="text" data-k="a24-r1m"></td></tr>
-      <tr><td>TODO 2 뒤</td><td><input type="text" data-k="a24-r2" inputmode="numeric" placeholder="0~4"></td><td><input type="text" data-k="a24-r2m"></td></tr>
-      <tr><td>TODO 3 뒤</td><td><input type="text" data-k="a24-r3" inputmode="numeric" placeholder="0~4"></td><td><input type="text" data-k="a24-r3m"></td></tr>
+      <tr><td>처음</td><td><input type="text" data-k="a24-r0" inputmode="numeric" placeholder="0~4"></td><td><textarea class="cell" data-k="a24-r0m"></textarea></td></tr>
+      <tr><td>TODO 1 뒤</td><td><input type="text" data-k="a24-r1" inputmode="numeric" placeholder="0~4"></td><td><textarea class="cell" data-k="a24-r1m"></textarea></td></tr>
+      <tr><td>TODO 2 뒤</td><td><input type="text" data-k="a24-r2" inputmode="numeric" placeholder="0~4"></td><td><textarea class="cell" data-k="a24-r2m"></textarea></td></tr>
+      <tr><td>TODO 3 뒤</td><td><input type="text" data-k="a24-r3" inputmode="numeric" placeholder="0~4"></td><td><textarea class="cell" data-k="a24-r3m"></textarea></td></tr>
     </tbody>
   </table>
   <details class="hint"><summary>힌트 1단계 (방향)</summary><p>Protocol 하나에는 "한 클라이언트가 함께 부르는 메서드"만 넣습니다. ①의 표 오른쪽 칸이 곧 Protocol 하나입니다.</p></details>
@@ -738,12 +738,12 @@ if __name__ == "__main__":
   <table class="sort-table">
     <thead><tr><th>위치</th><th>판정</th><th>너무 큰 약속 탓인가?</th><th>근거 (약속의 어느 부분, 실행 결과의 어느 줄)</th></tr></thead>
     <tbody>
-      <tr><td>[A]</td><td><select data-k="a27-A"><option></option><option>문제 없음</option><option>받는 조건을 좁힘</option><option>보장을 덜 지킴</option><option>항상 참을 깸</option><option>못 하는 기능을 강요받음</option></select></td><td><select data-k="a27-A-i"><option></option><option>예</option><option>아니오</option></select></td><td><input type="text" data-k="a27-A-w"></td></tr>
-      <tr><td>[B]</td><td><select data-k="a27-B"><option></option><option>문제 없음</option><option>받는 조건을 좁힘</option><option>보장을 덜 지킴</option><option>항상 참을 깸</option><option>못 하는 기능을 강요받음</option></select></td><td><select data-k="a27-B-i"><option></option><option>예</option><option>아니오</option></select></td><td><input type="text" data-k="a27-B-w"></td></tr>
-      <tr><td>[C]</td><td><select data-k="a27-C"><option></option><option>문제 없음</option><option>받는 조건을 좁힘</option><option>보장을 덜 지킴</option><option>항상 참을 깸</option><option>못 하는 기능을 강요받음</option></select></td><td><select data-k="a27-C-i"><option></option><option>예</option><option>아니오</option></select></td><td><input type="text" data-k="a27-C-w"></td></tr>
-      <tr><td>[D]</td><td><select data-k="a27-D"><option></option><option>문제 없음</option><option>받는 조건을 좁힘</option><option>보장을 덜 지킴</option><option>항상 참을 깸</option><option>못 하는 기능을 강요받음</option></select></td><td><select data-k="a27-D-i"><option></option><option>예</option><option>아니오</option></select></td><td><input type="text" data-k="a27-D-w"></td></tr>
-      <tr><td>[E]</td><td><select data-k="a27-E"><option></option><option>문제 없음</option><option>받는 조건을 좁힘</option><option>보장을 덜 지킴</option><option>항상 참을 깸</option><option>못 하는 기능을 강요받음</option></select></td><td><select data-k="a27-E-i"><option></option><option>예</option><option>아니오</option></select></td><td><input type="text" data-k="a27-E-w"></td></tr>
-      <tr><td>[F]</td><td><select data-k="a27-F"><option></option><option>문제 없음</option><option>받는 조건을 좁힘</option><option>보장을 덜 지킴</option><option>항상 참을 깸</option><option>못 하는 기능을 강요받음</option></select></td><td><select data-k="a27-F-i"><option></option><option>예</option><option>아니오</option></select></td><td><input type="text" data-k="a27-F-w"></td></tr>
+      <tr><td>[A]</td><td><select data-k="a27-A"><option></option><option>문제 없음</option><option>받는 조건을 좁힘</option><option>보장을 덜 지킴</option><option>항상 참을 깸</option><option>못 하는 기능을 강요받음</option></select></td><td><select data-k="a27-A-i"><option></option><option>예</option><option>아니오</option></select></td><td><textarea class="cell" data-k="a27-A-w"></textarea></td></tr>
+      <tr><td>[B]</td><td><select data-k="a27-B"><option></option><option>문제 없음</option><option>받는 조건을 좁힘</option><option>보장을 덜 지킴</option><option>항상 참을 깸</option><option>못 하는 기능을 강요받음</option></select></td><td><select data-k="a27-B-i"><option></option><option>예</option><option>아니오</option></select></td><td><textarea class="cell" data-k="a27-B-w"></textarea></td></tr>
+      <tr><td>[C]</td><td><select data-k="a27-C"><option></option><option>문제 없음</option><option>받는 조건을 좁힘</option><option>보장을 덜 지킴</option><option>항상 참을 깸</option><option>못 하는 기능을 강요받음</option></select></td><td><select data-k="a27-C-i"><option></option><option>예</option><option>아니오</option></select></td><td><textarea class="cell" data-k="a27-C-w"></textarea></td></tr>
+      <tr><td>[D]</td><td><select data-k="a27-D"><option></option><option>문제 없음</option><option>받는 조건을 좁힘</option><option>보장을 덜 지킴</option><option>항상 참을 깸</option><option>못 하는 기능을 강요받음</option></select></td><td><select data-k="a27-D-i"><option></option><option>예</option><option>아니오</option></select></td><td><textarea class="cell" data-k="a27-D-w"></textarea></td></tr>
+      <tr><td>[E]</td><td><select data-k="a27-E"><option></option><option>문제 없음</option><option>받는 조건을 좁힘</option><option>보장을 덜 지킴</option><option>항상 참을 깸</option><option>못 하는 기능을 강요받음</option></select></td><td><select data-k="a27-E-i"><option></option><option>예</option><option>아니오</option></select></td><td><textarea class="cell" data-k="a27-E-w"></textarea></td></tr>
+      <tr><td>[F]</td><td><select data-k="a27-F"><option></option><option>문제 없음</option><option>받는 조건을 좁힘</option><option>보장을 덜 지킴</option><option>항상 참을 깸</option><option>못 하는 기능을 강요받음</option></select></td><td><select data-k="a27-F-i"><option></option><option>예</option><option>아니오</option></select></td><td><textarea class="cell" data-k="a27-F-w"></textarea></td></tr>
     </tbody>
   </table>
   <p><b>③ 분리안 스케치.</b> <code>Device</code>를 어떤 작은 Protocol들로 나누겠나요? Protocol 이름과 메서드, 그리고 각 기기가 어느 Protocol을 지키는지 쓰세요. (완성 코드가 아니어도 됩니다.)</p>
@@ -761,7 +761,7 @@ if __name__ == "__main__":
   <textarea data-k="x1-why" placeholder="이유"></textarea>
 
   <p><b>2.</b> <code>def scan_homework(m: Machine)</code>가 실제로는 <code>m.scan_doc(...)</code>만 부릅니다. 첫 줄을 어떻게 바꾸겠나요? (코드 한 줄)</p>
-  <input type="text" data-k="x2-code" style="width:100%;font-family:ui-monospace,Menlo,Consolas,monospace" aria-label="바꾼 함수 첫 줄">
+  <textarea class="cell" data-k="x2-code" aria-label="바꾼 함수 첫 줄" style="font-family:ui-monospace,Menlo,Consolas,monospace"></textarea>
 
   <p><b>3.</b> 친구가 말합니다. <i>"펭귄이 <code>Bird</code>를 상속하지 않으면, 펭귄은 새가 아니게 되잖아."</i> 한 문장으로 반박하세요.</p>
   <textarea data-k="x3"></textarea>

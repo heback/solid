@@ -1,0 +1,16 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 교사 1명만 읽기·쓰기. 채점 결과 기록은 Functions(관리자 권한)가 한다.
+    function isTeacher() {
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.email == 'heback@ts.hs.kr';
+    }
+    match /submissions/{id} {
+      allow read, delete: if isTeacher();
+      allow create, update: if isTeacher()
+        && request.resource.data.session in [1, 2, 3];
+    }
+  }
+}
