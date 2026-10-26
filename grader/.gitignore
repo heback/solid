@@ -1,0 +1,5 @@
+# 정답·루브릭 번들(비공개). node grader/scripts/build_rubric.js 로 다시 만든다.
+functions/rubric/
+functions/node_modules/
+.firebase/
+*.log

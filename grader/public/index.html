@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SOLID 학습지 AI 채점기</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.2/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+<header>
+  <h1>SOLID 학습지 AI 채점기</h1>
+  <div id="user" hidden><span id="who"></span><button id="logout" type="button" class="ghost">로그아웃</button></div>
+</header>
+
+<main id="login" hidden>
+  <p>학교 계정(<b>@ts.hs.kr</b>)으로 로그인하세요.</p>
+  <button id="loginBtn" type="button">Google로 로그인</button>
+  <p id="loginMsg" class="err" role="alert"></p>
+</main>
+
+<main id="app" hidden>
+  <section id="drop" tabindex="0">
+    <p><b>학생 JSON 파일</b>을 여기에 끌어 놓거나 <label class="link">파일 선택<input id="pick" type="file" accept="application/json,.json" multiple hidden></label>하세요. (여러 개 가능)</p>
+  </section>
+
+  <div class="bar">
+    <button id="gradeAll" type="button">전체 채점</button>
+    <button id="gradeSel" type="button" class="ghost">선택 채점</button>
+    <button id="pdfAll" type="button" class="ghost">완료된 전체 PDF</button>
+    <button id="clear" type="button" class="ghost">목록 비우기</button>
+    <span id="summary"></span>
+  </div>
+
+  <table id="list">
+    <thead><tr><th><input type="checkbox" id="selAll" aria-label="전체 선택"></th><th>파일</th><th>이름</th><th>학번</th><th>차시</th><th>상태</th><th>점수</th><th></th></tr></thead>
+    <tbody></tbody>
+  </table>
+  <p class="note">채점 결과는 이 화면에만 있습니다. 새로고침하면 사라지니 PDF를 내려받아 두세요. AI 채점은 참고용이므로 점수와 피드백은 <b>결과 보기</b>에서 고칠 수 있습니다.</p>
+</main>
+
+<dialog id="detail">
+  <form method="dialog" class="dlg-head"><h2 id="dTitle"></h2><button class="ghost" value="close">닫기</button></form>
+  <div id="dBody"></div>
+  <div class="bar"><button id="dPdf" type="button">PDF 다운로드</button></div>
+</dialog>
+
+<div id="print" aria-hidden="true"></div>
+<script type="module" src="app.js"></script>
+</body>
+</html>
