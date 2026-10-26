@@ -95,12 +95,12 @@ class OrderService:
     <tr><th>요구</th><th>고칠 클래스</th><th>고칠 위치([A]/[B]/[C])</th><th>고칠 줄 수 예측</th></tr>
     <tr><td>카카오톡 알림으로 교체</td>
       <td><input type="text" data-k="3-1-p1-class"></td>
-      <td><input type="text" data-k="3-1-p1-pos"></td>
-      <td><input type="text" data-k="3-1-p1-n"></td></tr>
+      <td><input type="text" data-k="3-1-p1-pos" placeholder="예: [A]"></td>
+      <td><input type="text" data-k="3-1-p1-n" inputmode="numeric" placeholder="숫자"></td></tr>
     <tr><td>테스트용 가짜 발송</td>
       <td><input type="text" data-k="3-1-p2-class"></td>
-      <td><input type="text" data-k="3-1-p2-pos"></td>
-      <td><input type="text" data-k="3-1-p2-n"></td></tr>
+      <td><input type="text" data-k="3-1-p2-pos" placeholder="예: [A], [B]"></td>
+      <td><input type="text" data-k="3-1-p2-n" inputmode="numeric" placeholder="숫자"></td></tr>
   </table>
 
   <p><span class="q-level fact">사실</span> ③ 지금 코드 그대로, <code>OrderService</code>를 테스트하면서 실제 메일을 보내지 않을 수 있는가?</p>
@@ -297,8 +297,8 @@ if __name__ == "__main__":
 <!--/pyedit-->
   <table>
     <tr><th></th><th>통과 수 (/5)</th><th>가장 먼저 해결할 [미완성] 메시지</th></tr>
-    <tr><td>수정 전</td><td><input type="text" data-k="3-2-before-n"></td><td><input type="text" data-k="3-2-before-msg"></td></tr>
-    <tr><td>수정 후</td><td><input type="text" data-k="3-2-after-n"></td><td><input type="text" data-k="3-2-after-msg" placeholder="남은 메시지가 있다면"></td></tr>
+    <tr><td>수정 전</td><td><input type="text" data-k="3-2-before-n" inputmode="numeric" placeholder="0~5"></td><td><input type="text" data-k="3-2-before-msg"></td></tr>
+    <tr><td>수정 후</td><td><input type="text" data-k="3-2-after-n" inputmode="numeric" placeholder="0~5"></td><td><input type="text" data-k="3-2-after-msg" placeholder="남은 메시지가 있다면"></td></tr>
   </table>
 
   <details class="hint"><summary>힌트 1단계 (방향)</summary>
@@ -310,7 +310,7 @@ if __name__ == "__main__":
 
   <p><b>2) 관찰 기록</b></p>
   <p><span class="q-level fact">사실</span> <code>KakaoSender</code>를 추가할 때 <code>OrderService</code>의 코드는 몇 줄 고쳤는가? 3-1의 예측과 비교한다.</p>
-  <input type="text" data-k="3-2-kakao-n" placeholder="실제 줄 수"> &nbsp; 예측과 <select data-k="3-2-kakao-cmp"><option value=""></option><option>같았다</option><option>달랐다</option></select>
+  <input type="text" data-k="3-2-kakao-n" inputmode="numeric" placeholder="실제 줄 수"> &nbsp; 예측과 <select data-k="3-2-kakao-cmp"><option value=""></option><option>같았다</option><option>달랐다</option></select>
   <textarea data-k="3-2-kakao-why" placeholder="같거나 달랐던 이유"></textarea>
 
   <p><span class="q-level fact">사실</span> 수정한 코드의 의존 화살표를 다시 그린다. <code>MessageSender</code>도 하나의 상자로 그린다.</p>
@@ -651,10 +651,10 @@ if __name__ == "__main__":
 </script></div>
 <!--/pyedit-->
   <table>
-    <tr><th>카드</th><th>구현했나</th><th>점검 결과</th><th>기존 코드에서 고친 줄 수</th><th>새로 추가한 줄 수</th></tr>
-    <tr><td>①</td><td><input type="checkbox" data-k="3-4-i1"></td><td><select data-k="3-4-i1-res"><option value=""></option><option>통과</option><option>미완성</option><option>오류</option></select></td><td><input type="text" data-k="3-4-i1-mod"></td><td><input type="text" data-k="3-4-i1-add"></td></tr>
-    <tr><td>②</td><td><input type="checkbox" data-k="3-4-i2"></td><td><select data-k="3-4-i2-res"><option value=""></option><option>통과</option><option>미완성</option><option>오류</option></select></td><td><input type="text" data-k="3-4-i2-mod"></td><td><input type="text" data-k="3-4-i2-add"></td></tr>
-    <tr><td>③</td><td><input type="checkbox" data-k="3-4-i3"></td><td><select data-k="3-4-i3-res"><option value=""></option><option>통과</option><option>미완성</option><option>오류</option></select></td><td><input type="text" data-k="3-4-i3-mod"></td><td><input type="text" data-k="3-4-i3-add"></td></tr>
+    <tr><th>카드</th><th>구현했나</th><th>점검 결과</th><th>기존 코드에서 고친 줄 수</th><th>새로 추가한 줄 수 <small>(줄 세는 법은 활동 1-4)</small></th></tr>
+    <tr><td>①</td><td><input type="checkbox" data-k="3-4-i1"></td><td><select data-k="3-4-i1-res"><option value=""></option><option>통과</option><option>미완성</option><option>오류</option></select></td><td><input type="text" data-k="3-4-i1-mod" inputmode="numeric" placeholder="숫자"></td><td><input type="text" data-k="3-4-i1-add" inputmode="numeric" placeholder="숫자"></td></tr>
+    <tr><td>②</td><td><input type="checkbox" data-k="3-4-i2"></td><td><select data-k="3-4-i2-res"><option value=""></option><option>통과</option><option>미완성</option><option>오류</option></select></td><td><input type="text" data-k="3-4-i2-mod" inputmode="numeric" placeholder="숫자"></td><td><input type="text" data-k="3-4-i2-add" inputmode="numeric" placeholder="숫자"></td></tr>
+    <tr><td>③</td><td><input type="checkbox" data-k="3-4-i3"></td><td><select data-k="3-4-i3-res"><option value=""></option><option>통과</option><option>미완성</option><option>오류</option></select></td><td><input type="text" data-k="3-4-i3-mod" inputmode="numeric" placeholder="숫자"></td><td><input type="text" data-k="3-4-i3-add" inputmode="numeric" placeholder="숫자"></td></tr>
   </table>
 
   <details class="hint"><summary>힌트 1단계 (방향)</summary>
@@ -874,8 +874,8 @@ if __name__ == "__main__":
 <!--/pyedit-->
   <table>
     <tr><th></th><th>클래스(Protocol 포함) 수</th><th>클래스 코드 줄 수</th><th>책 대출 1건을 기록할 때 거치는 클래스 이름</th></tr>
-    <tr><td>설계안 A</td><td><input type="text" data-k="3-5-a-n"></td><td><input type="text" data-k="3-5-a-lines"></td><td><input type="text" data-k="3-5-a-path"></td></tr>
-    <tr><td>설계안 B</td><td><input type="text" data-k="3-5-b-n"></td><td><input type="text" data-k="3-5-b-lines"></td><td><input type="text" data-k="3-5-b-path"></td></tr>
+    <tr><td>설계안 A</td><td><input type="text" data-k="3-5-a-n" inputmode="numeric" placeholder="출력된 값"></td><td><input type="text" data-k="3-5-a-lines" inputmode="numeric" placeholder="출력된 값"></td><td><input type="text" data-k="3-5-a-path"></td></tr>
+    <tr><td>설계안 B</td><td><input type="text" data-k="3-5-b-n" inputmode="numeric" placeholder="출력된 값"></td><td><input type="text" data-k="3-5-b-lines" inputmode="numeric" placeholder="출력된 값"></td><td><input type="text" data-k="3-5-b-path"></td></tr>
   </table>
   <p>두 출력은 같은가? <select data-k="3-5-same"><option value=""></option><option>같다</option><option>다르다</option></select></p>
 

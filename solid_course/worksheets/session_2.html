@@ -112,16 +112,16 @@ def launch_all(birds: list[Bird], altitude: int = 5):
     <tbody>
       <tr><td><code>Sparrow</code></td>
         <td><select data-k="a21-sp-r"><option></option><option>약속 지킴</option><option>약속 깨짐</option><option>예외 발생</option></select></td>
-        <td><input type="text" data-k="a21-sp-h"></td><td><input type="text" data-k="a21-sp-w"></td></tr>
+        <td><input type="text" data-k="a21-sp-h" inputmode="numeric" placeholder="숫자 (예외면 없음)"></td><td><input type="text" data-k="a21-sp-w"></td></tr>
       <tr><td><code>Eagle</code></td>
         <td><select data-k="a21-ea-r"><option></option><option>약속 지킴</option><option>약속 깨짐</option><option>예외 발생</option></select></td>
-        <td><input type="text" data-k="a21-ea-h"></td><td><input type="text" data-k="a21-ea-w"></td></tr>
+        <td><input type="text" data-k="a21-ea-h" inputmode="numeric" placeholder="숫자 (예외면 없음)"></td><td><input type="text" data-k="a21-ea-w"></td></tr>
       <tr><td><code>Penguin</code></td>
         <td><select data-k="a21-pe-r"><option></option><option>약속 지킴</option><option>약속 깨짐</option><option>예외 발생</option></select></td>
-        <td><input type="text" data-k="a21-pe-h"></td><td><input type="text" data-k="a21-pe-w"></td></tr>
+        <td><input type="text" data-k="a21-pe-h" inputmode="numeric" placeholder="숫자 (예외면 없음)"></td><td><input type="text" data-k="a21-pe-w"></td></tr>
       <tr><td><code>RubberDuckToy</code></td>
         <td><select data-k="a21-du-r"><option></option><option>약속 지킴</option><option>약속 깨짐</option><option>예외 발생</option></select></td>
-        <td><input type="text" data-k="a21-du-h"></td><td><input type="text" data-k="a21-du-w"></td></tr>
+        <td><input type="text" data-k="a21-du-h" inputmode="numeric" placeholder="숫자 (예외면 없음)"></td><td><input type="text" data-k="a21-du-w"></td></tr>
     </tbody>
   </table>
   <p><span class="q-level fact">사실적</span> 네 마리 중 <b>가장 늦게 발견될 것 같은</b> 문제는 어느 새의 것인가요? 왜 그렇게 생각하나요?</p>
@@ -251,7 +251,7 @@ if __name__ == "__main__":
     </tr></tbody>
   </table>
 
-  <p><b>③ 어느 칸을 깼나?</b> 약속을 지키지 못한 새마다 깨진 칸에 표시하고 증거(출력)를 쓰세요. 깬 칸이 없으면 비워 두세요.</p>
+  <p><b>③ 어느 칸을 깼나?</b> 약속을 지키지 못한 새마다 깨진 칸에 표시하고 증거(출력)를 쓰세요. 깬 칸이 없으면 비워 두세요. (표에 있는 두 마리 모두 확인합니다.)</p>
   <table class="sort-table">
     <thead><tr><th>새</th><th>받는 조건</th><th>끝난 뒤 보장</th><th>항상 참</th><th>증거</th></tr></thead>
     <tbody>
@@ -324,7 +324,7 @@ if __name__ == "__main__":
   <div class="tags"><span class="t-type">코드 수정</span><span>10분</span><span>개인</span><span>목표 2-b</span></div>
 
   <p><b>① 읽기(2분).</b> <code>code/s2_office_machine.py</code>를 열고 실행하세요. 그리고 표를 채우세요.</p>
-  <p><span class="q-level fact">사실적</span> <code>OldPrinter</code>는 <code>Machine</code>의 메서드 4개 중 몇 개를 실제로 할 수 있나요? <input type="text" data-k="a24-count" aria-label="할 수 있는 메서드 수"> 개</p>
+  <p><span class="q-level fact">사실적</span> <code>OldPrinter</code>는 <code>Machine</code>의 메서드 4개 중 몇 개를 실제로 할 수 있나요? <input type="text" data-k="a24-count" aria-label="할 수 있는 메서드 수" inputmode="numeric" placeholder="숫자"> 개</p>
   <table class="sort-table">
     <thead><tr><th>쓰는 쪽(클라이언트) 함수</th><th>실제로 부르는 메서드</th><th>이 함수가 믿어야 하는 최소한의 약속</th></tr></thead>
     <tbody>
@@ -510,10 +510,10 @@ if __name__ == "__main__":
   <table class="sort-table">
     <thead><tr><th>시점</th><th>통과 수 (/4)</th><th>새로 본 메시지나 오류</th></tr></thead>
     <tbody>
-      <tr><td>처음</td><td><input type="text" data-k="a24-r0"></td><td><input type="text" data-k="a24-r0m"></td></tr>
-      <tr><td>TODO 1 뒤</td><td><input type="text" data-k="a24-r1"></td><td><input type="text" data-k="a24-r1m"></td></tr>
-      <tr><td>TODO 2 뒤</td><td><input type="text" data-k="a24-r2"></td><td><input type="text" data-k="a24-r2m"></td></tr>
-      <tr><td>TODO 3 뒤</td><td><input type="text" data-k="a24-r3"></td><td><input type="text" data-k="a24-r3m"></td></tr>
+      <tr><td>처음</td><td><input type="text" data-k="a24-r0" inputmode="numeric" placeholder="0~4"></td><td><input type="text" data-k="a24-r0m"></td></tr>
+      <tr><td>TODO 1 뒤</td><td><input type="text" data-k="a24-r1" inputmode="numeric" placeholder="0~4"></td><td><input type="text" data-k="a24-r1m"></td></tr>
+      <tr><td>TODO 2 뒤</td><td><input type="text" data-k="a24-r2" inputmode="numeric" placeholder="0~4"></td><td><input type="text" data-k="a24-r2m"></td></tr>
+      <tr><td>TODO 3 뒤</td><td><input type="text" data-k="a24-r3" inputmode="numeric" placeholder="0~4"></td><td><input type="text" data-k="a24-r3m"></td></tr>
     </tbody>
   </table>
   <details class="hint"><summary>힌트 1단계 (방향)</summary><p>Protocol 하나에는 "한 클라이언트가 함께 부르는 메서드"만 넣습니다. ①의 표 오른쪽 칸이 곧 Protocol 하나입니다.</p></details>
