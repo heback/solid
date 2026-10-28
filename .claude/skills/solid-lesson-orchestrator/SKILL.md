@@ -1,6 +1,6 @@
 ---
 name: solid-lesson-orchestrator
-description: 파이썬 기반 SOLID 원칙(SRP·OCP·LSP·ISP·DIP) 수업자료를 개념기반탐구학습지(3차시, 학생 활동 중심) + 교사 가이드 + 별도 정답 파일로 제작하는 오케스트레이터. SOLID/객체지향 수업자료·학습지·탐구활동·교사용 가이드·정답지 제작, 다시 실행, 재실행, 수정, 보완, 특정 차시/원칙만 다시, 이전 결과 기반 개선, 퀴즈만 업데이트 요청 시 반드시 사용.
+description: 파이썬 기반 SOLID 원칙(SRP·OCP·LSP·ISP·DIP) 수업자료를 개념기반탐구학습지(3차시, 학생 활동 중심) + 교사 가이드 + 별도 정답 파일로 제작하는 오케스트레이터. SOLID/객체지향 수업자료·학습지·탐구활동·교사용 가이드·정답지 제작, 다시 실행, 재실행, 수정, 보완, 특정 차시/원칙만 다시, 이전 결과 기반 개선, 퀴즈만 업데이트, 평가 문제 출제·시험 문항·힌트·모범 정답 요청 시 반드시 사용.
 ---
 
 # SOLID 수업자료 오케스트레이터
@@ -26,6 +26,9 @@ description: 파이썬 기반 SOLID 원칙(SRP·OCP·LSP·ISP·DIP) 수업자료
 
 ## Phase 5: 통합 — 리더
 `solid_course/index.html`을 수업용 진입점으로 개정(학생: 학습지 3종·사전 읽기, 교사: 가이드/정답 링크는 `teacher/` 안내로만). CLAUDE.md 이력 갱신.
+
+## Phase 6: 평가 문항 출제 (요청 시에만, 수업자료 제작과 독립)
+**실행 모드:** 서브 — quiz-designer(`solid-assessment-design`)가 `solid_course/assessment/{exam,hints,answers}.html`과 `code/`를 작성 → qa-reviewer가 코드 실행·정답 노출·정합성 검수 → 반려 시 재수정. 산출: `_workspace/06_assessment_*`는 필요 시 중간 메모.
 
 ## 데이터 흐름
 blueprint → 학습지·시작 코드·활동 인덱스·임시 풀이 → 가이드·정답·정답 코드 → QA 보고

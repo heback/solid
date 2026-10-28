@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SOLID 평가 정답</title>
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/teacher.css">
+<script src="../assets/highlight.js" defer></script>
+<style>
+  td code, th code{white-space:nowrap}
+  .k{font-size:13px;color:var(--muted)}
+  h2 small,h3 small{font-weight:400;color:var(--muted);font-size:14px}
+  .tot td{font-weight:700}
+  details.code>summary{cursor:pointer;color:var(--accent);margin:8px 0}
+  @media print{
+    header.top nav,.toc{display:none}
+    body{font-size:12.5px;line-height:1.55;background:#fff;color:#000}
+    h2.qa{break-before:page}
+    .answer,.misc,table,pre{break-inside:avoid}
+    pre code{font-size:10.5px}
+    details.code{display:block}
+  }
+</style>
+</head>
+<body>
+<div class="teacher-banner">교사 전용 · 모범 정답 및 채점 기준 · 학생 화면 공유·배포 금지</div>
+<header class="top">
+  <nav>
+    <a href="exam.html">평가 문제(학생용)</a>
+    <a href="hints.html">힌트(학생용)</a>
+    <a href="../teacher/answer_key.html">학습지 정답</a>
+    <a href="../index.html">목차</a>
+  </nav>
+  <h1>SOLID 원리 평가 · 모범 정답과 채점 기준</h1>
+  <p class="lead">문항 번호와 소문항 번호는 <a href="exam.html">exam.html</a>과 1:1로 대응합니다. 서술형은 <b>필수 요소 체크리스트</b>(요소당 배점)로, 구현형은 <b>공개 테스트 + 채점용 추가 케이스 + 구조 점검</b>으로 채점합니다. 정답 코드는 <code>assessment/code/solutions/</code>에 있으며 모두 assert로 검증되어 있습니다.</p>
+  <div class="toc"><a href="#common">공통 원칙</a><a href="#map">문항 설계표</a><a href="#a1">문항 1</a><a href="#a2">문항 2</a><a href="#a3">문항 3</a><a href="#a4">문항 4</a><a href="#a5">문항 5</a><a href="#verify">검증 방법</a></div>
+</header>
+
+<main>
+
+<section id="common">
+<h2>공통 채점 원칙</h2>
+<ul>
+  <li>원칙 이름만 맞히고 근거가 없으면 원칙 점수만 줍니다. <b>근거</b>(누가 바꾸는가, 무엇을 믿는가, 누가 누구를 아는가)가 맞고 원칙 이름이 틀리면 근거 점수는 줍니다.</li>
+  <li>서술형은 표현이 달라도 <b>필수 요소</b>가 들어 있으면 인정합니다. 같은 요소를 여러 번 써도 한 번만 셉니다.</li>
+  <li>구현형의 <b>우회 오답</b>(공개 테스트는 통과하지만 구체 클래스 이름으로 분기하거나 결과를 그대로 적은 답)은 문항별 감점 규칙을 따릅니다. 공개 테스트 통과 여부만으로 만점을 주지 않습니다.</li>
+  <li>실행 결과 예측(문항 3 (1))의 정답은 <b>실제 실행 결과</b>입니다(아래 출력은 Python 3.12·3.13에서 같음).</li>
+</ul>
+</section>
+
+<section id="map">
+<h2>문항 설계표</h2>
+<table>
+  <thead><tr><th>문항</th><th>능력(주/부)</th><th>원칙</th><th>도메인</th><th>난이도</th><th>배점</th><th>소문항 배점</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td>개념 이해</td><td>SRP·OCP·LSP·ISP·DIP</td><td>온라인 강의 수강신청</td><td>쉬움</td><td>15</td><td>(1) 10 · (2) 5</td></tr>
+    <tr><td>2</td><td>코드 분석</td><td>SRP·DIP</td><td>서버 로그 수집</td><td>보통</td><td>20</td><td>(1) 6 · (2) 8 · (3) 6</td></tr>
+    <tr><td>3</td><td>코드 분석</td><td>LSP (부: OCP)</td><td>게임 캐릭터 스킬</td><td>보통</td><td>20</td><td>(1) 8 · (2) 8 · (3) 4</td></tr>
+    <tr><td>4</td><td>구현 (부: 개념)</td><td>OCP</td><td>결제 수수료·영수증</td><td>보통</td><td>20</td><td>(1) 10 · (2) 5 · (3) 5</td></tr>
+    <tr><td>5</td><td>코드 분석 + 구현</td><td>ISP·DIP</td><td>캠퍼스 배달 로봇</td><td>어려움</td><td>25</td><td>(1) 8 · (2) 14 · (3) 3</td></tr>
+    <tr class="tot"><td colspan="5">합계</td><td>100</td><td>개념 15+5 / 분석 20+20+8 / 구현 15+14 (소문항 기준)</td></tr>
+  </tbody>
+</table>
+<table>
+  <thead><tr><th>원칙</th><th>직접 다루는 문항</th></tr></thead>
+  <tbody>
+    <tr><td>SRP</td><td>1-A, 2(1)(2)</td></tr>
+    <tr><td>OCP</td><td>1-B, 3(3), 4 전체</td></tr>
+    <tr><td>LSP</td><td>1-C, 3 전체</td></tr>
+    <tr><td>ISP</td><td>1-D, 5(1)a, 5(2)</td></tr>
+    <tr><td>DIP</td><td>1-E, 2(2)c·(3), 5(1)b, 5(2)(3)</td></tr>
+  </tbody>
+</table>
+</section>
+
+<!-- ============================================================ A1 -->
+<h2 class="qa" id="a1">문항 1. 상황에서 원칙 판단하기 <small>[개념 이해] [SRP·OCP·LSP·ISP·DIP] · 15점 · 쉬움</small></h2>
+<table>
+  <thead><tr><th>측정 요소</th><th>소문항</th></tr></thead>
+  <tbody>
+    <tr><td>① 낯선 상황에서 문제의 원인(변경 이유·확장 지점·약속·인터페이스 크기·의존 방향)을 찾아 원칙에 연결한다</td><td>(1)</td></tr>
+    <tr><td>② 비슷해 보이는 원칙(LSP와 ISP, SRP와 DIP)을 판단 기준으로 구별한다</td><td>(1) C·D, A·E</td></tr>
+    <tr><td>③ 변경 가능성을 근거로 과잉 적용 여부를 판단한다</td><td>(2)</td></tr>
+  </tbody>
+</table>
+
+<h3>(1) 모범 답 <small>10점 · 각 2점(원칙 1 + 근거 1)</small></h3>
+<table>
+  <thead><tr><th>상황</th><th>원칙</th><th>모범 근거(근거 1점의 필수 요소)</th><th>허용 / 감점</th></tr></thead>
+  <tbody>
+    <tr><td>A</td><td><b>SRP</b></td><td>서로 다른 세 팀(학사·재무·홍보)이 각자의 이유로 한 클래스를 바꾸므로 변경 이유가 셋이다. <i>필수: "요청자/변경 이유가 여럿"</i></td><td>허용: "책임이 세 개". 감점: "기능이 많아서"만 씀(변경 이유와 연결 안 됨 → 근거 0)</td></tr>
+    <tr><td>B</td><td><b>OCP</b></td><td>새 배정 정책을 추가할 때마다 기존 함수의 if-elif를 고쳐야 하므로 확장에 닫혀 있다. <i>필수: "새 종류 추가 시 기존 코드 수정"</i></td><td>허용: "정책을 클래스로 분리해야 한다"만 써도 수정 문제를 함의하면 인정</td></tr>
+    <tr><td>C</td><td><b>LSP</b></td><td>부모 <code>Course.enroll</code>의 약속(True/False 반환)을 믿은 화면이 자식 <code>AuditCourse</code>의 예외 때문에 멈췄으므로 자식이 부모 자리를 대신하지 못한다. <i>필수: "부모 약속을 자식이 깸 / 부모를 믿은 코드가 깨짐"</i></td><td>감점: ISP(예외를 던진다는 겉모습만 봄) → 원칙 0, 근거가 "약속을 깸"이면 근거 1</td></tr>
+    <tr><td>D</td><td><b>ISP</b></td><td>조교 클래스가 쓰지 않는 메서드 세 개까지 가진 큰 인터페이스에 묶여, 쓰지 않는 메서드의 변경 때문에 다시 고쳐야 한다. <i>필수: "쓰지 않는 메서드를 강요 / 인터페이스가 너무 큼"</i></td><td>감점: LSP → 원칙 0. "억지로 채움" 때문에 LSP도 함께 언급하고 주된 원인을 인터페이스 크기로 쓴 경우는 만점</td></tr>
+    <tr><td>E</td><td><b>DIP</b></td><td>대기 규칙(상위 정책)이 구체 DB 클래스를 직접 만들어 의존하므로 저장소를 바꾸거나 가짜로 테스트할 수 없다. <i>필수: "구체 클래스를 직접 생성/의존" 또는 "추상화에 의존하지 않음"</i></td><td>감점: SRP("DB 일까지 해서") → 원칙 0. 단, 근거에 "직접 만든다"가 있으면 근거 1</td></tr>
+  </tbody>
+</table>
+
+<h3>(2) 과잉 적용 판단 <small>5점</small></h3>
+<div class="answer"><h4>모범 답</h4>
+<p><b>반대</b>한다. 이 스크립트는 3년간 바뀐 적이 없고 입력·출력 방식이 늘어날 계획도 없어, 나눠서 얻는 <b>변경·확장의 이점이 거의 없다</b>. 대신 30줄 코드가 클래스 6개로 늘어 읽고 고치기 어려워진다. 다만 CSV 말고 다른 입력을 받거나 출력 형식이 여러 가지가 되는 <b>실제 변경 요구가 생기면 그때</b> 그 부분부터 나눈다.</p></div>
+<table class="rubric">
+  <thead><tr><th>필수 요소</th><th>배점</th><th>인정 범위</th></tr></thead>
+  <tbody>
+    <tr><td>판단 명시</td><td>1</td><td>반대 또는 조건부 찬성. 무조건 찬성은 이 요소 0이지만, 근거 요소가 맞으면 해당 점수는 준다</td></tr>
+    <tr><td>변경/확장 근거</td><td>2</td><td>"바뀐 적·바뀔 계획이 없어 분리의 이점이 없다", "변경 이유가 하나뿐". 단순히 "작아서"만 쓰면 1</td></tr>
+    <tr><td>비용 인식</td><td>1</td><td>클래스·파일 증가, 읽기 어려움, 유지보수 부담, 과설계</td></tr>
+    <tr><td>분리 시점 조건</td><td>1</td><td>"새 입력 형식이 생기면", "두 번째 출력이 필요해지면" 등 구체적 계기</td></tr>
+  </tbody>
+</table>
+<div class="misc"><b>흔한 오답</b>: "SOLID는 항상 지켜야 하므로 찬성"(원칙을 목적이 아닌 규칙으로 이해) / "클래스가 많으면 느려져서 반대"(성능은 이 판단의 핵심 근거가 아님 → 비용 요소 0, 변경 근거 없으면 1점 이하).</div>
+
+<!-- ============================================================ A2 -->
+<h2 class="qa" id="a2">문항 2. 로그 수집기의 변경 이유와 영향 범위 <small>[코드 분석] [SRP·DIP] · 20점 · 보통</small></h2>
+<table>
+  <thead><tr><th>측정 요소</th><th>소문항</th></tr></thead>
+  <tbody>
+    <tr><td>① 코드에서 서로 다른 변경 이유를 찾아 위치(줄 번호)로 근거를 댄다</td><td>(1)</td></tr>
+    <tr><td>② 변경 요청이 코드의 어디까지 영향을 주는지 추적한다(실제 실행 결과 포함)</td><td>(2)</td></tr>
+    <tr><td>③ 구체 도구에 직접 의존하는 문제를 DIP 용어로 설명하고 개선 구조를 설계한다</td><td>(2)c, (3)</td></tr>
+  </tbody>
+</table>
+
+<h3>(1) 변경 이유 3가지 <small>6점 · 각 2점(이유 1 + 줄 번호 1)</small></h3>
+<table>
+  <thead><tr><th>변경 이유(요청자)</th><th>줄 번호</th><th>인정 범위</th></tr></thead>
+  <tbody>
+    <tr><td>로그 형식(로그를 보내는 서버·수집 에이전트 담당)</td><td>5~9 (핵심 8)</td><td>"파싱 규칙", "입력 형식"</td></tr>
+    <tr><td>저장 위치·방식(인프라/저장소 담당)</td><td>14~17 (핵심 15)</td><td>"파일 경로", "저장 매체"</td></tr>
+    <tr><td>요약 문장 형식(운영 회의 담당)</td><td>19~22 (핵심 22)</td><td>"보고서 형식", "출력 문장"</td></tr>
+  </tbody>
+</table>
+<p class="k">허용: 네 번째 이유로 "오류로 볼 기준(11~12, 예: WARN도 포함하자는 보안 담당)"을 위 셋 중 하나 대신 쓰면 인정. 줄 번호는 핵심 줄이 범위 안에 있으면 인정.</p>
+
+<h3>(2) 변경 영향 추적 <small>8점</small></h3>
+<p>a) 실제 실행 결과(코드 수정 없이 새 형식 한 줄을 <code>collect()</code>에 넣음):</p>
+<pre><code class="out">ValueError: too many values to unpack (expected 3)</code></pre>
+<table class="rubric">
+  <thead><tr><th>요청</th><th>필수 요소(배점)</th><th>모범 답</th></tr></thead>
+  <tbody>
+    <tr><td>a) 로그 형식 변경 [3]</td><td>결과: ValueError로 수집 중단(1) / 고칠 줄: 8(1) / 영향: <code>entries</code>가 채워지지 않아 <code>save()</code>·<code>summary()</code>가 오류 로그를 전혀 반영하지 못함(1). "save·summary도 예외가 난다", "프로그램이 멈춰 저장·요약까지 가지 못한다", "빈 결과가 나온다" 모두 인정</td><td>줄 8에서 조각 4개를 변수 3개에 나누려다 <code>ValueError</code>가 나서 수집이 멈춘다. <code>save()</code>와 <code>summary()</code>는 같은 <code>entries</code>를 재료로 쓰므로 예외를 잡지 않으면 프로그램이 거기서 멈춰 저장·요약까지 가지 못하고, 잡고 넘어가도 entries가 비어 있어 빈 파일과 "오류 0건 / 서버 "만 나온다(실제 확인). 형식 하나 바뀐 것이 저장·요약까지 번진다.</td></tr>
+    <tr><td>b) 네트워크 저장 [2]</td><td>고칠 메서드: <code>save</code>(14~17)(1) / 재확인 범위: 같은 클래스 전체(수집·요약 포함)(1)</td><td><code>save()</code>만 고치면 되지만 같은 클래스·같은 파일이라 수집과 요약 기능까지 다시 테스트·배포해야 한다.</td></tr>
+    <tr><td>c) 파일 없이 save 테스트 [3]</td><td>불가능(1) / 근거 줄 15: <code>save()</code> 안에서 <code>open()</code>을 직접 호출(1) / "무엇을 쓸지"와 "어디에 쓸지"가 분리되지 않아 가짜 저장소를 넣을 수 없음(1). <code>unittest.mock.patch("builtins.open")</code>으로 "가능하다"고 쓴 답은, 그것이 구조가 아니라 전역 <code>open</code>을 가로채는 우회라는 점(줄 15의 직접 호출 때문)을 함께 지적하면 판단 1점 인정</td><td>지금은 불가능하다. 줄 15에서 실제 파일을 직접 열기 때문에 저장 대상을 바꿔 끼울 방법이 없다.</td></tr>
+  </tbody>
+</table>
+<div class="misc"><b>흔한 오답</b>: a)에서 "<code>message</code>에 '연결 시간 초과'가 아니라 다른 값이 들어간다"(조용히 잘못 들어간다고 예측 → 결과 요소 0; 실제로는 예외로 멈춤) / b)에서 "<code>save</code>만 고치면 끝"(재확인 범위 요소 0) / c)에서 "임시 파일을 쓰면 된다"(파일 없이라는 조건 위반 → 불가능 판단 0, 근거는 별도 채점).</div>
+
+<h3>(3) DIP 설명과 개선 구조 <small>6점</small></h3>
+<div class="answer"><h4>모범 답</h4>
+<p>"오류 줄을 골라 내보낸다"는 <b>상위 정책</b>이 "파일을 연다"는 <b>하위 세부</b>에 직접 의존하고 있어, 저장 방식을 바꾸거나 가짜 저장소로 시험하려면 상위 정책 코드를 고쳐야 한다. 둘 사이에 <code>LogStorage</code>라는 <b>추상화</b>를 두고, 상위 정책은 추상화만 알며 구체 저장소는 밖에서 주입받게 한다.</p>
+<p>구조: <code>LogParser</code>(형식 해석) / <code>SummaryFormatter</code>(요약 문장) / <code>LogStorage</code>(추상: <code>write(lines)</code>) ← <code>FileLogStorage</code>, <code>MemoryLogStorage</code>(테스트용) / <code>LogPipeline</code>(흐름 조립, 생성자로 저장소 주입).</p></div>
+<table class="rubric">
+  <thead><tr><th>필수 요소</th><th>배점</th><th>인정 범위</th></tr></thead>
+  <tbody>
+    <tr><td>상위 정책·하위 세부를 바르게 지목</td><td>2</td><td>상위 = 오류 선별·저장 결정(또는 수집기의 흐름), 하위 = 파일 열기·쓰기. 둘을 뒤바꾸면 0</td></tr>
+    <tr><td>추상화를 사이에 두고 양쪽이 그것에 의존</td><td>2</td><td>추상 클래스/프로토콜/인터페이스 모두 인정. "파일 클래스를 따로 뺀다"만 쓰고 추상화가 없으면 1</td></tr>
+    <tr><td>주입(구체 저장소를 밖에서 넣음)</td><td>1</td><td>생성자 인자·메서드 인자·설정 모두 인정</td></tr>
+    <tr><td>SRP 분리(형식 해석·요약을 다른 클래스로)</td><td>1</td><td>(1)에서 찾은 이유와 일치하게 나눴으면 인정. 이름은 자유</td></tr>
+  </tbody>
+</table>
+<details class="code"><summary>정답 예시 코드 열기 (<code>code/solutions/q2_log_collector.py</code>)</summary>
+<pre><code>"""Q2 정답 예시 코드(교사용): 서버 로그 수집기를 SRP·DIP에 맞게 나눈 한 가지 구조 (Python 3.12+)
+
+Q2는 분석 문항이라 학생이 코드를 제출하지 않는다. 이 파일은 (3) 서술형 '개선 구조'의
+모범 예시이며, 시작 코드와 결과가 같음을 assert로 확인한다.
+
+실행: python3 q2_log_collector.py   -&gt; 마지막 줄 "Q2 정답 코드: 모든 assert 통과"
+"""
+import os
+import tempfile
+from abc import ABC, abstractmethod
+
+
+class LogParser:
+    """변경 이유: 로그 형식(수집 에이전트 팀)."""
+    def parse(self, raw_text):
+        entries = []
+        for row in raw_text.strip().splitlines():
+            level, server, message = row.split("|")
+            entries.append((level.strip(), server.strip(), message.strip()))
+        return entries
+
+
+class LogStorage(ABC):
+    """저장 위치에 대한 추상화. 상위 정책(LogPipeline)은 이것만 안다."""
+    @abstractmethod
+    def write(self, lines): ...
+
+
+class FileLogStorage(LogStorage):
+    """변경 이유: 저장 위치(인프라 팀). 파일 열기는 여기에만 있다."""
+    def __init__(self, path):
+        self.path = path
+
+    def write(self, lines):
+        with open(self.path, "w", encoding="utf-8") as f:
+            for line in lines:
+                f.write(line + "\n")
+
+
+class MemoryLogStorage(LogStorage):
+    """테스트용 저장소: 파일 없이 검증할 수 있다(DIP의 이점)."""
+    def __init__(self):
+        self.lines = []
+
+    def write(self, lines):
+        self.lines = list(lines)
+
+
+class SummaryFormatter:
+    """변경 이유: 회의용 요약 문장 형식(운영팀)."""
+    def format(self, errors):
+        servers = sorted({server for _, server, _ in errors})
+        return f"오류 {len(errors)}건 / 서버 {', '.join(servers)}"
+
+
+class LogPipeline:
+    """조립·흐름만 담당. 구체 저장소를 직접 만들지 않고 주입받는다."""
+    def __init__(self, parser: LogParser, storage: LogStorage, formatter: SummaryFormatter):
+        self.parser, self.storage, self.formatter = parser, storage, formatter
+        self.entries = []
+
+    def collect(self, raw_text):
+        self.entries.extend(self.parser.parse(raw_text))
+
+    def errors(self):
+        return [e for e in self.entries if e[0] == "ERROR"]
+
+    def save(self):
+        self.storage.write(f"{server}: {message}" for _, server, message in self.errors())
+
+    def summary(self):
+        return self.formatter.format(self.errors())
+
+
+RAW = """
+INFO|web-1|요청 처리 완료
+ERROR|db-2|연결 시간 초과
+ERROR|web-1|응답 코드 500
+WARN|web-2|느린 응답
+ERROR|db-2|디스크 부족
+"""
+
+if __name__ == "__main__":
+    # 1) 메모리 저장소로 파일 없이 검증
+    mem = MemoryLogStorage()
+    p = LogPipeline(LogParser(), mem, SummaryFormatter())
+    p.collect(RAW)
+    p.save()
+    assert p.summary() == "오류 3건 / 서버 db-2, web-1"
+    assert mem.lines == ["db-2: 연결 시간 초과", "web-1: 응답 코드 500", "db-2: 디스크 부족"]
+
+    # 2) 파일 저장소로 바꿔도 LogPipeline은 그대로 — 시작 코드와 같은 파일 내용
+    out = os.path.join(tempfile.gettempdir(), "q2_errors_solution.txt")
+    p2 = LogPipeline(LogParser(), FileLogStorage(out), SummaryFormatter())
+    p2.collect(RAW)
+    p2.save()
+    with open(out, encoding="utf-8") as f:
+        assert f.read() == "db-2: 연결 시간 초과\nweb-1: 응답 코드 500\ndb-2: 디스크 부족\n"
+
+    # 3) 시작 코드와 결과 비교
+    import importlib.util, pathlib
+    spec = importlib.util.spec_from_file_location(
+        "q2_start", pathlib.Path(__file__).resolve().parent.parent / "q2_log_collector.py")
+    start = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(start)
+    old = start.ServerLogCollector(os.path.join(tempfile.gettempdir(), "q2_errors_old.txt"))
+    old.collect(RAW)
+    assert old.summary() == p.summary()
+
+    # 4) 상위 정책이 구체 저장소를 직접 만들지 않는지(구조 점검)
+    import inspect
+    src = inspect.getsource(LogPipeline)
+    assert "open(" not in src and "FileLogStorage" not in src
+    print("Q2 정답 코드: 모든 assert 통과")</code></pre>
+</details>
+
+<!-- ============================================================ A3 -->
+<h2 class="qa" id="a3">문항 3. 스킬의 약속과 자동 전투 <small>[코드 분석] [LSP] · 20점 · 보통</small></h2>
+<table>
+  <thead><tr><th>측정 요소</th><th>소문항</th></tr></thead>
+  <tbody>
+    <tr><td>① 다형성 호출(<code>super()</code> 포함)의 실행 결과를 정확히 추적한다</td><td>(1)</td></tr>
+    <tr><td>② 하위 클래스가 부모의 약속(사전 조건·사후 조건·불변 조건)을 지키는지 근거를 들어 판정한다. "다르게 동작함 ≠ 위반"을 구별한다</td><td>(2)</td></tr>
+    <tr><td>③ 호출부의 타입 분기가 LSP 위반을 덮고 OCP를 깨는 이유를 설명한다</td><td>(3)</td></tr>
+  </tbody>
+</table>
+
+<h3>(1) 실행 결과 <small>8점 · 스킬 줄마다 2점</small></h3>
+<p>실제 출력(<code>python3 code/q3_game_skills.py</code>):</p>
+<pre><code class="out">화염구  피해  35 | 보스  65 | 린 hp 40 mp 15
+흡수   피해 -15 | 보스  80 | 린 hp 55 mp 7
+광폭   피해  40 | 보스  40 | 린 hp 43 mp 7
+베기   피해  10 | 보스  30 | 린 hp 43 mp 7
+남은 보스 hp: 30</code></pre>
+<table>
+  <thead><tr><th>출력 순서</th><th>피해</th><th>보스 hp</th><th>린 hp</th><th>린 mp</th><th>계산 과정</th></tr></thead>
+  <tbody>
+    <tr><td>화염구</td><td>35</td><td>65</td><td>40</td><td>15</td><td><code>super().use</code> 전에 mp 25 ≥ 20 → 보너스 5. 피해 30+5</td></tr>
+    <tr><td>흡수</td><td>−15</td><td>80</td><td>55</td><td>7</td><td>음수 피해라 보스 hp가 <b>늘어남</b>, 린 hp +15</td></tr>
+    <tr><td>광폭</td><td>40</td><td>40</td><td>43</td><td>7</td><td>mp 7 &lt; 12 → hp 12 소모, 피해 20×2</td></tr>
+    <tr><td>베기</td><td>10</td><td>30</td><td>43</td><td>7</td><td>cost 0이라 mp 그대로</td></tr>
+    <tr><td>남은 보스 hp</td><td colspan="5">30 (베기 줄과 일치해야 베기 줄 2점)</td></tr>
+  </tbody>
+</table>
+<p class="k">채점: 한 줄의 네 값이 모두 맞으면 2점, 한 값만 틀리면 1점. 앞 줄의 실수가 뒤로 이어진 경우(예: 화염구 보너스를 빠뜨려 이후 보스 hp가 모두 5씩 큼), 뒤 줄은 학생 값 기준으로 계산이 맞으면 인정(연쇄 감점 없음).</p>
+<div class="misc"><b>흔한 오답과 매력 요인</b>: 화염구 피해 30(보너스 확인이 <code>super().use()</code> <b>전</b>이라는 순서를 놓침; 사용 후 mp 15만 보고 보너스 없다고 판단) / 흡수 뒤 보스 hp 50(음수 피해를 "15 피해"로 읽음) / 광폭 피해 20·린 hp 55(mp 부족 갈래를 놓쳐 부모 동작으로 추적) / 광폭 뒤 mp −5(hp가 아니라 mp를 깎는다고 오해).</div>
+
+<h3>(2) 약속 위반 판정 <small>8점</small></h3>
+<table class="rubric">
+  <thead><tr><th>클래스</th><th>모범 답</th><th>배점·필수 요소</th></tr></thead>
+  <tbody>
+    <tr><td>Fireball</td><td><b>지킴</b>. 피해가 늘어나도 0 이상의 int이고, mp는 <code>super().use()</code>를 통해 정확히 cost만큼 줄며, mp 부족 시 0을 돌려주고(<code>damage &gt; 0</code>이 아니면 0) hp를 건드리지 않는다. 약속의 범위 안에서 다르게 동작할 뿐이다.</td><td>2 = 지킴 판정(1) + "결과가 약속 범위 안"이라는 근거(1). <b>매력 오답</b>: "부모와 결과가 달라서 위반" → 0</td></tr>
+    <tr><td>Drain</td><td><b>어김: ②, ③ (그리고 ①)</b>. <code>return -self.power</code>로 음수 피해(②), <code>hero.hp += self.power</code>로 hp 변경(③), mp 검사 없이 <code>hero.mp -= self.cost</code>라 mp가 모자라도 음수까지 깎음(①, 이번 실행에서는 드러나지 않음).</td><td>3 = ②와 근거(1) + ③과 근거(1) + ①을 찾음(1). ①은 실행에 드러나지 않는 잠재 위반이라 변별 요소</td></tr>
+    <tr><td>Berserk</td><td><b>어김: ①, ③</b>. mp가 모자라면 아무것도 바꾸지 않고 0을 돌려줘야 하는데, <code>hero.hp -= self.cost</code> 후 <code>self.power * 2</code>를 돌려준다(①). 그 결과 hp가 바뀐다(③). mp가 충분할 때는 부모와 같아 약속을 지킨다.</td><td>3 = ①과 근거(1) + ③과 근거(1) + "mp 부족 상황에서만 깨짐"을 구분(1). mp 부족 갈래에서 mp가 cost만큼 줄지 않는 점을 ②로 적은 경우 감점하지 않으며, 근거가 같으면 ① 근거로 인정</td></tr>
+  </tbody>
+</table>
+<p class="k">검증: 정답 코드의 <code>contract_violations()</code>가 실제 객체로 시험한 결과도 Fireball ∅, Drain {①②③}, Berserk {①③}입니다.</p>
+
+<h3>(3) 호출부 타입 분기 <small>4점</small></h3>
+<div class="answer"><h4>모범 답</h4>
+<p><code>auto_battle</code>이 <code>Drain</code>이라는 구체 자식을 알아야 하므로, 약속을 깨는 스킬이 새로 생길 때마다 전투 코드를 또 고쳐야 한다(OCP 위반, LSP 위반을 호출부에 떠넘김). 또 <code>Drain</code>이 hp를 바꾸는 문제(③)는 그대로 남는다. 대안: 회복처럼 약속이 다른 동작은 <code>Skill</code>을 상속하지 않는 별도 계층(예: <code>RecoverySkill.apply()</code>)으로 떼어 내거나, <code>Drain</code>을 약속 안에서 동작하도록 고친다.</p></div>
+<table class="rubric">
+  <thead><tr><th>필수 요소</th><th>배점</th><th>인정 범위</th></tr></thead>
+  <tbody>
+    <tr><td>호출부가 구체 타입을 알게 됨 → 새 스킬마다 수정</td><td>2</td><td>"OCP 위반", "if가 계속 늘어남", "부모만 믿고 쓸 수 없게 됨" 중 하나와 이유</td></tr>
+    <tr><td>대안</td><td>2</td><td>별도 계층/인터페이스로 분리, 약속에 맞게 자식 수정, 약속 자체를 재설계해 모든 스킬이 따르게 함(예: 피해·회복을 함께 돌려주는 결과 객체). "<code>max(0, damage)</code>로 감싼다"는 1점(②만 가리고 ③은 남음)</td></tr>
+  </tbody>
+</table>
+<details class="code"><summary>정답 코드 열기 (<code>code/solutions/q3_game_skills.py</code>: 약속 검사기 + 고친 구조 + 출력 고정 assert)</summary>
+<pre><code>"""Q3 정답 코드(교사용): 스킬 약속 검사기와 LSP를 지키도록 고친 구조 (Python 3.12+)
+
+1) contract_violations(): Skill 약속 ①②③을 실제로 시험해 어긴 항목을 돌려준다.
+2) 시작 코드의 Fireball은 약속을 지키고, Berserk·Drain은 어긴다는 것을 assert로 확인.
+3) 고친 구조: Berserk는 약속 안에서 동작, Drain은 Skill이 아닌 별도 RecoverySkill 계층으로.
+4) 시작 코드의 실제 출력(문항 (1) 정답)을 그대로 재현해 assert로 고정.
+
+실행: python3 q3_game_skills.py   -&gt; 마지막 줄 "Q3 정답 코드: 모든 assert 통과"
+"""
+import contextlib
+import importlib.util
+import io
+import pathlib
+
+spec = importlib.util.spec_from_file_location(
+    "q3_start", pathlib.Path(__file__).resolve().parent.parent / "q3_game_skills.py")
+start = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(start)
+Hero, Skill = start.Hero, start.Skill
+
+
+def contract_violations(skill):
+    """약속 ①②③ 중 어긴 번호 집합. mp 부족/충분 두 상황을 모두 시험한다."""
+    broken = set()
+    # 상황 A: mp 부족
+    h = Hero("t", hp=50, mp=skill.cost - 1) if skill.cost &gt; 0 else None
+    if h is not None:
+        r = skill.use(h)
+        if r != 0 or h.mp != skill.cost - 1:
+            broken.add("①")
+        if h.hp != 50:
+            broken.add("③")
+    # 상황 B: mp 충분(보너스 조건 둘 다)
+    for mp in (skill.cost, skill.cost + 30):
+        h = Hero("t", hp=50, mp=mp)
+        r = skill.use(h)
+        if not isinstance(r, int) or r &lt; 0 or h.mp != mp - skill.cost:
+            broken.add("②")
+        if h.hp != 50:
+            broken.add("③")
+    return broken
+
+
+# ---- 고친 구조 ----------------------------------------------------------
+class Berserk(Skill):
+    """mp가 충분할 때만 발동, 대신 피해 2배. 약속 ①②③ 모두 지킴."""
+    def use(self, hero):
+        if hero.mp &lt; self.cost:
+            return 0
+        hero.mp -= self.cost
+        return self.power * 2
+
+
+class RecoverySkill:
+    """회복 계열은 '피해를 주는 스킬'의 약속과 다르므로 별도 계층(별도 약속)으로 둔다.
+    약속: mp가 cost 이상이면 cost만큼 줄이고 hp를 회복, 회복량(0 이상)을 돌려준다."""
+    def __init__(self, name, cost, amount):
+        self.name, self.cost, self.amount = name, cost, amount
+
+    def apply(self, hero):
+        if hero.mp &lt; self.cost:
+            return 0
+        hero.mp -= self.cost
+        hero.hp += self.amount
+        return self.amount
+
+
+class Drain(RecoverySkill):
+    pass
+
+
+if __name__ == "__main__":
+    # (2) 위반 판정 근거: 실제 검사 결과
+    assert contract_violations(start.Fireball("화염구", 10, 30)) == set()
+    assert contract_violations(start.Skill("베기", 0, 10)) == set()
+    assert contract_violations(start.Berserk("광폭", 12, 20)) == {"①", "③"}
+    assert contract_violations(start.Drain("흡수", 8, 15)) == {"①", "②", "③"}
+
+    # (3) 고친 구조는 약속을 지키고, Drain은 더 이상 Skill이 아니다
+    assert contract_violations(Berserk("광폭", 12, 20)) == set()
+    assert not isinstance(Drain("흡수", 8, 15), Skill)
+    h = Hero("린", 40, 7)
+    assert Drain("흡수", 8, 15).apply(h) == 0 and (h.hp, h.mp) == (40, 7)
+    h = Hero("린", 40, 25)
+    assert Drain("흡수", 8, 15).apply(h) == 15 and (h.hp, h.mp) == (55, 17)
+
+    # (1) 시작 코드의 실제 출력(문항 정답) 고정
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        hero = Hero("린", hp=40, mp=25)
+        skills = [start.Fireball("화염구", 10, 30), start.Drain("흡수", 8, 15),
+                  start.Berserk("광폭", 12, 20), start.Skill("베기", 0, 10)]
+        left = start.auto_battle(hero, skills, boss_hp=100)
+    lines = buf.getvalue().splitlines()
+    assert left == 30
+    assert [l.split("|")[1].strip() for l in lines] == ["보스  65", "보스  80", "보스  40", "보스  30"]
+    assert lines[1].endswith("hp 55 mp 7") and lines[2].endswith("hp 43 mp 7")
+    print("Q3 정답 코드: 모든 assert 통과")</code></pre>
+</details>
+
+<!-- ============================================================ A4 -->
+<h2 class="qa" id="a4">문항 4. 결제 수단을 고치지 않고 늘리기 <small>[구현] [OCP] · 20점 · 보통</small></h2>
+<table>
+  <thead><tr><th>측정 요소</th><th>소문항</th></tr></thead>
+  <tbody>
+    <tr><td>① 종류별 분기를 추상 클래스와 다형성으로 바꾸는 리팩터링을 구현한다</td><td>(1)</td></tr>
+    <tr><td>② 기존 클래스를 고치지 않고 새 하위 클래스만 추가해 기능을 넓힌다</td><td>(2)</td></tr>
+    <tr><td>③ 자신의 변경을 "고친 곳/추가한 곳"으로 구분해 OCP와 연결한다</td><td>(3)</td></tr>
+  </tbody>
+</table>
+
+<h3>(1)(2) 채점 기준 <small>15점</small></h3>
+<table class="rubric">
+  <thead><tr><th>항목</th><th>배점</th><th>확인 방법</th></tr></thead>
+  <tbody>
+    <tr><td>공개 테스트 t1·t2(기존 세 수단)</td><td>3</td><td>t1 통과 1 + t2 통과 2(t2 안의 두 assert 중 하나라도 실패하면 t2 0)</td></tr>
+    <tr><td>t3: <code>PaymentMethod</code>가 추상(<code>ABC</code>+<code>@abstractmethod fee</code>), 세 수단이 상속</td><td>3</td><td>추상 메서드 없이 ABC만 상속해 <code>isabstract</code>가 False이면 t3 실패 → 1점만</td></tr>
+    <tr><td><code>pay()</code>가 <code>method.fee(amount)</code>와 <code>method.label</code>만 사용(분기 없음), t5 통과</td><td>4</td><td>코드 읽기 + 아래 구조 점검</td></tr>
+    <tr><td>(2) <code>PointPayment</code>: t4 통과 + 채점용 경계 케이스</td><td>5</td><td>t4 통과 3 + 추가 케이스(10000·10099·10100원) 모두 맞으면 2</td></tr>
+  </tbody>
+</table>
+<div class="answer"><h4>채점용 추가 케이스(학생 비공개)</h4>
+<ul>
+  <li><code>pay(10000, PointPayment())</code> → <code>"포인트 결제 10000원 + 수수료 100원 = 10100원"</code> (1%가 정확히 최소값인 경계)</li>
+  <li><code>pay(10099, PointPayment())</code> → 수수료 100원(버림) / <code>pay(10100, PointPayment())</code> → 수수료 101원</li>
+  <li><code>pay(0, CardPayment())</code> → 수수료 0원 / <code>pay(49, CardPayment())</code> → 수수료 0원 / <code>pay(1, BankTransfer())</code> → 수수료 500원</li>
+  <li>label을 <code>@property</code>로 준 새 수단도 동작해야 함 / <code>fee</code>를 빼먹은 하위 클래스는 만들 때 <code>TypeError</code></li>
+</ul></div>
+<div class="misc"><b>우회 오답(공개 테스트는 통과하지만 감점)</b>: <code>pay()</code> 안에 <code>if isinstance(method, CardPayment): … else: fee = method.fee(amount)</code>처럼 구체 클래스 분기를 남김 → 이 경우도 t5는 통과하므로 구조 점검으로 잡습니다. <b>"pay() 분기 없음" 4점 중 4점 감점</b>. <code>if method.label == "포인트"</code>처럼 라벨로 분기해도 같음. 수수료 결과를 그대로 적어 넣음(예: <code>return 246</code>) → 해당 수단의 테스트 점수 0. 실제 확인: 정답 코드에 <code>isinstance</code> 분기를 넣은 변형은 공개 테스트 5/5 통과, 구조 점검에서 실패.</div>
+<div class="misc"><b>흔한 오답</b>: <code>PointPayment.fee</code>를 <code>amount // 100 if amount // 100 &gt; 100 else 100</code>로 써서 정확히 100원일 때도 맞지만 읽기 어려움(정답 인정) / <code>amount * 0.01</code>로 float가 나와 25000원에서 <code>"수수료 250.0원"</code> → t4 실패(5000원은 <code>max</code> 덕에 100이 나와 통과하므로 경계 확인 필요) / <code>label</code>을 <code>__init__</code>에서 받도록 바꿔 <code>CardPayment()</code>가 인자 없이 만들어지지 않음 → t1 실패(지시한 이름·사용법 위반).</div>
+<p class="k">허용 해법: <code>label</code>은 클래스 속성·<code>@property</code>·<code>__init__</code>에서 고정값 대입 모두 인정. <code>typing.Protocol</code>로 만든 경우 t3(<code>isabstract</code>)이 실패하므로 지시 위반으로 3점 중 1점.</p>
+
+<h3>(3) 서술 <small>5점</small></h3>
+<div class="answer"><h4>모범 답</h4>
+<p>고친 곳: 없음(<code>PayCounter</code>와 기존 세 수단 클래스는 한 줄도 고치지 않음). 추가한 곳: <code>PointPayment</code> 클래스 하나. 새 결제 수단은 새 클래스를 <b>추가</b>하는 것만으로 늘릴 수 있으니 확장에 열려 있고, 이미 검증된 <code>PayCounter</code>는 <b>고치지 않으므로</b> 변경에 닫혀 있다.</p></div>
+<table class="rubric">
+  <thead><tr><th>필수 요소</th><th>배점</th><th>인정 범위</th></tr></thead>
+  <tbody>
+    <tr><td>고친 곳 = 없음(또는 <code>PayCounter</code> 무수정) 명시</td><td>1</td><td>(1) 리팩터링 과정의 수정을 섞어 쓴 경우, (2) 단계와 구분했으면 인정</td></tr>
+    <tr><td>추가한 곳 = <code>PointPayment</code></td><td>1</td><td></td></tr>
+    <tr><td>확장에 열림 = 새 클래스 추가로 기능이 늘어남</td><td>1.5</td><td></td></tr>
+    <tr><td>변경에 닫힘 = 기존(검증된) 코드를 고치지 않음</td><td>1.5</td><td>"그래서 기존 기능이 깨질 위험이 없다"까지 쓰면 만점 근거로 충분</td></tr>
+  </tbody>
+</table>
+<details class="code"><summary>정답 코드 열기 (<code>code/solutions/q4_payment.py</code>)</summary>
+<pre><code>"""Q4 정답 코드(교사용): 결제 수단을 추상화해 OCP를 지키는 구조 (Python 3.12+)
+
+공개 테스트(문제와 동일) 5개 + 채점용 추가 케이스(answers.html에만 공개)를 assert로 확인한다.
+
+실행: python3 q4_payment.py   -&gt; 마지막 줄 "Q4 정답 코드: 모든 assert 통과"
+"""
+from abc import ABC, abstractmethod
+
+
+class PaymentMethod(ABC):
+    """결제 수단의 약속: label(표시 이름, str)과 fee(amount) -&gt; 0 이상의 int 수수료."""
+    label: str = ""
+
+    @abstractmethod
+    def fee(self, amount: int) -&gt; int: ...
+
+
+class CardPayment(PaymentMethod):
+    label = "카드"
+    def fee(self, amount):
+        return amount * 2 // 100
+
+
+class BankTransfer(PaymentMethod):
+    label = "계좌이체"
+    def fee(self, amount):
+        return 500
+
+
+class PhonePayment(PaymentMethod):
+    label = "휴대폰"
+    def fee(self, amount):
+        return amount * 5 // 100
+
+
+class PointPayment(PaymentMethod):          # (2) 새 수단: 기존 클래스는 한 줄도 고치지 않고 추가만
+    label = "포인트"
+    def fee(self, amount):
+        return max(100, amount // 100)      # 결제액의 1%(원 미만 버림), 최소 100원
+
+
+class PayCounter:
+    """결제 수단의 구체 타입을 모른다. 추상화(PaymentMethod)의 약속만 사용."""
+    def pay(self, amount: int, method: PaymentMethod) -&gt; str:
+        fee = method.fee(amount)
+        return f"{method.label} 결제 {amount}원 + 수수료 {fee}원 = {amount + fee}원"
+
+
+# ===================== 공개 테스트 (수정 금지) =====================
+def _check(name, fn):
+    try:
+        fn()
+        print(f"[통과] {name}")
+        return True
+    except Exception as e:  # 실패해도 다음 테스트를 계속 실행
+        print(f"[실패] {name} -&gt; {type(e).__name__}: {e}")
+        return False
+
+
+def t1_card():
+    assert PayCounter().pay(12345, CardPayment()) == "카드 결제 12345원 + 수수료 246원 = 12591원"
+
+
+def t2_bank_phone():
+    assert PayCounter().pay(3000, BankTransfer()) == "계좌이체 결제 3000원 + 수수료 500원 = 3500원"
+    assert PayCounter().pay(999, PhonePayment()) == "휴대폰 결제 999원 + 수수료 49원 = 1048원"
+
+
+def t3_abstract():
+    import inspect
+    assert inspect.isabstract(PaymentMethod), "PaymentMethod는 추상 클래스여야 함"
+    for cls in (CardPayment, BankTransfer, PhonePayment):
+        assert issubclass(cls, PaymentMethod), f"{cls.__name__}가 PaymentMethod를 상속하지 않음"
+
+
+def t4_point():
+    assert PayCounter().pay(5000, PointPayment()) == "포인트 결제 5000원 + 수수료 100원 = 5100원"
+    assert PayCounter().pay(25000, PointPayment()) == "포인트 결제 25000원 + 수수료 250원 = 25250원"
+
+
+def t5_new_method_without_edit():
+    # 테스트가 즉석에서 만든 새 결제 수단. PayCounter를 고치지 않고도 동작해야 한다.
+    class GiftCard(PaymentMethod):
+        label = "상품권"
+        def fee(self, amount):
+            return 0
+    assert PayCounter().pay(7000, GiftCard()) == "상품권 결제 7000원 + 수수료 0원 = 7000원"
+
+
+if __name__ == "__main__":
+    tests = [("카드 수수료", t1_card), ("계좌이체·휴대폰 수수료", t2_bank_phone),
+             ("추상 클래스 구조", t3_abstract), ("포인트 결제 추가", t4_point),
+             ("PayCounter 수정 없이 새 수단", t5_new_method_without_edit)]
+    passed = sum(_check(n, f) for n, f in tests)
+    print(f"공개 테스트 {passed}/{len(tests)} 통과")
+    assert passed == len(tests)
+
+    # ---- 채점용 추가 케이스(학생 비공개) ----
+    import inspect
+    pc = PayCounter()
+    assert pc.pay(10000, PointPayment()) == "포인트 결제 10000원 + 수수료 100원 = 10100원"   # 1% = 최소값 경계
+    assert pc.pay(10099, PointPayment()) == "포인트 결제 10099원 + 수수료 100원 = 10199원"   # 버림
+    assert pc.pay(10100, PointPayment()) == "포인트 결제 10100원 + 수수료 101원 = 10201원"
+    assert pc.pay(0, CardPayment()) == "카드 결제 0원 + 수수료 0원 = 0원"
+    assert pc.pay(49, CardPayment()) == "카드 결제 49원 + 수수료 0원 = 49원"
+    assert pc.pay(1, BankTransfer()) == "계좌이체 결제 1원 + 수수료 500원 = 501원"
+
+    # property로 label을 준 새 수단도 동작(허용 해법 범위 확인)
+    class Crypto(PaymentMethod):
+        @property
+        def label(self):
+            return "코인"
+        def fee(self, amount):
+            return 300
+    assert pc.pay(100, Crypto()) == "코인 결제 100원 + 수수료 300원 = 400원"
+
+    # 추상 메서드를 빼먹은 하위 클래스는 만들 수 없어야 함
+    class Broken(PaymentMethod):
+        label = "x"
+    try:
+        Broken()
+        raise AssertionError("fee 없는 하위 클래스가 만들어짐")
+    except TypeError:
+        pass
+
+    # 우회 오답 탐지: PayCounter.pay 안에 구체 타입 분기·라벨 하드코딩이 없어야 함
+    pay_src = inspect.getsource(PayCounter.pay)
+    for banned in ("isinstance", "type(", "CardPayment", "BankTransfer", "PhonePayment", "PointPayment", "elif"):
+        assert banned not in pay_src, banned
+    print("Q4 정답 코드: 모든 assert 통과")</code></pre>
+</details>
+
+<!-- ============================================================ A5 -->
+<h2 class="qa" id="a5">문항 5. 배달 로봇 배차 — 분석하고 다시 짜기 <small>[코드 분석 + 구현] [ISP·DIP] · 25점 · 어려움</small></h2>
+<table>
+  <thead><tr><th>측정 요소</th><th>소문항</th></tr></thead>
+  <tbody>
+    <tr><td>① 큰 인터페이스와 구체 의존을 줄 번호로 찾아 그 결과(부분 실행·테스트 불가)를 설명한다</td><td>(1)</td></tr>
+    <tr><td>② 역할 인터페이스 분리와 의존성 주입을 함께 구현하고, 역할로 능력을 확인한다</td><td>(2)</td></tr>
+    <tr><td>③ 주입이 테스트 대역(가짜 객체)을 가능하게 하는 이유를 DIP로 설명한다</td><td>(3)</td></tr>
+  </tbody>
+</table>
+
+<h3>(1) 분석 <small>8점</small></h3>
+<p>c) 실제 실행 결과(시작 코드):</p>
+<pre><code class="out">NotImplementedError: 인도 로봇은 승강기를 못 탄다
+robot.log == ['이동:정문', '이동:중앙광장', '이동:공학관']</code></pre>
+<table class="rubric">
+  <thead><tr><th>소문항</th><th>모범 답</th><th>필수 요소(배점)</th></tr></thead>
+  <tbody>
+    <tr><td>a) ISP [3]</td><td>줄 11~12(<code>Robot</code>의 <code>ride_elevator</code>)와 줄 22~23. 모든 로봇이 하나의 큰 인터페이스 <code>Robot</code>을 구현해야 해서, 승강기를 못 타는 <code>SidewalkRobot</code>도 <code>ride_elevator</code>를 억지로 갖고 "못 한다" 예외로 채웠다.</td><td>위치(11~12 또는 22~23)(1) / 인도 로봇이 쓰지 않는(할 수 없는) 메서드를 강요받음(1) / 원인 = 인터페이스가 역할별로 나뉘지 않음(1)</td></tr>
+    <tr><td>b) DIP [3]</td><td>줄 44 <code>self.map = GpsMap()</code>. 배차 규칙(상위 정책)이 구체 지도 클래스를 직접 만들어 의존하므로, 다른 경로 계산 방식으로 바꾸려면 <code>Dispatcher</code>를 고쳐야 하고, 테스트할 때 가짜 경로를 넣을 수 없다.</td><td>줄 44(1) / 경로 방식 변경 시 <code>Dispatcher</code> 수정(1) / 가짜로 바꿔 끼워 테스트 불가(1)</td></tr>
+    <tr><td>c) 실행 결과 [2]</td><td>세 곳으로 이동한 다음 줄 50에서 <code>NotImplementedError</code>가 나서 멈추고, 보관함은 열리지 않는다. <code>log</code>에는 이동 기록 3개가 남는다(이미 움직여 버림).</td><td><code>NotImplementedError</code>(1) / 이동 3개가 이미 기록됨(1)</td></tr>
+  </tbody>
+</table>
+<div class="misc"><b>흔한 오답</b>: c)에서 "<code>SidewalkRobot</code>이 추상 메서드를 다 구현하지 않아 객체를 못 만든다"(세 메서드 모두 정의했으므로 객체는 만들어짐) / "아무 일도 일어나지 않고 log가 비어 있다"(예외가 이동 뒤에 난다는 순서를 놓침) / a)에서 LSP만 지적(부모 약속을 깨는 것도 맞는 관찰이지만 이 문항의 원인은 인터페이스 크기 → 원인 요소 0, 나머지 인정).</div>
+
+<h3>(2) 구현 <small>14점</small></h3>
+<table class="rubric">
+  <thead><tr><th>항목</th><th>배점</th><th>확인 방법</th></tr></thead>
+  <tbody>
+    <tr><td>t1 역할 분리: <code>Courier</code>·<code>ElevatorUser</code>, 인도 로봇에 <code>ride_elevator</code> 없음</td><td>4</td><td>공개 테스트 + <code>inspect.isabstract</code>(추가 케이스 4)</td></tr>
+    <tr><td>t2 주입: <code>RoutePlanner</code> 추상, <code>Dispatcher(planner)</code></td><td>3</td><td>공개 테스트 + <code>Dispatcher</code> 안에 <code>GpsMap</code> 이름 없음</td></tr>
+    <tr><td>t3 건물 로봇 층 배달(순서 포함)</td><td>2</td><td>공개 테스트</td></tr>
+    <tr><td>t4 움직이기 전 <code>ValueError</code></td><td>3</td><td>공개 테스트 + 역할(<code>ElevatorUser</code>)로 확인했는지 코드 읽기</td></tr>
+    <tr><td>채점용 추가 케이스 1~3</td><td>2</td><td>새 로봇 종류 <code>RoofDrone</code>, 층 없는 배달, <code>floor=0</code></td></tr>
+  </tbody>
+</table>
+<div class="answer"><h4>채점용 추가 케이스(학생 비공개)</h4>
+<ol>
+  <li>테스트에서 새로 만든 <code>RoofDrone(ElevatorUser, Courier)</code> + <code>OnePlanner</code>(경로 <code>[goal]</code>)로 <code>deliver(…, floor=2)</code> → <code>["비행:b", "옥상→2층", "투하"]</code> (Dispatcher 수정 없이 동작)</li>
+  <li><code>BuildingRobot</code>, 층 없음 → <code>["이동:b", "보관함 열림"]</code> (승강기 기록 없음)</li>
+  <li><code>BuildingRobot</code>, <code>floor=0</code> → <code>["이동:b", "승강기:0층", "보관함 열림"]</code> (<code>if floor:</code>로 쓰면 실패)</li>
+  <li><code>Courier</code>·<code>ElevatorUser</code>·<code>RoutePlanner</code>가 모두 추상 클래스</li>
+  <li><code>Dispatcher</code> 소스에 <code>GpsMap</code>·<code>SidewalkRobot</code>·<code>BuildingRobot</code>·<code>hasattr</code>·<code>NotImplementedError</code>가 없음</li>
+</ol></div>
+<div class="misc"><b>우회 오답(공개 테스트는 통과하지만 감점)</b>:
+<ul>
+  <li><code>if isinstance(robot, SidewalkRobot): raise ValueError</code> — 구체 클래스 분기. 새 로봇 종류마다 <code>Dispatcher</code>를 고쳐야 함 → t4 3점 중 2점 감점.</li>
+  <li><code>if not hasattr(robot, "ride_elevator")</code> — 공개 테스트는 통과(실제 확인: 4/4)하지만 역할(인터페이스)이 아닌 메서드 이름 존재로 판단. 이름만 같은 다른 메서드를 가진 객체도 통과시킴 → 1점 감점.</li>
+  <li><code>try: robot.ride_elevator(floor) except …: raise ValueError</code> — 이미 이동한 뒤라 t4가 실패. 이동 전에 미리 <code>ride_elevator</code>를 불러 보는 방식은 로그가 남아 t4 실패.</li>
+  <li><code>Dispatcher.__init__(self, planner=None): self.planner = planner or GpsMap()</code> — 공개 테스트는 통과하지만 상위 정책이 다시 구체 클래스를 앎 → t2 3점 중 1점 감점(기본값 편의를 위한 것이라는 설명을 주석으로 쓴 경우 감점 없음 여부는 교사 재량, 기본 규칙은 감점).</li>
+</ul></div>
+<p class="k">허용 해법: <code>Courier</code>의 <code>log</code>를 <code>__init__</code> 대신 각 로봇에서 준비해도 t1~t4를 통과하면 인정(채점용 <code>RoofDrone</code>은 스스로 <code>log</code>를 준비하므로 이 해법에서도 그대로 돌아감). <code>ElevatorUser</code>가 <code>Courier</code>를 상속하는 구조(<code>class ElevatorUser(Courier)</code>, <code>BuildingRobot(ElevatorUser)</code>)도 t1을 통과하면 인정. 역할 확인에 <code>isinstance(robot, ElevatorUser)</code>를 쓰는 것은 <b>추상 역할</b>에 대한 확인이므로 감점하지 않는다.</p>
+
+<h3>(3) 서술 <small>3점</small></h3>
+<div class="answer"><h4>모범 답</h4>
+<p><code>Dispatcher</code>가 구체 <code>GpsMap</code>이 아니라 추상화 <code>RoutePlanner</code>에만 의존하고 그것을 생성자로 주입받으므로, 같은 약속(<code>route</code>)을 지키는 가짜 <code>FakePlanner</code>를 대신 넣을 수 있다. 그래서 실제 지도 없이도 배차 규칙만 따로 시험할 수 있다.</p></div>
+<table class="rubric">
+  <thead><tr><th>필수 요소</th><th>배점</th><th>인정 범위</th></tr></thead>
+  <tbody>
+    <tr><td>추상화에 의존(구체 클래스를 모름)</td><td>1</td><td></td></tr>
+    <tr><td>밖에서 주입받음</td><td>1</td><td>"생성자로 받는다", "바꿔 끼운다"</td></tr>
+    <tr><td>같은 약속을 지키는 가짜로 대체 가능 → 실제 의존 없이 테스트</td><td>1</td><td></td></tr>
+  </tbody>
+</table>
+<details class="code"><summary>정답 코드 열기 (<code>code/solutions/q5_delivery_robot.py</code>)</summary>
+<pre><code>"""Q5 정답 코드(교사용): 역할 인터페이스 분리(ISP) + 경로 계획기 주입(DIP) (Python 3.12+)
+
+공개 테스트(문제와 동일) 4개 + 채점용 추가 케이스(answers.html에만 공개)를 assert로 확인한다.
+
+실행: python3 q5_delivery_robot.py   -&gt; 마지막 줄 "Q5 정답 코드: 모든 assert 통과"
+"""
+from abc import ABC, abstractmethod
+
+
+# ---- ISP: 쓰는 쪽(Dispatcher)이 필요로 하는 역할 단위로 쪼갠 인터페이스 ----
+class Courier(ABC):
+    """모든 배달 로봇의 공통 역할: 이동하고 보관함을 연다."""
+    def __init__(self):
+        self.log = []
+
+    @abstractmethod
+    def drive_to(self, place): ...
+
+    @abstractmethod
+    def open_locker(self): ...
+
+
+class ElevatorUser(ABC):
+    """승강기를 탈 수 있는 로봇만 갖는 역할."""
+    @abstractmethod
+    def ride_elevator(self, floor): ...
+
+
+class SidewalkRobot(Courier):                      # 못 하는 일은 아예 약속하지 않는다
+    def drive_to(self, place):
+        self.log.append(f"이동:{place}")
+
+    def open_locker(self):
+        self.log.append("보관함 열림")
+
+
+class BuildingRobot(Courier, ElevatorUser):        # 두 역할을 모두 구현
+    def drive_to(self, place):
+        self.log.append(f"이동:{place}")
+
+    def open_locker(self):
+        self.log.append("보관함 열림")
+
+    def ride_elevator(self, floor):
+        self.log.append(f"승강기:{floor}층")
+
+
+# ---- DIP: 상위 정책(Dispatcher)과 하위 세부(GpsMap)가 모두 추상화에 의존 ----
+class RoutePlanner(ABC):
+    @abstractmethod
+    def route(self, start, goal) -&gt; list[str]: ...
+
+
+class GpsMap(RoutePlanner):
+    def route(self, start, goal):
+        return [start, "중앙광장", goal]
+
+
+class Dispatcher:
+    def __init__(self, planner: RoutePlanner):     # 구체 지도 클래스를 직접 만들지 않고 주입받는다
+        self.planner = planner
+
+    def deliver(self, robot: Courier, start, goal, floor=None):
+        if floor is not None and not isinstance(robot, ElevatorUser):   # 역할(추상) 확인은 허용
+            raise ValueError("이 로봇은 승강기를 탈 수 없어 층 배달을 맡을 수 없다")
+        for place in self.planner.route(start, goal):
+            robot.drive_to(place)
+        if floor is not None:
+            robot.ride_elevator(floor)
+        robot.open_locker()
+        return robot.log
+
+
+# ===================== 공개 테스트 (수정 금지) =====================
+def _check(name, fn):
+    try:
+        fn()
+        print(f"[통과] {name}")
+        return True
+    except Exception as e:  # 실패해도 다음 테스트를 계속 실행
+        print(f"[실패] {name} -&gt; {type(e).__name__}: {e}")
+        return False
+
+
+def t1_roles():
+    assert issubclass(SidewalkRobot, Courier) and issubclass(BuildingRobot, Courier)
+    assert issubclass(BuildingRobot, ElevatorUser)
+    assert not issubclass(SidewalkRobot, ElevatorUser), "인도 로봇이 승강기 역할을 떠안고 있음"
+    assert not hasattr(SidewalkRobot(), "ride_elevator"), "인도 로봇에 쓸 수 없는 메서드가 남아 있음"
+
+
+def t2_injected_planner():
+    class FakePlanner(RoutePlanner):            # 테스트용 가짜 경로 계획기
+        def route(self, start, goal):
+            return [start, goal]
+    log = Dispatcher(FakePlanner()).deliver(SidewalkRobot(), "정문", "도서관 앞")
+    assert log == ["이동:정문", "이동:도서관 앞", "보관함 열림"], log
+
+
+def t3_building_with_floor():
+    log = Dispatcher(GpsMap()).deliver(BuildingRobot(), "기숙사", "공학관", floor=4)
+    assert log == ["이동:기숙사", "이동:중앙광장", "이동:공학관", "승강기:4층", "보관함 열림"], log
+
+
+def t4_refuse_before_moving():
+    robot = SidewalkRobot()
+    try:
+        Dispatcher(GpsMap()).deliver(robot, "정문", "공학관", floor=3)
+    except ValueError:
+        assert robot.log == [], "거절하기 전에 이미 움직였음"
+        return
+    raise AssertionError("승강기를 못 타는 로봇에 층 배달을 맡겼는데 ValueError가 없음")
+
+
+if __name__ == "__main__":
+    print("현재 동작:", Dispatcher(GpsMap()).deliver(BuildingRobot(), "기숙사", "공학관", floor=4))
+    tests = [("역할 인터페이스 분리", t1_roles), ("경로 계획기 주입", t2_injected_planner),
+             ("건물 로봇 층 배달", t3_building_with_floor), ("못 하는 일은 출발 전 거절", t4_refuse_before_moving)]
+    passed = sum(_check(n, f) for n, f in tests)
+    print(f"공개 테스트 {passed}/{len(tests)} 통과")
+    assert passed == len(tests)
+
+    # ---- 채점용 추가 케이스(학생 비공개) ----
+    import inspect
+    # 1) 테스트가 새로 만든 로봇 종류(드론형 건물 로봇)도 Dispatcher 수정 없이 동작해야 함
+    class RoofDrone(ElevatorUser, Courier):    # 이 순서면 ElevatorUser(Courier) 구조(허용 해법)에서도 MRO 오류 없음
+        def __init__(self):
+            self.log = []                          # log를 각 로봇에서 준비하는 허용 해법에서도 동작
+        def drive_to(self, place): self.log.append(f"비행:{place}")
+        def open_locker(self): self.log.append("투하")
+        def ride_elevator(self, floor): self.log.append(f"옥상→{floor}층")
+    class OnePlanner(RoutePlanner):
+        def route(self, start, goal): return [goal]
+    assert Dispatcher(OnePlanner()).deliver(RoofDrone(), "a", "b", floor=2) == ["비행:b", "옥상→2층", "투하"]
+    # 2) 층 없는 배달은 건물 로봇도 승강기를 타지 않음
+    assert Dispatcher(OnePlanner()).deliver(BuildingRobot(), "a", "b") == ["이동:b", "보관함 열림"]
+    # 3) floor=0(지하/로비 등)도 '층 지정'으로 취급(falsy 함정)
+    assert Dispatcher(OnePlanner()).deliver(BuildingRobot(), "a", "b", floor=0) == ["이동:b", "승강기:0층", "보관함 열림"]
+    # 4) 역할 인터페이스는 추상이어야 함
+    assert inspect.isabstract(Courier) and inspect.isabstract(ElevatorUser) and inspect.isabstract(RoutePlanner)
+    # 5) 우회 오답 탐지: Dispatcher가 구체 클래스 이름을 알면 안 됨
+    disp_src = inspect.getsource(Dispatcher)
+    for banned in ("GpsMap", "SidewalkRobot", "BuildingRobot", "hasattr", "NotImplementedError"):
+        assert banned not in disp_src, banned
+    print("Q5 정답 코드: 모든 assert 통과")</code></pre>
+</details>
+
+<section id="verify">
+<h2>검증 방법(채점 전 교사 확인용)</h2>
+<pre><code class="out">cd solid_course/assessment/code
+python3 q2_log_collector.py      # 시작 코드: 요약 1줄 + 오류 3줄 출력
+python3 q3_game_skills.py        # 시작 코드: 문항 3 (1)의 실제 출력
+python3 q4_payment.py            # 시작 코드: 공개 테스트 0/5 (정상)
+python3 q5_delivery_robot.py     # 시작 코드: 공개 테스트 0/4 (정상)
+for f in solutions/*.py; do python3 "$f"; done   # 각 파일 마지막 줄 "모든 assert 통과"</code></pre>
+<p>학생 제출물 채점: 학생 파일을 <code>code/</code>에 두고 <code>python3 학생파일.py</code>로 공개 테스트를 확인한 뒤, 해당 정답 코드 파일에서 <code># ---- 채점용 추가 케이스</code> 줄부터 마지막 <code>print</code> 앞까지를 복사해 학생 파일의 <code>if __name__ == "__main__":</code> 블록 끝(같은 들여쓰기)에 붙여 실행합니다. 어느 assert에서 멈추는지가 감점 항목을 알려 줍니다.</p>
+</section>
+
+</main>
+</body>
+</html>

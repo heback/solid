@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SOLID 평가 문제</title>
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/highlight.js" defer></script>
+<style>
+  .toc{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+  .toc a{padding:4px 12px;border:1px solid var(--line);border-radius:999px;color:var(--accent);text-decoration:none;font-size:14px}
+  .meta{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 10px}
+  .tag{font-size:13px;padding:2px 10px;border-radius:999px;border:1px solid var(--line);background:var(--card)}
+  .tag.ab{border-color:var(--accent);color:var(--accent)}
+  .tag.pts{font-weight:700}
+  .sub{margin:14px 0 4px;font-weight:700}
+  .sub small{font-weight:400;color:var(--muted)}
+  .write{min-height:5.5em;border:1px dashed var(--line);border-radius:8px;margin:6px 0 14px;padding:8px 12px;color:var(--muted);font-size:13px}
+  .write.tall{min-height:9em}
+  .hintlink{font-size:14px;color:var(--accent);text-decoration:none}
+  .filelink{font-size:14px}
+  td.blank{min-width:70px}
+  h2 .pts{font-size:15px;font-weight:400;color:var(--muted)}
+  @media print{
+    header.top nav,.hintlink,.toc{display:none}
+    body{font-size:13px;line-height:1.6;background:#fff;color:#000}
+    section.qsec{break-before:page}
+    section.qsec:first-of-type{break-before:auto}
+    pre,table,.situation{break-inside:avoid}
+    pre code{font-size:11px}
+    .write{min-height:7em;border-color:#999}
+    .write.tall{min-height:12em}
+  }
+</style>
+</head>
+<body>
+<header class="top">
+  <nav>
+    <a href="hints.html">문제 해결 도움 자료(힌트)</a>
+    <a href="../index.html">목차</a>
+  </nav>
+  <h1>SOLID 원리 평가 문제</h1>
+  <p class="lead">5문항 · 100점 · Python 3.12 이상. 개념 이해, 코드 분석, 구현 능력을 함께 봅니다. 막히면 문항마다 있는 <b>힌트 보기</b>를 누르세요. 힌트는 방향만 알려 주고 정답은 알려 주지 않습니다.</p>
+  <table>
+    <thead><tr><th>문항</th><th>능력</th><th>원칙</th><th>난이도</th><th>배점</th></tr></thead>
+    <tbody>
+      <tr><td><a href="#q1">1</a></td><td>개념 이해</td><td>SRP·OCP·LSP·ISP·DIP</td><td>쉬움</td><td>15</td></tr>
+      <tr><td><a href="#q2">2</a></td><td>코드 분석</td><td>SRP·DIP</td><td>보통</td><td>20</td></tr>
+      <tr><td><a href="#q3">3</a></td><td>코드 분석</td><td>LSP</td><td>보통</td><td>20</td></tr>
+      <tr><td><a href="#q4">4</a></td><td>구현</td><td>OCP</td><td>보통</td><td>20</td></tr>
+      <tr><td><a href="#q5">5</a></td><td>코드 분석 + 구현(종합)</td><td>ISP·DIP</td><td>어려움</td><td>25</td></tr>
+    </tbody>
+  </table>
+  <div class="box tip">
+    <h4>코드 문항 안내</h4>
+    <ul>
+      <li>시작 코드는 아래 본문에 있고, 파일로도 받을 수 있습니다: <a class="filelink" href="code/q2_log_collector.py" download>q2_log_collector.py</a> · <a class="filelink" href="code/q3_game_skills.py" download>q3_game_skills.py</a> · <a class="filelink" href="code/q4_payment.py" download>q4_payment.py</a> · <a class="filelink" href="code/q5_delivery_robot.py" download>q5_delivery_robot.py</a></li>
+      <li>실행: 터미널에서 <code>python3 q4_payment.py</code>. 시작 코드는 그대로 실행됩니다(구현 문항은 처음에 공개 테스트가 <b>[실패]</b>로 나오는 것이 정상).</li>
+      <li>구현 문항(4, 5)은 파일 맨 아래 <b>공개 테스트는 고치지 말고</b> 모두 <b>[통과]</b>가 나오게 만드세요. 공개 테스트를 통과해도 <b>구체 클래스 이름으로 분기</b>하거나 <b>결과를 그대로 적어 넣은</b> 답은 감점됩니다. 채점할 때 공개되지 않은 테스트를 더 돌립니다.</li>
+      <li>문항 3 (1)은 <b>실행하지 말고</b> 먼저 예측해서 쓰세요.</li>
+    </ul>
+  </div>
+  <div class="toc"><a href="#q1">문항 1</a><a href="#q2">문항 2</a><a href="#q3">문항 3</a><a href="#q4">문항 4</a><a href="#q5">문항 5</a></div>
+</header>
+
+<main>
+
+<!-- ============================================================ Q1 -->
+<section class="qsec" id="q1">
+<h2>문항 1. 상황에서 원칙 판단하기 <span class="pts">(15점)</span></h2>
+<div class="meta"><span class="tag ab">[개념 이해]</span><span class="tag">[SRP·OCP·LSP·ISP·DIP]</span><span class="tag">쉬움</span><span class="tag pts">15점</span></div>
+<p><a class="hintlink" href="hints.html#h1">힌트 보기 →</a></p>
+<div class="situation"><b>상황</b>: 한 대학의 <b>온라인 강의 수강신청 시스템</b>을 유지보수하는 팀에서 아래 A~E 다섯 가지 고민이 나왔습니다.</div>
+<ol type="A">
+  <li><code>EnrollmentService</code> 클래스 하나가 선수과목 충족 검사, 수강료 계산, 수강확인서 PDF 꾸미기를 모두 맡습니다. 지난달 학사팀은 선수과목 규칙을, 재무팀은 수강료 규칙을, 홍보팀은 확인서 디자인을 바꿔 달라고 요청했고, 같은 파일이 세 번 고쳐졌습니다.</li>
+  <li>좌석 배정 함수 <code>assign_seats(policy)</code> 안에 <code>if policy == "선착순" … elif policy == "학년우선" … elif policy == "추첨"</code>이 있습니다. 다음 학기에 "재수강자 후순위" 정책을 넣으려면 이 함수를 또 열어 고쳐야 합니다.</li>
+  <li><code>Course.enroll(student)</code>는 "정원이 남았으면 등록하고 <code>True</code>, 꽉 찼으면 <code>False</code>를 돌려준다"고 약속합니다. 하위 클래스 <code>AuditCourse</code>(청강 강의)는 정원이 남아도 <code>enroll()</code>을 부르면 <code>PermissionError</code>를 던집니다. 강의 목록을 돌며 <code>enroll()</code>을 부르던 신청 화면이 청강 강의에서 멈췄습니다.</li>
+  <li>인터페이스 <code>CourseStaff</code>에 추상 메서드 <code>open_course</code>, <code>grade</code>, <code>book_room</code>, <code>check_attendance</code> 네 개가 있습니다. 출석만 확인하는 조교 클래스 <code>AttendanceTA</code>는 나머지 세 메서드를 억지로 채워 넣었고, <code>grade</code>의 매개변수가 바뀔 때마다 쓰지도 않는 이 클래스까지 다시 고쳐야 했습니다.</li>
+  <li>대기자 관리 클래스 <code>WaitlistManager</code>가 생성자에서 <code>self.db = MySqlWaitlistTable()</code>을 직접 만듭니다. 대기 순번 규칙을 테스트하려면 매번 실제 DB 서버를 켜야 하고, 저장소를 클라우드로 바꾸자 <code>WaitlistManager</code>까지 고쳐야 했습니다.</li>
+</ol>
+
+<p class="sub">(1) A~E 각각에 가장 직접 관련된 SOLID 원칙을 하나씩 고르고, 판단 근거를 한 문장으로 쓰시오. <small>각 2점(원칙 1 + 근거 1), 10점</small></p>
+<table>
+  <thead><tr><th style="width:8%">상황</th><th style="width:16%">원칙</th><th>판단 근거(한 문장)</th></tr></thead>
+  <tbody>
+    <tr><td>A</td><td class="blank"></td><td></td></tr>
+    <tr><td>B</td><td class="blank"></td><td></td></tr>
+    <tr><td>C</td><td class="blank"></td><td></td></tr>
+    <tr><td>D</td><td class="blank"></td><td></td></tr>
+    <tr><td>E</td><td class="blank"></td><td></td></tr>
+  </tbody>
+</table>
+
+<p class="sub">(2) 과잉 적용 판단 <small>5점</small></p>
+<p>신입 개발자가 이렇게 제안했습니다. "학기 초에 한 번만 돌리는 30줄짜리 <b>수강 인원 집계 스크립트</b>(입력은 CSV 파일 하나, 출력은 화면에 한 줄, 지난 3년간 한 번도 바뀐 적 없음)도 SOLID를 지켜야 하니까 <code>Reader</code>·<code>Counter</code>·<code>Printer</code> 추상 클래스 3개와 구현 클래스 3개로 나눕시다."</p>
+<p>이 제안에 대한 당신의 판단(찬성 / 반대 / 조건부 찬성)과 근거를 2~3문장으로 쓰시오. 근거에는 <b>'변경' 또는 '확장'</b>의 관점이 들어가야 합니다.</p>
+<div class="write">판단:　　　　　 근거:</div>
+</section>
+
+<!-- ============================================================ Q2 -->
+<section class="qsec" id="q2">
+<h2>문항 2. 로그 수집기의 변경 이유와 영향 범위 <span class="pts">(20점)</span></h2>
+<div class="meta"><span class="tag ab">[코드 분석]</span><span class="tag">[SRP·DIP]</span><span class="tag">보통</span><span class="tag pts">20점</span></div>
+<p><a class="hintlink" href="hints.html#h2">힌트 보기 →</a> · <a class="filelink" href="code/q2_log_collector.py" download>시작 코드 내려받기</a></p>
+<div class="situation"><b>상황</b>: 여러 서버가 보낸 로그를 모아 오류만 파일에 저장하고, 운영 회의용 요약 문장을 만드는 수집기입니다. 각 줄 끝의 <code># 숫자</code>는 줄 번호입니다.</div>
+<pre><code>"""Q2 시작 코드: 서버 로그 수집기 (Python 3.12+)
+
+여러 서버가 보낸 로그 문자열을 모아, 오류만 골라 파일에 저장하고
+운영 회의용 요약 문장을 만든다. 이 코드는 정상 동작한다. 구조를 분석하라.
+
+실행: python3 q2_log_collector.py
+"""
+import os
+import tempfile
+
+
+class ServerLogCollector:
+    def __init__(self, path):                                   # 1
+        self.path = path                                        # 2
+        self.entries = []                                       # 3
+                                                                # 4
+    def collect(self, raw_text):                                # 5
+        # 로그 한 줄 형식: "레벨|서버이름|메시지"                  # 6
+        for row in raw_text.strip().splitlines():               # 7
+            level, server, message = row.split("|")             # 8
+            self.entries.append((level.strip(), server.strip(), message.strip()))  # 9
+                                                                # 10
+    def errors(self):                                           # 11
+        return [e for e in self.entries if e[0] == "ERROR"]     # 12
+                                                                # 13
+    def save(self):                                             # 14
+        with open(self.path, "w", encoding="utf-8") as f:       # 15
+            for level, server, message in self.errors():        # 16
+                f.write(f"{server}: {message}\n")               # 17
+                                                                # 18
+    def summary(self):                                          # 19
+        errs = self.errors()                                    # 20
+        servers = sorted({server for _, server, _ in errs})     # 21
+        return f"오류 {len(errs)}건 / 서버 {', '.join(servers)}"  # 22
+
+
+if __name__ == "__main__":
+    raw = """
+    INFO|web-1|요청 처리 완료
+    ERROR|db-2|연결 시간 초과
+    ERROR|web-1|응답 코드 500
+    WARN|web-2|느린 응답
+    ERROR|db-2|디스크 부족
+    """
+    out = os.path.join(tempfile.gettempdir(), "q2_errors.txt")
+    c = ServerLogCollector(out)
+    c.collect(raw)
+    c.save()
+    print(c.summary())
+    with open(out, encoding="utf-8") as f:
+        print(f.read(), end="")</code></pre>
+<p>실행 결과:</p>
+<pre><code class="out">오류 3건 / 서버 db-2, web-1
+db-2: 연결 시간 초과
+web-1: 응답 코드 500
+db-2: 디스크 부족</code></pre>
+
+<p class="sub">(1) 이 클래스를 바꾸게 만드는 이유(요청하는 사람·팀이 다른 것)를 <b>3가지</b> 찾아, 각각 해당하는 줄 번호 범위를 쓰시오. <small>6점</small></p>
+<table>
+  <thead><tr><th style="width:8%"></th><th>바꾸게 만드는 이유(누가, 무엇을)</th><th style="width:22%">줄 번호</th></tr></thead>
+  <tbody><tr><td>①</td><td></td><td></td></tr><tr><td>②</td><td></td><td></td></tr><tr><td>③</td><td></td><td></td></tr></tbody>
+</table>
+
+<p class="sub">(2) 변경 영향 추적 <small>8점</small></p>
+<p>다음 세 요청이 들어왔다고 합시다. 각각 질문에 답하시오.</p>
+<ol type="a">
+  <li><b>[3점]</b> 로그 형식이 <code>"레벨|서버|메시지"</code>에서 <code>"시각|레벨|서버|메시지"</code>로 바뀌었습니다. 코드를 고치지 않고 새 형식 로그(예: <code>09:00|ERROR|db-2|연결 시간 초과</code>)를 <code>collect()</code>에 넣으면 어떤 일이 생기는지, 고쳐야 할 줄은 몇 번인지, 그리고 이 문제가 <code>save()</code>·<code>summary()</code>에는 어떤 영향을 주는지 쓰시오.</li>
+  <li><b>[2점]</b> 오류 로그를 파일이 아니라 사내 로그 서버(네트워크)로 보내기로 했습니다. 고쳐야 할 메서드는 무엇이고, 그 수정 때문에 함께 다시 확인(테스트)해야 하는 범위는 어디까지인지 쓰시오.</li>
+  <li><b>[3점]</b> 테스트 담당자가 "<code>save()</code>가 올바른 줄을 쓰는지 파일을 만들지 않고 확인하고 싶다"고 합니다. 지금 구조로 가능한지, 불가능하다면 어떤 줄 때문인지 쓰시오.</li>
+</ol>
+<div class="write tall">a)<br><br>b)<br><br>c)</div>
+
+<p class="sub">(3) <code>save()</code>의 문제를 DIP 관점에서 <b>'상위 정책', '하위 세부', '추상화'</b> 세 단어를 모두 써서 설명하고, 개선된 구조를 클래스 이름과 각 클래스의 역할 수준으로 제안하시오(코드 작성은 필요 없음). <small>6점</small></p>
+<div class="write tall"></div>
+</section>
+
+<!-- ============================================================ Q3 -->
+<section class="qsec" id="q3">
+<h2>문항 3. 스킬의 약속과 자동 전투 <span class="pts">(20점)</span></h2>
+<div class="meta"><span class="tag ab">[코드 분석]</span><span class="tag">[LSP]</span><span class="tag">보통</span><span class="tag pts">20점</span></div>
+<p><a class="hintlink" href="hints.html#h3">힌트 보기 →</a> · <a class="filelink" href="code/q3_game_skills.py" download>시작 코드 내려받기</a></p>
+<div class="situation"><b>상황</b>: 게임의 자동 전투 함수 <code>auto_battle</code>은 <code>Skill</code> 문서에 적힌 약속 ①②③만 믿고 작성되었습니다. 여러 개발자가 각자 새 스킬을 하위 클래스로 추가했습니다.</div>
+<pre><code>"""Q3 시작 코드: 게임 캐릭터 스킬 (Python 3.12+)
+
+전투 시스템(auto_battle)은 Skill의 약속만 믿고 작성되었다.
+실행 전에 출력을 먼저 예측하라.
+
+실행: python3 q3_game_skills.py
+"""
+
+
+class Hero:
+    def __init__(self, name, hp, mp):
+        self.name, self.hp, self.mp = name, hp, mp
+
+
+class Skill:
+    """Skill의 약속(모든 스킬이 지켜야 함)
+    ① 사용 전: mp가 cost보다 적으면 아무것도 바꾸지 않고 0을 돌려준다.
+    ② 사용 후: mp를 정확히 cost만큼 줄이고, 0 이상의 피해량(int)을 돌려준다.
+    ③ hp는 스킬 사용으로 바뀌지 않는다.
+    """
+    def __init__(self, name, cost, power):
+        self.name, self.cost, self.power = name, cost, power
+
+    def use(self, hero):
+        if hero.mp &lt; self.cost:
+            return 0
+        hero.mp -= self.cost
+        return self.power
+
+
+class Fireball(Skill):
+    """mp가 20 이상 남아 있으면 피해 +5"""
+    def use(self, hero):
+        bonus = 5 if hero.mp &gt;= 20 else 0
+        damage = super().use(hero)
+        return damage + bonus if damage &gt; 0 else 0
+
+
+class Berserk(Skill):
+    """mp가 모자라면 hp를 대신 써서라도 발동한다"""
+    def use(self, hero):
+        if hero.mp &lt; self.cost:
+            hero.hp -= self.cost
+            return self.power * 2
+        return super().use(hero)
+
+
+class Drain(Skill):
+    """적의 생명력을 빼앗아 자신을 회복한다(피해량을 음수로 표시)"""
+    def use(self, hero):
+        hero.mp -= self.cost
+        hero.hp += self.power
+        return -self.power
+
+
+def auto_battle(hero, skills, boss_hp):
+    for skill in skills:
+        damage = skill.use(hero)
+        boss_hp -= damage
+        print(f"{skill.name:&lt;4} 피해 {damage:&gt;3} | 보스 {boss_hp:&gt;3} | {hero.name} hp {hero.hp} mp {hero.mp}")
+    return boss_hp
+
+
+if __name__ == "__main__":
+    hero = Hero("린", hp=40, mp=25)
+    skills = [Fireball("화염구", 10, 30), Drain("흡수", 8, 15),
+              Berserk("광폭", 12, 20), Skill("베기", 0, 10)]
+    left = auto_battle(hero, skills, boss_hp=100)
+    print("남은 보스 hp:", left)</code></pre>
+
+<p class="sub">(1) 실행 결과 예측: <b>실행하지 말고</b> 아래 표를 채우시오. <small>8점(스킬 줄마다 2점; 마지막 줄 "남은 보스 hp"는 베기 줄과 함께 채점)</small></p>
+<table>
+  <thead><tr><th>출력 순서</th><th>피해</th><th>보스 hp</th><th>린 hp</th><th>린 mp</th></tr></thead>
+  <tbody>
+    <tr><td>화염구</td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>흡수</td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>광폭</td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>베기</td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>남은 보스 hp</td><td colspan="4"></td></tr>
+  </tbody>
+</table>
+
+<p class="sub">(2) <code>Fireball</code>, <code>Drain</code>, <code>Berserk</code> 각각이 <code>Skill</code>의 약속 ①②③을 지키는지 판단하시오. 어긴다면 <b>어긴 약속 번호</b>와 <b>근거가 되는 코드</b>를 쓰시오. <small>8점</small></p>
+<table>
+  <thead><tr><th style="width:14%">클래스</th><th style="width:18%">지킴 / 어김</th><th style="width:18%">어긴 약속 번호</th><th>근거(코드와 그 결과)</th></tr></thead>
+  <tbody><tr><td>Fireball</td><td></td><td></td><td></td></tr><tr><td>Drain</td><td></td><td></td><td></td></tr><tr><td>Berserk</td><td></td><td></td><td></td></tr></tbody>
+</table>
+
+<p class="sub">(3) 전투 담당 개발자가 "흡수 때문에 보스 hp가 늘어나니 <code>auto_battle</code>에 <code>if isinstance(skill, Drain): damage = 0</code>을 넣자"고 합니다. 이 방법이 좋지 않은 이유와 더 나은 대안 1가지를 쓰시오. <small>4점</small></p>
+<div class="write"></div>
+</section>
+
+<!-- ============================================================ Q4 -->
+<section class="qsec" id="q4">
+<h2>문항 4. 결제 수단을 고치지 않고 늘리기 <span class="pts">(20점)</span></h2>
+<div class="meta"><span class="tag ab">[구현]</span><span class="tag">[OCP]</span><span class="tag">보통</span><span class="tag pts">20점</span></div>
+<p><a class="hintlink" href="hints.html#h4">힌트 보기 →</a> · <a class="filelink" href="code/q4_payment.py" download>시작 코드 내려받기</a></p>
+<div class="situation"><b>상황</b>: 결제 창구 <code>PayCounter</code>는 결제 수단별 수수료를 붙여 영수증 한 줄을 만듭니다. 결제 수단이 문자열이라 새 수단이 생길 때마다 <code>pay()</code> 안의 <code>if-elif</code>를 고쳐야 합니다.</div>
+<pre><code>"""Q4 시작 코드: 결제 수수료와 영수증 한 줄 (Python 3.12+)
+
+지금은 결제 수단이 문자열이고, 새 수단이 생길 때마다 PayCounter.pay 안의
+if-elif를 고쳐야 한다. 문제의 요구대로 리팩터링하라.
+맨 아래 공개 테스트는 수정하지 말고, 모두 [통과]가 나오게 만들어라.
+
+실행: python3 q4_payment.py
+"""
+
+
+class PayCounter:
+    def pay(self, amount, method):
+        if method == "card":
+            label, fee = "카드", amount * 2 // 100          # 결제액의 2%(원 미만 버림)
+        elif method == "bank":
+            label, fee = "계좌이체", 500                    # 고정 500원
+        elif method == "phone":
+            label, fee = "휴대폰", amount * 5 // 100        # 결제액의 5%(원 미만 버림)
+        else:
+            raise ValueError(f"모르는 결제 수단: {method}")
+        return f"{label} 결제 {amount}원 + 수수료 {fee}원 = {amount + fee}원"
+
+
+# ===================== 공개 테스트 (수정 금지) =====================
+def _check(name, fn):
+    try:
+        fn()
+        print(f"[통과] {name}")
+        return True
+    except Exception as e:  # 실패해도 다음 테스트를 계속 실행
+        print(f"[실패] {name} -&gt; {type(e).__name__}: {e}")
+        return False
+
+
+def t1_card():
+    assert PayCounter().pay(12345, CardPayment()) == "카드 결제 12345원 + 수수료 246원 = 12591원"
+
+
+def t2_bank_phone():
+    assert PayCounter().pay(3000, BankTransfer()) == "계좌이체 결제 3000원 + 수수료 500원 = 3500원"
+    assert PayCounter().pay(999, PhonePayment()) == "휴대폰 결제 999원 + 수수료 49원 = 1048원"
+
+
+def t3_abstract():
+    import inspect
+    assert inspect.isabstract(PaymentMethod), "PaymentMethod는 추상 클래스여야 함"
+    for cls in (CardPayment, BankTransfer, PhonePayment):
+        assert issubclass(cls, PaymentMethod), f"{cls.__name__}가 PaymentMethod를 상속하지 않음"
+
+
+def t4_point():
+    assert PayCounter().pay(5000, PointPayment()) == "포인트 결제 5000원 + 수수료 100원 = 5100원"
+    assert PayCounter().pay(25000, PointPayment()) == "포인트 결제 25000원 + 수수료 250원 = 25250원"
+
+
+def t5_new_method_without_edit():
+    # 테스트가 즉석에서 만든 새 결제 수단. PayCounter를 고치지 않고도 동작해야 한다.
+    class GiftCard(PaymentMethod):
+        label = "상품권"
+        def fee(self, amount):
+            return 0
+    assert PayCounter().pay(7000, GiftCard()) == "상품권 결제 7000원 + 수수료 0원 = 7000원"
+
+
+if __name__ == "__main__":
+    print("현재 동작:", PayCounter().pay(12345, "card"))   # 리팩터링 후에는 이 줄을 지우거나 새 구조에 맞게 고친다
+    tests = [("카드 수수료", t1_card), ("계좌이체·휴대폰 수수료", t2_bank_phone),
+             ("추상 클래스 구조", t3_abstract), ("포인트 결제 추가", t4_point),
+             ("PayCounter 수정 없이 새 수단", t5_new_method_without_edit)]
+    passed = sum(_check(n, f) for n, f in tests)
+    print(f"공개 테스트 {passed}/{len(tests)} 통과")</code></pre>
+<p>시작 코드 실행 결과(공개 테스트는 아직 모두 실패하는 것이 정상):</p>
+<pre><code class="out">현재 동작: 카드 결제 12345원 + 수수료 246원 = 12591원
+[실패] 카드 수수료 -&gt; NameError: name 'CardPayment' is not defined
+[실패] 계좌이체·휴대폰 수수료 -&gt; NameError: name 'BankTransfer' is not defined
+[실패] 추상 클래스 구조 -&gt; NameError: name 'PaymentMethod' is not defined
+[실패] 포인트 결제 추가 -&gt; NameError: name 'PointPayment' is not defined
+[실패] PayCounter 수정 없이 새 수단 -&gt; NameError: name 'PaymentMethod' is not defined
+공개 테스트 0/5 통과</code></pre>
+
+<p class="sub">(1) 리팩터링 <small>10점</small></p>
+<p>다음 이름과 규칙을 <b>그대로</b> 지켜 코드를 바꾸시오.</p>
+<ul>
+  <li><code>PaymentMethod</code>: <code>abc.ABC</code>를 상속한 추상 클래스. 표시 이름 <code>label</code>(문자열)을 갖고, 추상 메서드 <code>fee(self, amount: int) -&gt; int</code>를 선언한다.</li>
+  <li><code>CardPayment</code>(label <code>"카드"</code>, 결제액의 2%·원 미만 버림), <code>BankTransfer</code>(label <code>"계좌이체"</code>, 500원 고정), <code>PhonePayment</code>(label <code>"휴대폰"</code>, 결제액의 5%·원 미만 버림): 모두 <code>PaymentMethod</code>를 상속한다.</li>
+  <li><code>PayCounter.pay(self, amount: int, method: PaymentMethod) -&gt; str</code>: 반환 형식은 시작 코드와 똑같다(<code>"{label} 결제 {amount}원 + 수수료 {fee}원 = {합계}원"</code>). <b><code>pay()</code> 안에서 결제 수단의 종류를 묻는 분기(<code>if</code>·<code>isinstance</code>)를 쓰지 않는다.</b></li>
+</ul>
+<p class="sub">(2) 기능 추가 <small>5점</small></p>
+<p>새 결제 수단 <code>PointPayment</code>를 추가하시오. label은 <code>"포인트"</code>, 수수료는 <b>결제액의 1%(원 미만 버림), 단 최소 100원</b>입니다. 공개 테스트 5개가 모두 <b>[통과]</b>해야 합니다.</p>
+<p class="sub">(3) (2)를 하면서 <b>이미 있던 클래스 안을 고친 곳</b>과 <b>새로 추가한 곳</b>을 구분해 쓰고, 이것이 OCP의 '확장에는 열려 있고 변경에는 닫혀 있다'를 어떻게 보여 주는지 2문장으로 설명하시오. <small>5점</small></p>
+<div class="write">고친 곳:　　　　　 추가한 곳:<br><br>설명:</div>
+<p class="k" style="font-size:14px;color:var(--muted)">제출: 완성한 <code>q4_payment.py</code> 파일과 (3)의 답.</p>
+</section>
+
+<!-- ============================================================ Q5 -->
+<section class="qsec" id="q5">
+<h2>문항 5. 배달 로봇 배차 — 분석하고 다시 짜기 <span class="pts">(25점)</span></h2>
+<div class="meta"><span class="tag ab">[코드 분석 + 구현]</span><span class="tag">[ISP·DIP]</span><span class="tag">어려움</span><span class="tag pts">25점</span></div>
+<p><a class="hintlink" href="hints.html#h5">힌트 보기 →</a> · <a class="filelink" href="code/q5_delivery_robot.py" download>시작 코드 내려받기</a></p>
+<div class="situation"><b>상황</b>: 캠퍼스 배달 로봇은 두 종류입니다. <b>인도 로봇</b>(<code>SidewalkRobot</code>)은 실외 인도만 다니고, <b>건물 로봇</b>(<code>BuildingRobot</code>)은 승강기를 타고 건물 안 층까지 갑니다. 배차 담당 <code>Dispatcher</code>는 경로를 받아 로봇을 움직이고, 층이 지정되면 승강기를 태운 뒤 보관함을 엽니다. 각 줄 끝의 <code># 숫자</code>는 줄 번호입니다.</div>
+<pre><code>"""Q5 시작 코드: 캠퍼스 배달 로봇 배차 (Python 3.12+)
+
+인도(실외)만 다니는 로봇과 건물 안까지 들어가는 로봇이 있다.
+배차 담당(Dispatcher)은 경로를 받아 로봇을 움직이고, 필요하면 승강기를 태운 뒤 보관함을 연다.
+이 코드는 실행되지만 구조에 문제가 있다. 분석하고 문제의 요구대로 리팩터링하라.
+맨 아래 공개 테스트는 수정하지 말고, 모두 [통과]가 나오게 만들어라.
+
+실행: python3 q5_delivery_robot.py
+"""
+from abc import ABC, abstractmethod
+
+
+class Robot(ABC):                                               # 1
+    def __init__(self):                                         # 2
+        self.log = []                                           # 3
+                                                                # 4
+    @abstractmethod                                             # 5
+    def drive_to(self, place): ...                              # 6
+                                                                # 7
+    @abstractmethod                                             # 8
+    def open_locker(self): ...                                  # 9
+                                                                # 10
+    @abstractmethod                                             # 11
+    def ride_elevator(self, floor): ...                         # 12
+                                                                # 13
+                                                                # 14
+class SidewalkRobot(Robot):                                     # 15
+    def drive_to(self, place):                                  # 16
+        self.log.append(f"이동:{place}")                         # 17
+                                                                # 18
+    def open_locker(self):                                      # 19
+        self.log.append("보관함 열림")                            # 20
+                                                                # 21
+    def ride_elevator(self, floor):                             # 22
+        raise NotImplementedError("인도 로봇은 승강기를 못 탄다")    # 23
+                                                                # 24
+                                                                # 25
+class BuildingRobot(Robot):                                     # 26
+    def drive_to(self, place):                                  # 27
+        self.log.append(f"이동:{place}")                         # 28
+                                                                # 29
+    def open_locker(self):                                      # 30
+        self.log.append("보관함 열림")                            # 31
+                                                                # 32
+    def ride_elevator(self, floor):                             # 33
+        self.log.append(f"승강기:{floor}층")                      # 34
+                                                                # 35
+                                                                # 36
+class GpsMap:                                                   # 37
+    def route(self, start, goal):                               # 38
+        return [start, "중앙광장", goal]                          # 39
+                                                                # 40
+                                                                # 41
+class Dispatcher:                                               # 42
+    def __init__(self):                                         # 43
+        self.map = GpsMap()                                     # 44
+                                                                # 45
+    def deliver(self, robot, start, goal, floor=None):          # 46
+        for place in self.map.route(start, goal):               # 47
+            robot.drive_to(place)                               # 48
+        if floor is not None:                                   # 49
+            robot.ride_elevator(floor)                          # 50
+        robot.open_locker()                                     # 51
+        return robot.log                                        # 52
+
+
+# ===================== 공개 테스트 (수정 금지) =====================
+def _check(name, fn):
+    try:
+        fn()
+        print(f"[통과] {name}")
+        return True
+    except Exception as e:  # 실패해도 다음 테스트를 계속 실행
+        print(f"[실패] {name} -&gt; {type(e).__name__}: {e}")
+        return False
+
+
+def t1_roles():
+    assert issubclass(SidewalkRobot, Courier) and issubclass(BuildingRobot, Courier)
+    assert issubclass(BuildingRobot, ElevatorUser)
+    assert not issubclass(SidewalkRobot, ElevatorUser), "인도 로봇이 승강기 역할을 떠안고 있음"
+    assert not hasattr(SidewalkRobot(), "ride_elevator"), "인도 로봇에 쓸 수 없는 메서드가 남아 있음"
+
+
+def t2_injected_planner():
+    class FakePlanner(RoutePlanner):            # 테스트용 가짜 경로 계획기
+        def route(self, start, goal):
+            return [start, goal]
+    log = Dispatcher(FakePlanner()).deliver(SidewalkRobot(), "정문", "도서관 앞")
+    assert log == ["이동:정문", "이동:도서관 앞", "보관함 열림"], log
+
+
+def t3_building_with_floor():
+    log = Dispatcher(GpsMap()).deliver(BuildingRobot(), "기숙사", "공학관", floor=4)
+    assert log == ["이동:기숙사", "이동:중앙광장", "이동:공학관", "승강기:4층", "보관함 열림"], log
+
+
+def t4_refuse_before_moving():
+    robot = SidewalkRobot()
+    try:
+        Dispatcher(GpsMap()).deliver(robot, "정문", "공학관", floor=3)
+    except ValueError:
+        assert robot.log == [], "거절하기 전에 이미 움직였음"
+        return
+    raise AssertionError("승강기를 못 타는 로봇에 층 배달을 맡겼는데 ValueError가 없음")
+
+
+if __name__ == "__main__":
+    print("현재 동작:", Dispatcher().deliver(BuildingRobot(), "기숙사", "공학관", floor=4))  # 리팩터링 후에는 지우거나 새 구조에 맞게 고친다
+    tests = [("역할 인터페이스 분리", t1_roles), ("경로 계획기 주입", t2_injected_planner),
+             ("건물 로봇 층 배달", t3_building_with_floor), ("못 하는 일은 출발 전 거절", t4_refuse_before_moving)]
+    passed = sum(_check(n, f) for n, f in tests)
+    print(f"공개 테스트 {passed}/{len(tests)} 통과")</code></pre>
+
+<p class="sub">(1) 분석 <small>8점</small></p>
+<ol type="a">
+  <li><b>[3점]</b> ISP를 어기는 곳을 줄 번호로 지적하고, <b>누가 무엇을 억지로 떠안고 있는지</b> 쓰시오.</li>
+  <li><b>[3점]</b> DIP를 어기는 곳을 줄 번호로 지적하고, 이 때문에 <b>경로 계산 방식을 바꾸거나 테스트할 때</b> 생기는 문제를 쓰시오.</li>
+  <li><b>[2점]</b> 시작 코드에서 <code>Dispatcher().deliver(SidewalkRobot(), "정문", "공학관", floor=3)</code>을 실행하면 어떻게 되는지, 그 직후 로봇의 <code>log</code>에는 무엇이 남는지 쓰시오.</li>
+</ol>
+<div class="write tall">a)<br><br>b)<br><br>c)</div>
+
+<p class="sub">(2) 구현 <small>14점</small></p>
+<p>다음 이름과 규칙을 <b>그대로</b> 지켜 코드를 바꾸시오. 로그 문자열 형식(<code>이동:장소</code>, <code>승강기:N층</code>, <code>보관함 열림</code>)과 <code>GpsMap</code>의 경로는 바꾸지 않습니다.</p>
+<ul>
+  <li><code>Courier</code>: 모든 배달 로봇의 공통 역할(추상 클래스). <code>drive_to(place)</code>, <code>open_locker()</code>를 갖고, <code>log</code> 리스트를 준비한다.</li>
+  <li><code>ElevatorUser</code>: 승강기를 탈 수 있는 로봇만 갖는 역할(추상 클래스). <code>ride_elevator(floor)</code>를 갖는다.</li>
+  <li><code>SidewalkRobot</code>은 <code>Courier</code>만, <code>BuildingRobot</code>은 <code>Courier</code>와 <code>ElevatorUser</code>를 모두 구현한다. 인도 로봇에는 <code>ride_elevator</code>가 <b>없어야</b> 한다.</li>
+  <li><code>RoutePlanner</code>: 추상 클래스, <code>route(start, goal)</code>은 장소 이름 리스트를 돌려준다. <code>GpsMap</code>은 <code>RoutePlanner</code>를 구현한다.</li>
+  <li><code>Dispatcher(planner)</code>: 경로 계획기를 <b>생성자 인자로 받는다</b>. <code>deliver(robot, start, goal, floor=None)</code>은 로봇의 <code>log</code>를 돌려준다. <b>층이 지정되었는데 승강기를 탈 수 없는 로봇이면, 움직이기 전에 <code>ValueError</code>를 일으킨다.</b> <code>floor=0</code>도 층이 지정된 것으로 본다.</li>
+  <li><code>Dispatcher</code> 안에는 구체 로봇 클래스나 구체 지도 클래스의 이름이 나오지 않아야 한다.</li>
+</ul>
+<p>시작 코드 실행 결과(공개 테스트는 아직 모두 실패하는 것이 정상):</p>
+<pre><code class="out">현재 동작: ['이동:기숙사', '이동:중앙광장', '이동:공학관', '승강기:4층', '보관함 열림']
+[실패] 역할 인터페이스 분리 -&gt; NameError: name 'Courier' is not defined
+[실패] 경로 계획기 주입 -&gt; NameError: name 'RoutePlanner' is not defined
+[실패] 건물 로봇 층 배달 -&gt; TypeError: Dispatcher.__init__() takes 1 positional argument but 2 were given
+[실패] 못 하는 일은 출발 전 거절 -&gt; TypeError: Dispatcher.__init__() takes 1 positional argument but 2 were given
+공개 테스트 0/4 통과</code></pre>
+
+<p class="sub">(3) 공개 테스트 <code>t2_injected_planner</code>는 실제 지도 없이 <code>FakePlanner</code>로 <code>Dispatcher</code>를 시험합니다. 리팩터링 후에 이것이 가능해진 이유를 DIP로 1~2문장 설명하시오. <small>3점</small></p>
+<div class="write"></div>
+<p class="k" style="font-size:14px;color:var(--muted)">제출: (1)·(3)의 답과 완성한 <code>q5_delivery_robot.py</code> 파일.</p>
+</section>
+
+<nav class="pager" style="padding-left:0;padding-right:0"><a href="#top" onclick="scrollTo(0,0);return false">↑ 맨 위로</a><a href="hints.html">문제 해결 도움 자료 →</a></nav>
+</main>
+</body>
+</html>
