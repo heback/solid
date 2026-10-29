@@ -115,15 +115,16 @@ async function openDetail(x) {
   if (!rubric) {
     try {
       const d = (await rubricFn()).data;
-      rubric = { items: Object.fromEntries(d.items.map(i => [i.id, i.answerKey])), solutions: d.solutions };
+      rubric = { items: Object.fromEntries(d.items.map(i => [i.id, i.answerKey])), solutions: d.solutions, questions: d.questions };
     } catch (e) { $("#dMsg").textContent = "모범 답을 불러오지 못했습니다: " + (e.message || e.code); }
   }
   const ans = id => rubric?.items[id] ? `<details class="raw"><summary>모범 답·채점 기준</summary><pre>${esc(rubric.items[id])}</pre></details>` : "";
+  const qtext = q => rubric?.questions[q] ? `<details class="raw"><summary>문항 ${q} 문제</summary><pre>${esc(rubric.questions[q])}</pre></details>` : "";
   const sol = q => rubric?.solutions[q] ? `<details class="raw"><summary>문항 ${q} 모범 코드</summary><pre>${esc(rubric.solutions[q])}</pre></details>` : "";
   const byQ = {};
   d.items.forEach((it, i) => (byQ[it.q] ||= []).push([it, i]));
   $("#dBody").innerHTML = `<p>총점 <b id="dTotal">${total(d)}</b> / 100 <small class="mute">(${esc(d.model)})</small></p>` +
-    Object.keys(byQ).map(q => `<h3 class="qh">문항 ${q}</h3>${sol(q)}` + byQ[q].map(([it, i]) => `<div class="item" data-i="${i}">
+    Object.keys(byQ).map(q => `<h3 class="qh">문항 ${q}</h3>${qtext(q)}${sol(q)}` + byQ[q].map(([it, i]) => `<div class="item" data-i="${i}">
       <h3>${esc(it.id)}. ${esc(it.label)} ${it.needsReview ? '<span class="flag">직접 확인 필요</span>' : ""}</h3>
       <label>점수 <input type="number" min="0" max="${it.max}" value="${it.score}"> / ${it.max}</label>
       <textarea aria-label="피드백">${esc(it.feedback)}</textarea>${ans(it.id)}</div>`).join("")).join("") +
@@ -164,6 +165,9 @@ async function saveDetail() {
   } catch (e) { $("#dMsg").textContent = "저장 실패: " + e.code; return false; }
 }
 $("#dSave").onclick = saveDetail;
+// 문제·모범 답·모범 코드 접힌 칸을 한 번에 펼치거나 접는다.
+let allOpen = false;
+$("#dToggle").onclick = () => { allOpen = !allOpen; document.querySelectorAll("#dBody details.raw").forEach(d => { d.open = allOpen; }); $("#dToggle").textContent = allOpen ? "문제·정답 모두 접기" : "문제·정답 모두 펼치기"; };
 $("#dSend").onclick = async () => {
   if (!cur || !(await saveDetail())) return;
   const x = rows().find(y => y.uid === cur.uid);
@@ -177,5 +181,5 @@ $("#dRegrade").onclick = async () => {
   const nx = rows().find(y => y.uid === x.uid);
   if (nx?.r) openDetail(nx);
 };
-$("#detail").addEventListener("close", () => { cur = null; });
+$("#detail").addEventListener("close", () => { cur = null; allOpen = false; $("#dToggle").textContent = "문제·정답 모두 펼치기"; });
 render();
