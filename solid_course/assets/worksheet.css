@@ -103,18 +103,12 @@ details[open]>summary{margin-bottom:var(--s-1)}
 .pyedit-hl{position:absolute;inset:0;margin:0;padding:var(--s-3) var(--s-4);border:0;border-radius:0;background:transparent;box-shadow:none;overflow:hidden;pointer-events:none;font-family:var(--font-mono);font-size:.84rem;line-height:1.6;white-space:pre;tab-size:4;color:var(--ink)}
 .pyedit-pop pre,.pyedit-hl{font-variant-ligatures:none}
 
-/* ── 정답 표시(answers.js): T 키로 숨김/표시 ── */
-.ans-box{margin:calc(-1 * var(--s-2)) 0 var(--s-4);padding:var(--s-2) var(--s-3);background:var(--ok-soft);border:1px solid var(--ok);border-left-width:4px;border-radius:var(--r-md);font-size:var(--fs-sm);line-height:1.65;white-space:pre-wrap;color:var(--ink)}
-.ans-box.inline{display:inline-block;margin:var(--s-1) 0 var(--s-1) var(--s-2);padding:2px var(--s-3);vertical-align:middle}
-td>.ans-box{margin:var(--s-1) 0 0}
-.ans-box.code{white-space:normal;margin:var(--s-2) 0 var(--s-4)}
-.ans-box.code pre{margin:var(--s-2) 0 0;background:var(--surface);max-height:420px;border-left-color:var(--ok)}
-.ans-tag{display:inline-block;margin-right:var(--s-2);padding:0 var(--s-2);border-radius:var(--r-sm);background:var(--ok);color:var(--on-brand);font-size:var(--fs-xs);font-weight:var(--fw-bold);letter-spacing:.04em}
-.ans-pick{background:var(--ok-soft);outline:2px solid var(--ok);outline-offset:2px;border-radius:var(--r-sm)}
-.ans-pick::after{content:" ← 정답";color:var(--ok);font-size:var(--fs-xs);font-weight:var(--fw-bold)}
-body.hide-answers .ans-box{display:none}
-body.hide-answers .ans-pick{background:none;outline:none}
-body.hide-answers .ans-pick::after{content:none}
+/* ── 정답 표시(answers.js): 입력칸에 정답이 채워진 동안(T 키로 지움/채움) ── */
+body.answers-on .activity textarea:not(.pyedit-code),body.answers-on .activity input[type=text],body.answers-on .activity select{background:var(--ok-soft);border-color:var(--ok);color:var(--ink)}
+body.answers-on .activity :disabled{opacity:1;color:var(--ink);-webkit-text-fill-color:var(--ink);cursor:default}
+body.answers-on .activity input[type=checkbox]:checked,body.answers-on .activity input[type=radio]:checked{outline:3px solid var(--ok);outline-offset:2px;border-radius:50%}
+body.answers-on .pyedit{border-color:var(--ok);box-shadow:0 0 0 3px var(--ok-soft)}
+body.answers-on .pyedit-name::after{content:"정답";margin-left:var(--s-2);padding:0 var(--s-2);border-radius:var(--r-sm);background:var(--ok);color:var(--on-brand);font-family:var(--font-sans);font-size:var(--fs-xs);font-weight:var(--fw-bold)}
 
 /* ── 좁은 화면: 표는 가로로 밀어서 본다 ── */
 @media (max-width:720px){.ws-tools{width:auto;max-width:none;margin:var(--s-4) var(--s-2) var(--s-2);padding:var(--s-2);gap:var(--s-1);justify-content:center;bottom:var(--s-2)}.ws-tools button{padding:2px var(--s-2);font-size:var(--fs-xs)}.ws-tools .saved{display:none}.activity{padding:var(--s-3) var(--s-3) var(--s-4)}.activity table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}}

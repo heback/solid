@@ -11,7 +11,11 @@
     if (el.scrollHeight) el.style.height = (el.scrollHeight + 2) + "px";
   };
   const growAll = () => document.querySelectorAll("main textarea").forEach(grow);
+  // 정답 표시 중(answers.js)에는 입력칸에 정답이 들어 있으므로 저장·내보내기·불러오기·지우기를 막는다.
+  const answersOn = () => !!(window.solidAnswers && window.solidAnswers.shown);
+  const blocked = () => { if (!answersOn()) return false; alert("정답이 표시된 상태입니다. T 키로 정답을 숨긴 뒤 사용하세요."); return true; };
   function save() {
+    if (answersOn()) return;
     fields().forEach((el, i) => {
       try {
         const v = (el.type === "checkbox" || el.type === "radio") ? el.checked : el.value;
@@ -40,6 +44,7 @@
   const setVal = (el, v) => { if (el.type === "checkbox" || el.type === "radio") el.checked = !!v; else el.value = v == null ? "" : v; };
   // JSON 내보내기: { format, page, savedAt, fields: { 입력칸키: 값 } }
   function exportJson() {
+    if (blocked()) return;
     // 평가 페이지(body[data-require-id])는 학번·성명이 있어야 저장한다.
     if (document.body.dataset.requireId !== undefined) {
       const miss = ["id-no", "id-name"].map(id => document.getElementById(id)).find(el => el && !el.value.trim());
@@ -59,6 +64,7 @@
   }
   // JSON 불러오기: 검증 후 현재 입력을 덮어쓴다.
   function importJson(file) {
+    if (blocked()) return;
     const status = msg => { const s = document.querySelector(".saved"); if (s) s.textContent = msg; };
     const r = new FileReader();
     r.onerror = () => alert("파일을 읽지 못했습니다.");
@@ -121,6 +127,7 @@
       wasClosed = [];
     });
     document.getElementById("ws-reset").onclick = () => {
+      if (blocked()) return;
       if (!confirm("이 학습지의 입력을 모두 지울까요?")) return;
       fields().forEach((el, i) => { try { localStorage.removeItem(key(el, i)); } catch (e) {} });
       fields().forEach(el => { if (el.type === "checkbox" || el.type === "radio") el.checked = false; else el.value = ""; });
