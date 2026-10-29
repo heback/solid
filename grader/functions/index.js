@@ -81,6 +81,16 @@ exports.submitExam = onCall({ region: REGION, memory: "256MiB", maxInstances: 10
   return { ok: true };
 });
 
+// [교사] 모범 답·채점 기준(교사 화면에 표시)
+exports.getRubric = onCall({ region: REGION }, async req => {
+  checkTeacher(req.auth);
+  const r = require("./rubric/exam.json");
+  return {
+    items: r.items.map(({ id, q, label, max, answerKey }) => ({ id, q, label, max, answerKey })),
+    solutions: Object.fromEntries(Object.entries(r.questions).filter(([, v]) => v.shownSolution).map(([q, v]) => [q, v.shownSolution])),
+  };
+});
+
 // [교사] 학생이 낸 파일 내용(답안 확인용)
 exports.getSubmission = onCall({ region: REGION }, async req => {
   checkTeacher(req.auth);

@@ -1,7 +1,8 @@
 import { collection, doc, updateDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-firestore.js";
 import { $, esc, fmtDate, millis, db, call, start, isTeacher } from "./common.js";
 
-const gradeFn = call("gradeExam", 190000), sendFn = call("sendFeedback", 120000), fileFn = call("getSubmission");
+const gradeFn = call("gradeExam", 190000), sendFn = call("sendFeedback", 120000), fileFn = call("getSubmission"), rubricFn = call("getRubric");
+let rubric = null;   // { items:{id: 모범 답·기준}, solutions:{문항: 모범 코드} } (처음 열 때 한 번만 받는다)
 let subs = new Map(), results = new Map();   // uid -> 문서 데이터
 const selected = new Set(), grading = new Set(), errors = new Map();
 let unsubs = [];
@@ -111,13 +112,21 @@ async function openDetail(x) {
   const d = cur.result;
   $("#dTitle").textContent = `${x.s.studentNo} ${x.s.studentName} · ${x.s.email}`;
   $("#dMsg").textContent = "";
+  if (!rubric) {
+    try {
+      const d = (await rubricFn()).data;
+      rubric = { items: Object.fromEntries(d.items.map(i => [i.id, i.answerKey])), solutions: d.solutions };
+    } catch (e) { $("#dMsg").textContent = "모범 답을 불러오지 못했습니다: " + (e.message || e.code); }
+  }
+  const ans = id => rubric?.items[id] ? `<details class="raw"><summary>모범 답·채점 기준</summary><pre>${esc(rubric.items[id])}</pre></details>` : "";
+  const sol = q => rubric?.solutions[q] ? `<details class="raw"><summary>문항 ${q} 모범 코드</summary><pre>${esc(rubric.solutions[q])}</pre></details>` : "";
   const byQ = {};
   d.items.forEach((it, i) => (byQ[it.q] ||= []).push([it, i]));
   $("#dBody").innerHTML = `<p>총점 <b id="dTotal">${total(d)}</b> / 100 <small class="mute">(${esc(d.model)})</small></p>` +
-    Object.keys(byQ).map(q => `<h3 class="qh">문항 ${q}</h3>` + byQ[q].map(([it, i]) => `<div class="item" data-i="${i}">
+    Object.keys(byQ).map(q => `<h3 class="qh">문항 ${q}</h3>${sol(q)}` + byQ[q].map(([it, i]) => `<div class="item" data-i="${i}">
       <h3>${esc(it.id)}. ${esc(it.label)} ${it.needsReview ? '<span class="flag">직접 확인 필요</span>' : ""}</h3>
       <label>점수 <input type="number" min="0" max="${it.max}" value="${it.score}"> / ${it.max}</label>
-      <textarea aria-label="피드백">${esc(it.feedback)}</textarea></div>`).join("")).join("") +
+      <textarea aria-label="피드백">${esc(it.feedback)}</textarea>${ans(it.id)}</div>`).join("")).join("") +
     `<div class="item"><h3>종합 평가</h3><textarea id="dOverall" aria-label="종합 평가">${esc(d.overall)}</textarea></div>
      <details class="raw" id="raw"><summary>학생 답안 원문 보기</summary><div id="rawBody" class="mute">불러오는 중…</div></details>`;
   $("#detail").showModal();

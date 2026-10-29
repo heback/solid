@@ -13,6 +13,7 @@ const text = html => html
   .replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/g, "")
   .replace(/<option[^>]*>[^<]*<\/option>/g, "")
   .replace(/<textarea[^>]*><\/textarea>|<input[^>]*>|<select[\s\S]*?<\/select>/g, "")
+  .replace(/<\/t[dh]>/g, " │ ")
   .replace(/<\/(p|li|tr|h\d|div|details|table)>|<br\s*\/?>/g, "\n")
   .replace(/<[^>]+>/g, "")
   .replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&nbsp;/g, " ")
@@ -41,7 +42,8 @@ for (const q of [1, 2, 3, 4, 5]) {
   const parts = ans.split(/(?=<h3>)/).slice(1);
   const starter = CODE[q] ? fs.readFileSync(path.join(ROOT, "code", CODE[q]), "utf8") : "";
   const solution = CODE[q] ? fs.readFileSync(path.join(ROOT, "code/solutions", CODE[q]), "utf8") : "";
-  questions[q] = { text: text(qsec), starterCode: q === 2 || q === 3 ? starter : "", solutionCode: q >= 4 ? solution : "" };
+  // solutionCode는 AI 채점 프롬프트용(구현 문항만), shownSolution은 교사 화면에 보여 줄 모범 코드(코드가 있는 모든 문항)
+  questions[q] = { text: text(qsec), starterCode: q === 2 || q === 3 ? starter : "", solutionCode: q >= 4 ? solution : "", shownSolution: solution };
   for (const [id, prefix, label, max] of SPEC[q]) {
     // "(1)"이 "(1)(2)"와 헷갈리지 않도록 접두어 바로 뒤가 공백인 h3만 고른다.
     const part = parts.find(p => { const h = text(p.match(/<h3>([\s\S]*?)<\/h3>/)[1]); return h.startsWith(prefix + " "); });
