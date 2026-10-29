@@ -87,6 +87,8 @@ details[open]>summary{margin-bottom:var(--s-1)}
 .pyedit-status{font-size:var(--fs-xs);color:var(--ink-3)}
 .activity textarea.pyedit-code{position:relative;display:block;width:100%;box-sizing:border-box;padding:var(--s-3) var(--s-4);background:transparent;color:transparent;caret-color:var(--ink);-webkit-text-fill-color:transparent;margin:0;border:0;border-radius:0;min-height:200px;max-height:560px;font-family:var(--font-mono);font-size:.84rem;line-height:1.6;white-space:pre;overflow:auto;tab-size:4;resize:vertical;box-shadow:none}
 .activity textarea.pyedit-code:focus{background:transparent;box-shadow:none}
+/* 글자가 투명한 편집 칸: 선택 영역에서도 글자는 아래 하이라이트 층이 보이게 하고 배경색만 칠한다 */
+.activity textarea.pyedit-code::selection{background:var(--brand-ring);color:transparent;-webkit-text-fill-color:transparent}
 .pyedit-out{margin:0;padding:var(--s-3) var(--s-4);min-height:44px;max-height:320px;overflow:auto;border:0;border-top:1px solid var(--line);border-radius:0;background:var(--console-bg);color:var(--console-fg);font-size:.82rem;white-space:pre-wrap;box-shadow:none}
 .pyedit-out.err{color:var(--console-err)}
 .pyedit-pop{width:min(900px,94vw);max-height:88vh;padding:0;border:1px solid var(--line);border-radius:var(--r-lg);background:var(--surface);color:var(--ink);box-shadow:var(--sh-3)}
@@ -107,8 +109,8 @@ details[open]>summary{margin-bottom:var(--s-1)}
 body.answers-on .activity textarea:not(.pyedit-code),body.answers-on .activity input[type=text],body.answers-on .activity select{background:var(--ok-soft);border-color:var(--ok);color:var(--ink)}
 body.answers-on .activity :disabled{opacity:1;color:var(--ink);-webkit-text-fill-color:var(--ink);cursor:default}
 body.answers-on .activity input[type=checkbox]:checked,body.answers-on .activity input[type=radio]:checked{outline:3px solid var(--ok);outline-offset:2px;border-radius:50%}
-body.answers-on .pyedit{border-color:var(--ok);box-shadow:0 0 0 3px var(--ok-soft)}
-body.answers-on .pyedit-name::after{content:"정답";margin-left:var(--s-2);padding:0 var(--s-2);border-radius:var(--r-sm);background:var(--ok);color:var(--on-brand);font-family:var(--font-sans);font-size:var(--fs-xs);font-weight:var(--fw-bold)}
+body.answers-on .pyedit.is-answer{border-color:var(--ok);box-shadow:0 0 0 3px var(--ok-soft)}
+body.answers-on .pyedit.is-answer .pyedit-name::after{content:"정답";margin-left:var(--s-2);padding:0 var(--s-2);border-radius:var(--r-sm);background:var(--ok);color:var(--on-brand);font-family:var(--font-sans);font-size:var(--fs-xs);font-weight:var(--fw-bold)}
 
 /* ── 좁은 화면: 표는 가로로 밀어서 본다 ── */
 @media (max-width:720px){.ws-tools{width:auto;max-width:none;margin:var(--s-4) var(--s-2) var(--s-2);padding:var(--s-2);gap:var(--s-1);justify-content:center;bottom:var(--s-2)}.ws-tools button{padding:2px var(--s-2);font-size:var(--fs-xs)}.ws-tools .saved{display:none}.activity{padding:var(--s-3) var(--s-3) var(--s-4)}.activity table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}}

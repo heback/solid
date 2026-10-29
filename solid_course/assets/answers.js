@@ -10,7 +10,9 @@
   let answers = null, solutions = {};
   let mine = new Map();                  // 정답을 채우기 전 학생의 값
 
-  const fields = () => Array.from(document.querySelectorAll("main [data-k]")).filter(el => !el.dataset.k.startsWith("id-"));
+  // 정답이 없는 칸(이름·학번, 정답 코드가 없는 편집기)은 건드리지 않는다.
+  const hasAnswer = el => { const k = el.dataset.k; return !k.startsWith("id-") && (k.startsWith("py-") ? !!solutions[k.slice(3)] : true); };
+  const fields = () => Array.from(document.querySelectorAll("main [data-k]")).filter(hasAnswer);
   const isCheck = el => el.type === "checkbox" || el.type === "radio";
   const fire = el => el.dispatchEvent(new Event("input", { bubbles: true }));   // 편집기 색칠·글상자 높이 갱신
   const label = () => { const b = document.getElementById("ws-answers"); if (b) b.textContent = state.shown ? "정답 지우기 (T)" : "정답 채우기 (T)"; };
@@ -26,6 +28,7 @@
       if (el.tagName === "SELECT") { el.value = typeof v === "string" ? v : ""; el.disabled = true; continue; }
       el.value = typeof v === "string" ? v : "";
       el.readOnly = true;
+      el.closest(".pyedit")?.classList.add("is-answer");
       fire(el);
     }
     label();
@@ -38,7 +41,7 @@
       const v = mine.get(el);
       if (isCheck(el)) { el.checked = !!v; el.disabled = false; continue; }
       el.value = v == null ? "" : v;
-      if (el.tagName === "SELECT") el.disabled = false; else { el.readOnly = false; fire(el); }
+      if (el.tagName === "SELECT") el.disabled = false; else { el.readOnly = false; el.closest(".pyedit")?.classList.remove("is-answer"); fire(el); }
     }
     mine = new Map();
     label();
