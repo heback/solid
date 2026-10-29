@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SOLID 평가 문제·정답 (교사)</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  .qbox{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin-bottom:20px}
+  .qbox h2{font-size:1.1rem;margin:0 0 8px;color:var(--accent)}
+  .qbox pre{white-space:pre-wrap;word-break:break-word;font:inherit;font-size:.93rem;margin:6px 0 12px;background:var(--bg);padding:10px 12px;border-radius:8px}
+  .qbox pre.code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85rem;white-space:pre;overflow:auto;max-height:480px}
+  .qbox h3{font-size:.98rem;margin:14px 0 2px}
+  .qbox .lbl{font-size:.85rem;color:var(--mute);margin:8px 0 0}
+  .toc{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+</style>
+</head>
+<body>
+<header>
+  <h1>SOLID 평가 문제·정답 · 교사</h1>
+  <div id="user" hidden><a class="btn ghost sm noprint" href="teacher.html">← 채점 화면</a><button id="print" type="button" class="ghost sm noprint">인쇄</button><span id="who"></span><button id="logout" type="button" class="ghost">로그아웃</button></div>
+</header>
+<main id="login" hidden>
+  <p>교사 계정(<b>@ts.hs.kr</b>)으로 로그인하세요.</p>
+  <button id="loginBtn" type="button">Google로 로그인</button>
+  <p id="loginMsg" class="err" role="alert"></p>
+</main>
+<main id="app" hidden>
+  <p class="note">교사 전용 화면입니다. 학생에게 보여 주거나 공유하지 마세요.</p>
+  <div id="toc" class="toc"></div>
+  <div id="body"><p class="mute">불러오는 중…</p></div>
+</main>
+<script type="module" src="key.js"></script>
+</body>
+</html>

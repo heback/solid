@@ -87,6 +87,7 @@ exports.getRubric = onCall({ region: REGION }, async req => {
   const r = require("./rubric/exam.json");
   return {
     items: r.items.map(({ id, q, label, max, answerKey }) => ({ id, q, label, max, answerKey })),
+    questions: Object.fromEntries(Object.entries(r.questions).map(([q, v]) => [q, v.text])),
     solutions: Object.fromEntries(Object.entries(r.questions).filter(([, v]) => v.shownSolution).map(([q, v]) => [q, v.shownSolution])),
   };
 });
