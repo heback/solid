@@ -77,17 +77,31 @@
     const hl = document.createElement("pre");
     hl.className = "pyedit-hl";
     hl.setAttribute("aria-hidden", "true");
-    wrap.append(hl, ta);
+    const gutter = document.createElement("pre");   // 행 번호(편집 칸과 같은 줄 높이로 함께 스크롤)
+    gutter.className = "pyedit-gutter";
+    gutter.setAttribute("aria-hidden", "true");
+    wrap.append(gutter, hl, ta);
     box.append(bar, wrap, out);
 
     const $ = a => bar.querySelector('[data-a="' + a + '"]');
     const status = t => { bar.querySelector(".pyedit-status").textContent = t; };
     let timer = null, runId = 0;
 
-    const paint = () => { hl.innerHTML = highlight(ta.value) + "\n"; hl.scrollTop = ta.scrollTop; hl.scrollLeft = ta.scrollLeft; };
+    let lastLines = 0;
+    const sync = () => { hl.scrollTop = gutter.scrollTop = ta.scrollTop; hl.scrollLeft = ta.scrollLeft; };
+    const paint = () => {
+      hl.innerHTML = highlight(ta.value) + "\n";
+      const n = ta.value.split("\n").length;
+      if (n !== lastLines) {   // 줄 수가 바뀔 때만 번호를 다시 만든다. 번호 칸 너비는 자릿수에 맞춘다.
+        lastLines = n;
+        gutter.textContent = Array.from({ length: n }, (_, i) => i + 1).join("\n") + "\n";
+        wrap.style.setProperty("--gw", "calc(" + Math.max(2, String(n).length) + "ch + 22px)");
+      }
+      sync();
+    };
     const fit = () => { ta.style.height = "auto"; ta.style.height = Math.min(ta.scrollHeight + 4, 560) + "px"; paint(); };
     ta.addEventListener("input", fit);
-    ta.addEventListener("scroll", () => { hl.scrollTop = ta.scrollTop; hl.scrollLeft = ta.scrollLeft; });
+    ta.addEventListener("scroll", sync);
     paint();
     requestAnimationFrame(fit);
     window.addEventListener("load", fit); // worksheet.js가 저장된 내용을 복원한 뒤 다시 그린다.
@@ -102,7 +116,7 @@
         e.preventDefault();
         if (s === en && !e.shiftKey) { set(v.slice(0, s) + "    " + v.slice(en), s + 4, s + 4); return; }
         const block = v.slice(ls, en), lines = block.split("\n");
-        const edited = lines.map(l => e.shiftKey ? l.replace(/^ {1,4}/, "") : "    " + l).join("\n");
+        const edited = lines.map(l => e.shiftKey ? l.replace(/^ {1,4}/, "") : (l ? "    " + l : l)).join("\n");
         const delta = edited.length - block.length;
         set(v.slice(0, ls) + edited + v.slice(en), e.shiftKey ? Math.max(ls, s - Math.min(4, (lines[0].match(/^ */)[0].length))) : s + 4, en + delta);
       } else if (e.key === "Enter" && s === en && !e.isComposing) {
