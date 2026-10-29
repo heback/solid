@@ -20,8 +20,6 @@
   .sub small{font-weight:400;color:var(--muted)}
   .write{min-height:5.5em;border:1px dashed var(--line);border-radius:8px;margin:6px 0 14px;padding:8px 12px;color:var(--muted);font-size:13px}
   .write.tall{min-height:9em}
-  .submitbtn{display:inline-block;padding:8px 18px;border-radius:8px;background:var(--accent);color:#fff!important;text-decoration:none;font-weight:700}
-  .submitbox{margin:14px 0;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
   .hintlink{font-size:14px;color:var(--accent);text-decoration:none}
   td.blank{min-width:70px}
   h2 .pts{font-size:15px;font-weight:400;color:var(--muted)}
@@ -29,7 +27,7 @@
   .qsec textarea.cell{min-width:0}
   .qsec input.num{min-width:60px;width:100%}
   @media print{
-    header.top nav,.hintlink,.toc,.submitbox{display:none}
+    header.top nav,.hintlink,.toc{display:none}
     body{font-size:13px;line-height:1.6;background:#fff;color:#000}
     section.qsec{break-before:page}
     section.qsec:first-of-type{break-before:auto}
@@ -40,7 +38,7 @@
   }
 </style>
 </head>
-<body data-require-id>
+<body data-require-id data-submit-url="https://solid-grader-dshs.web.app/">
 <header class="top">
   <nav>
     <a href="hints.html" target="_blank" rel="noopener">문제 해결 도움 자료(힌트)</a>
@@ -63,7 +61,7 @@
     <ul>
       <li>실행: 문항 4·5는 편집기의 <b>실행</b> 버튼을 누릅니다. 시작 코드는 그대로 실행됩니다(구현 문항은 처음에 공개 테스트가 <b>[실패]</b>로 나오는 것이 정상).</li>
       <li>구현 문항(4, 5)은 파일 맨 아래 <b>공개 테스트는 고치지 말고</b> 모두 <b>[통과]</b>가 나오게 만드세요. 공개 테스트를 통과해도 <b>구체 클래스 이름으로 분기</b>하거나 <b>결과를 그대로 적어 넣은</b> 답은 감점됩니다. 채점할 때 공개되지 않은 테스트를 더 돌립니다.</li>
-      <li>답은 아래 칸에 직접 입력하거나 고르세요. <b>학번과 성명</b>을 맨 위에 먼저 입력하세요. 입력 내용은 이 브라우저에 <b>임시 저장</b>됩니다(입력할 때마다, 30초마다). 새로고침·브라우저 오류·실수로 닫은 뒤에도 같은 브라우저로 이 페이지를 다시 열면 복구됩니다. 단, 다른 컴퓨터나 브라우저 데이터 삭제 후에는 복구되지 않으니, 중간중간 아래쪽 <b>💾 JSON 저장</b>으로 파일을 내려받아 두고 문제가 생기면 <b>📂 JSON 불러오기</b>로 되살리세요. 최종 제출은 JSON 파일입니다(학번과 성명이 비어 있으면 저장되지 않습니다). 저장한 파일은 맨 아래 <b>제출</b> 버튼으로 이동해 학교 계정으로 로그인해 제출합니다. 구현 문항(4, 5)은 아래 편집기에서 코드를 고치고 <b>실행</b>해 공개 테스트를 확인하세요.</li>
+      <li>답은 아래 칸에 직접 입력하거나 고르세요. <b>학번과 성명</b>을 맨 위에 먼저 입력하세요. 입력 내용은 이 브라우저에 <b>임시 저장</b>됩니다(입력할 때마다, 30초마다). 새로고침·브라우저 오류·실수로 닫은 뒤에도 같은 브라우저로 이 페이지를 다시 열면 복구됩니다. 단, 다른 컴퓨터나 브라우저 데이터 삭제 후에는 복구되지 않으니, 중간중간 아래쪽 <b>💾 JSON 저장</b>으로 파일을 내려받아 두고 문제가 생기면 <b>📂 JSON 불러오기</b>로 되살리세요. 최종 제출은 JSON 파일입니다(학번과 성명이 비어 있으면 저장되지 않습니다). 저장한 파일은 화면 아래 도구 모음의 <b>제출</b> 버튼으로 이동해 학교 계정으로 로그인해 제출합니다. 구현 문항(4, 5)은 아래 편집기에서 코드를 고치고 <b>실행</b>해 공개 테스트를 확인하세요.</li>
       <li>문항 3 (1)은 <b>실행하지 말고</b> 먼저 예측해서 쓰세요.</li>
     </ul>
   </div>
@@ -754,7 +752,6 @@ if __name__ == "__main__":
 </section>
 
 <nav class="pager" style="padding-left:0;padding-right:0"><a href="#top" onclick="scrollTo(0,0);return false">↑ 맨 위로</a><a href="hints.html" target="_blank" rel="noopener">문제 해결 도움 자료 →</a></nav>
-<div class="submitbox"><a class="submitbtn" href="https://solid-grader-dshs.web.app/" target="_blank" rel="noopener">제출</a></div>
 </main>
 </body>
 </html>

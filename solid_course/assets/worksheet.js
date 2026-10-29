@@ -96,6 +96,14 @@
     bar.className = "ws-tools";
     bar.innerHTML = '<span class="saved"></span><button type="button" id="ws-export">💾 JSON 저장</button><button type="button" id="ws-import">📂 JSON 불러오기</button><input type="file" id="ws-file" accept="application/json,.json" hidden><button type="button" id="ws-print">🖨 인쇄/PDF</button><button type="button" id="ws-reset">입력 지우기</button>';
     document.body.appendChild(bar);
+    // 평가 페이지(body[data-submit-url])는 도구 모음 맨 끝에 제출 버튼을 둔다(새 탭으로 열기).
+    if (document.body.dataset.submitUrl) {
+      const b = document.createElement("button");
+      b.type = "button"; b.id = "ws-submit"; b.textContent = "제출";
+      b.style.cssText = "background:var(--accent);color:#fff";
+      b.onclick = () => window.open(document.body.dataset.submitUrl, "_blank", "noopener");
+      bar.appendChild(b);
+    }
     document.getElementById("ws-export").onclick = exportJson;
     const fileInput = document.getElementById("ws-file");
     document.getElementById("ws-import").onclick = () => fileInput.click();
