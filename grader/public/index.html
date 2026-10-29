@@ -3,13 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SOLID 학습지 AI 채점기</title>
+<title>SOLID 평가 답안 제출</title>
 <link rel="stylesheet" href="style.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.2/html2pdf.bundle.min.js"></script>
 </head>
 <body>
 <header>
-  <h1>SOLID 학습지 AI 채점기</h1>
+  <h1>SOLID 평가 답안 제출</h1>
   <div id="user" hidden><span id="who"></span><button id="logout" type="button" class="ghost">로그아웃</button></div>
 </header>
 
@@ -21,34 +20,18 @@
 
 <main id="app" hidden>
   <section id="drop" tabindex="0">
-    <p><b>학생 JSON 파일</b>을 여기에 끌어 놓거나 <label class="link">파일 선택<input id="pick" type="file" accept="application/json,.json" multiple hidden></label>하세요. 차시는 파일에서 자동으로 인식해 차시별로 저장합니다. 같은 학생·같은 차시를 다시 올리면 덮어씁니다.</p>
-    <p id="upMsg" class="note" role="status"></p>
+    <p><b>평가 화면에서 저장한 답안 파일(JSON)</b>을 여기에 끌어 놓거나 <label class="link">파일 선택<input id="pick" type="file" accept="application/json,.json" hidden></label>하세요.</p>
+    <p class="note">파일은 평가 화면 아래쪽 <b>💾 JSON 저장</b>으로 만듭니다(파일 이름 예: <code>exam_학번_성명.json</code>). 다시 제출하면 이전 제출을 덮어쓰고, 이미 받은 채점 결과는 사라집니다.</p>
+    <p id="msg" class="note" role="status"></p>
   </section>
 
-  <nav id="tabs" aria-label="차시"></nav>
-
-  <div class="bar">
-    <button id="gradeAll" type="button">미채점 모두 채점</button>
-    <button id="gradeSel" type="button" class="ghost">선택 채점</button>
-    <button id="pdfAll" type="button" class="ghost">완료된 목록 PDF</button>
-    <button id="delSel" type="button" class="ghost danger">선택 삭제</button>
-    <span id="summary"></span>
-  </div>
-
-  <table id="list">
-    <thead><tr><th><input type="checkbox" id="selAll" aria-label="전체 선택"></th><th>차시</th><th>이름</th><th>학번</th><th>업로드</th><th>상태</th><th>점수</th><th></th></tr></thead>
-    <tbody></tbody>
+  <h2 style="font-size:1.05rem;margin:22px 0 8px">내 제출 현황</h2>
+  <table id="status">
+    <thead><tr><th>학번·성명</th><th>제출일시</th><th>채점 여부</th><th>피드백 보고서</th></tr></thead>
+    <tbody><tr><td colspan="4" class="mute">아직 제출한 답안이 없습니다.</td></tr></tbody>
   </table>
-  <p class="note">파일과 채점 결과는 서버(Storage·Firestore)에 저장됩니다. AI 채점은 참고용이므로 <b>결과 보기</b>에서 점수와 피드백을 고쳐 저장할 수 있습니다.</p>
+  <p class="note">채점이 끝나고 선생님이 피드백을 보내면 '채점 완료'로 바뀌고 보고서 링크가 나타납니다.</p>
 </main>
-
-<dialog id="detail">
-  <form method="dialog" class="dlg-head"><h2 id="dTitle"></h2><button class="ghost" value="close">닫기</button></form>
-  <div id="dBody"></div>
-  <div class="bar"><button id="dSave" type="button">수정 내용 저장</button><button id="dPdf" type="button" class="ghost">PDF 다운로드</button><span id="dMsg" class="note" role="status"></span></div>
-</dialog>
-
-<div id="print" aria-hidden="true"></div>
-<script type="module" src="app.js"></script>
+<script type="module" src="student.js"></script>
 </body>
 </html>

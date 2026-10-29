@@ -5,3 +5,6 @@ export const firebaseConfig = {
   projectId: "solid-grader-dshs",
   appId: "1:841438527421:web:56a5bd81d75da2294a9cd4",
 };
+
+// 교사 화면 표시용(화면 안내에만 쓰임). 실제 권한은 firestore.rules와 Functions의 TEACHER_EMAILS가 정한다.
+export const TEACHER_EMAILS = ["heback@ts.hs.kr"];

@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SOLID 평가 채점 (교사)</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>SOLID 평가 채점 · 교사</h1>
+  <div id="user" hidden><span id="who"></span><button id="logout" type="button" class="ghost">로그아웃</button></div>
+</header>
+
+<main id="login" hidden>
+  <p>교사 계정(<b>@ts.hs.kr</b>)으로 로그인하세요.</p>
+  <button id="loginBtn" type="button">Google로 로그인</button>
+  <p id="loginMsg" class="err" role="alert"></p>
+</main>
+
+<main id="app" hidden>
+  <p id="denied" class="err" hidden>교사 권한이 없는 계정입니다. 학생 제출 화면은 <a href="index.html">여기</a>입니다.</p>
+  <div id="board">
+    <div class="bar">
+      <button id="gradeNew" type="button">미채점 일괄 채점</button>
+      <button id="gradeSel" type="button" class="ghost">선택 채점(재채점은 덮어씀)</button>
+      <button id="sendAll" type="button">채점 완료 일괄 전송</button>
+      <button id="sendSel" type="button" class="ghost">선택 전송</button>
+      <span id="summary" class="grow"></span>
+    </div>
+    <p id="msg" class="note" role="status"></p>
+    <table id="list">
+      <thead><tr><th><input type="checkbox" id="selAll" aria-label="전체 선택"></th><th>학번</th><th>성명</th><th class="hide-s">계정</th><th>제출일시</th><th>채점</th><th>점수</th><th>피드백 전송</th><th></th></tr></thead>
+      <tbody></tbody>
+    </table>
+    <p class="note">AI 채점은 참고용입니다. <b>결과 조회</b>에서 점수와 피드백을 고친 뒤 <b>전송</b>하세요. 전송하기 전에는 학생이 점수를 볼 수 없습니다. 점수를 고치거나 다시 채점한 뒤에는 다시 전송해야 학생 보고서에 반영됩니다. 학생이 답안을 다시 제출하면 이전 채점 결과와 보고서는 삭제됩니다.</p>
+  </div>
+</main>
+
+<dialog id="detail">
+  <form method="dialog" class="dlg-head"><h2 id="dTitle"></h2><button class="ghost" value="close">닫기</button></form>
+  <div id="dBody"></div>
+  <div class="bar">
+    <button id="dSave" type="button">수정 내용 저장</button>
+    <button id="dSend" type="button" class="ghost">저장하고 학생에게 전송</button>
+    <button id="dRegrade" type="button" class="ghost danger">다시 채점(덮어쓰기)</button>
+    <span id="dMsg" class="note" role="status"></span>
+  </div>
+</dialog>
+<script type="module" src="teacher.js"></script>
+</body>
+</html>

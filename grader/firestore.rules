@@ -1,16 +1,27 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // 교사 1명만 읽기·쓰기. 채점 결과 기록은 Functions(관리자 권한)가 한다.
-    function isTeacher() {
+    function signedIn() {
       return request.auth != null
         && request.auth.token.email_verified == true
-        && request.auth.token.email == 'heback@ts.hs.kr';
+        && request.auth.token.email.matches('.*@ts[.]hs[.]kr');
     }
-    match /submissions/{id} {
-      allow read, delete: if isTeacher();
-      allow create, update: if isTeacher()
-        && request.resource.data.session in [1, 2, 3];
+    function isTeacher() {
+      return signedIn() && request.auth.token.email == 'heback@ts.hs.kr';
+    }
+
+    // 제출 기록: 학생은 자기 것만 읽는다. 쓰기는 Functions(관리자 권한)만 한다.
+    match /exam_submissions/{uid} {
+      allow read: if isTeacher() || (signedIn() && request.auth.uid == uid);
+    }
+    // 채점 결과(전송 전 비공개): 교사만 읽고, 점수·피드백 수정만 교사가 직접 한다.
+    match /exam_results/{uid} {
+      allow read: if isTeacher();
+      allow update: if isTeacher();
+    }
+    // 학생에게 전송된 피드백 보고서: 본인과 교사만 읽는다. 쓰기는 Functions만 한다.
+    match /exam_reports/{uid} {
+      allow read: if isTeacher() || (signedIn() && request.auth.uid == uid);
     }
   }
 }

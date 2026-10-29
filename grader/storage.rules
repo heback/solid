@@ -1,13 +1,9 @@
 rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
-    match /submissions/{allPaths=**} {
-      allow read, delete: if request.auth != null && request.auth.token.email_verified == true
-        && request.auth.token.email == 'heback@ts.hs.kr';
-      allow create, update: if request.auth != null && request.auth.token.email_verified == true
-        && request.auth.token.email == 'heback@ts.hs.kr'
-        && request.resource.size < 400 * 1024
-        && request.resource.contentType == 'application/json';
+    // 답안 파일은 Functions(관리자 권한)만 읽고 쓴다. 브라우저에서는 접근할 수 없다.
+    match /{allPaths=**} {
+      allow read, write: if false;
     }
   }
 }
