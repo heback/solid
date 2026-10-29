@@ -21,7 +21,6 @@
   .write{min-height:5.5em;border:1px dashed var(--line);border-radius:8px;margin:6px 0 14px;padding:8px 12px;color:var(--muted);font-size:13px}
   .write.tall{min-height:9em}
   .hintlink{font-size:14px;color:var(--accent);text-decoration:none}
-  .filelink{font-size:14px}
   td.blank{min-width:70px}
   h2 .pts{font-size:15px;font-weight:400;color:var(--muted)}
   .qsec.activity{border:0;padding:0;margin:28px 0;break-inside:auto}
@@ -60,8 +59,7 @@
   <div class="box tip">
     <h4>코드 문항 안내</h4>
     <ul>
-      <li>시작 코드는 아래 본문에 있고, 파일로도 받을 수 있습니다: <a class="filelink" href="code/q2_log_collector.py" download>q2_log_collector.py</a> · <a class="filelink" href="code/q3_game_skills.py" download>q3_game_skills.py</a> · <a class="filelink" href="code/q4_payment.py" download>q4_payment.py</a> · <a class="filelink" href="code/q5_delivery_robot.py" download>q5_delivery_robot.py</a></li>
-      <li>실행: 터미널에서 <code>python3 q4_payment.py</code>. 시작 코드는 그대로 실행됩니다(구현 문항은 처음에 공개 테스트가 <b>[실패]</b>로 나오는 것이 정상).</li>
+      <li>실행: 문항 4·5는 편집기의 <b>실행</b> 버튼을 누릅니다. 시작 코드는 그대로 실행됩니다(구현 문항은 처음에 공개 테스트가 <b>[실패]</b>로 나오는 것이 정상).</li>
       <li>구현 문항(4, 5)은 파일 맨 아래 <b>공개 테스트는 고치지 말고</b> 모두 <b>[통과]</b>가 나오게 만드세요. 공개 테스트를 통과해도 <b>구체 클래스 이름으로 분기</b>하거나 <b>결과를 그대로 적어 넣은</b> 답은 감점됩니다. 채점할 때 공개되지 않은 테스트를 더 돌립니다.</li>
       <li>답은 아래 칸에 직접 입력하거나 고르세요. 입력 내용은 이 브라우저에 자동 저장되고, 아래쪽 <b>💾 JSON 저장</b>으로 파일을 내려받아 제출할 수 있습니다. 구현 문항(4, 5)은 아래 편집기에서 코드를 고치고 <b>실행</b>해 공개 테스트를 확인하세요.</li>
       <li>문항 3 (1)은 <b>실행하지 말고</b> 먼저 예측해서 쓰세요.</li>
@@ -115,7 +113,7 @@
 <section class="qsec activity" id="q2">
 <h2>문항 2. 로그 수집기의 변경 이유와 영향 범위 <span class="pts">(20점)</span></h2>
 <div class="meta"><span class="tag ab">[코드 분석]</span><span class="tag">[SRP·DIP]</span><span class="tag">보통</span><span class="tag pts">20점</span></div>
-<p><a class="hintlink" href="hints.html#h2">힌트 보기 →</a> · <a class="filelink" href="code/q2_log_collector.py" download>시작 코드 내려받기</a></p>
+<p><a class="hintlink" href="hints.html#h2">힌트 보기 →</a></p>
 <div class="situation"><b>상황</b>: 여러 서버가 보낸 로그를 모아 오류만 파일에 저장하고, 운영 회의용 요약 문장을 만드는 수집기입니다. 각 줄 끝의 <code># 숫자</code>는 줄 번호입니다.</div>
 <pre><code>"""Q2 시작 코드: 서버 로그 수집기 (Python 3.12+)
 
@@ -202,7 +200,7 @@ db-2: 디스크 부족</code></pre>
 <section class="qsec activity" id="q3">
 <h2>문항 3. 스킬의 약속과 자동 전투 <span class="pts">(20점)</span></h2>
 <div class="meta"><span class="tag ab">[코드 분석]</span><span class="tag">[LSP]</span><span class="tag">보통</span><span class="tag pts">20점</span></div>
-<p><a class="hintlink" href="hints.html#h3">힌트 보기 →</a> · <a class="filelink" href="code/q3_game_skills.py" download>시작 코드 내려받기</a></p>
+<p><a class="hintlink" href="hints.html#h3">힌트 보기 →</a></p>
 <div class="situation"><b>상황</b>: 게임의 자동 전투 함수 <code>auto_battle</code>은 <code>Skill</code> 문서에 적힌 약속 ①②③만 믿고 작성되었습니다. 여러 개발자가 각자 새 스킬을 하위 클래스로 추가했습니다.</div>
 <pre><code>"""Q3 시작 코드: 게임 캐릭터 스킬 (Python 3.12+)
 
@@ -300,8 +298,100 @@ if __name__ == "__main__":
 <section class="qsec activity" id="q4">
 <h2>문항 4. 결제 수단을 고치지 않고 늘리기 <span class="pts">(20점)</span></h2>
 <div class="meta"><span class="tag ab">[구현]</span><span class="tag">[OCP]</span><span class="tag">보통</span><span class="tag pts">20점</span></div>
-<p><a class="hintlink" href="hints.html#h4">힌트 보기 →</a> · <a class="filelink" href="code/q4_payment.py" download>시작 코드 내려받기</a></p>
+<p><a class="hintlink" href="hints.html#h4">힌트 보기 →</a></p>
 <div class="situation"><b>상황</b>: 결제 창구 <code>PayCounter</code>는 결제 수단별 수수료를 붙여 영수증 한 줄을 만듭니다. 결제 수단이 문자열이라 새 수단이 생길 때마다 <code>pay()</code> 안의 <code>if-elif</code>를 고쳐야 합니다.</div>
+<pre><code>"""Q4 시작 코드: 결제 수수료와 영수증 한 줄 (Python 3.12+)
+
+지금은 결제 수단이 문자열이고, 새 수단이 생길 때마다 PayCounter.pay 안의
+if-elif를 고쳐야 한다. 문제의 요구대로 리팩터링하라.
+맨 아래 공개 테스트는 수정하지 말고, 모두 [통과]가 나오게 만들어라.
+
+실행: python3 q4_payment.py
+"""
+
+
+class PayCounter:
+    def pay(self, amount, method):
+        if method == "card":
+            label, fee = "카드", amount * 2 // 100          # 결제액의 2%(원 미만 버림)
+        elif method == "bank":
+            label, fee = "계좌이체", 500                    # 고정 500원
+        elif method == "phone":
+            label, fee = "휴대폰", amount * 5 // 100        # 결제액의 5%(원 미만 버림)
+        else:
+            raise ValueError(f"모르는 결제 수단: {method}")
+        return f"{label} 결제 {amount}원 + 수수료 {fee}원 = {amount + fee}원"
+
+
+# ===================== 공개 테스트 (수정 금지) =====================
+def _check(name, fn):
+    try:
+        fn()
+        print(f"[통과] {name}")
+        return True
+    except Exception as e:  # 실패해도 다음 테스트를 계속 실행
+        print(f"[실패] {name} -&gt; {type(e).__name__}: {e}")
+        return False
+
+
+def t1_card():
+    assert PayCounter().pay(12345, CardPayment()) == "카드 결제 12345원 + 수수료 246원 = 12591원"
+
+
+def t2_bank_phone():
+    assert PayCounter().pay(3000, BankTransfer()) == "계좌이체 결제 3000원 + 수수료 500원 = 3500원"
+    assert PayCounter().pay(999, PhonePayment()) == "휴대폰 결제 999원 + 수수료 49원 = 1048원"
+
+
+def t3_abstract():
+    import inspect
+    assert inspect.isabstract(PaymentMethod), "PaymentMethod는 추상 클래스여야 함"
+    for cls in (CardPayment, BankTransfer, PhonePayment):
+        assert issubclass(cls, PaymentMethod), f"{cls.__name__}가 PaymentMethod를 상속하지 않음"
+
+
+def t4_point():
+    assert PayCounter().pay(5000, PointPayment()) == "포인트 결제 5000원 + 수수료 100원 = 5100원"
+    assert PayCounter().pay(25000, PointPayment()) == "포인트 결제 25000원 + 수수료 250원 = 25250원"
+
+
+def t5_new_method_without_edit():
+    # 테스트가 즉석에서 만든 새 결제 수단. PayCounter를 고치지 않고도 동작해야 한다.
+    class GiftCard(PaymentMethod):
+        label = "상품권"
+        def fee(self, amount):
+            return 0
+    assert PayCounter().pay(7000, GiftCard()) == "상품권 결제 7000원 + 수수료 0원 = 7000원"
+
+
+if __name__ == "__main__":
+    print("현재 동작:", PayCounter().pay(12345, "card"))   # 리팩터링 후에는 이 줄을 지우거나 새 구조에 맞게 고친다
+    tests = [("카드 수수료", t1_card), ("계좌이체·휴대폰 수수료", t2_bank_phone),
+             ("추상 클래스 구조", t3_abstract), ("포인트 결제 추가", t4_point),
+             ("PayCounter 수정 없이 새 수단", t5_new_method_without_edit)]
+    passed = sum(_check(n, f) for n, f in tests)
+    print(f"공개 테스트 {passed}/{len(tests)} 통과")
+</code></pre>
+<p>시작 코드 실행 결과(공개 테스트는 아직 모두 실패하는 것이 정상):</p>
+<pre><code class="out">현재 동작: 카드 결제 12345원 + 수수료 246원 = 12591원
+[실패] 카드 수수료 -&gt; NameError: name 'CardPayment' is not defined
+[실패] 계좌이체·휴대폰 수수료 -&gt; NameError: name 'BankTransfer' is not defined
+[실패] 추상 클래스 구조 -&gt; NameError: name 'PaymentMethod' is not defined
+[실패] 포인트 결제 추가 -&gt; NameError: name 'PointPayment' is not defined
+[실패] PayCounter 수정 없이 새 수단 -&gt; NameError: name 'PaymentMethod' is not defined
+공개 테스트 0/5 통과</code></pre>
+
+<p class="sub">(1) 리팩터링 <small>10점</small></p>
+<p>다음 이름과 규칙을 <b>그대로</b> 지켜 코드를 바꾸시오.</p>
+<ul>
+  <li><code>PaymentMethod</code>: <code>abc.ABC</code>를 상속한 추상 클래스. 표시 이름 <code>label</code>(문자열)을 갖고, 추상 메서드 <code>fee(self, amount: int) -&gt; int</code>를 선언한다.</li>
+  <li><code>CardPayment</code>(label <code>"카드"</code>, 결제액의 2%·원 미만 버림), <code>BankTransfer</code>(label <code>"계좌이체"</code>, 500원 고정), <code>PhonePayment</code>(label <code>"휴대폰"</code>, 결제액의 5%·원 미만 버림): 모두 <code>PaymentMethod</code>를 상속한다.</li>
+  <li><code>PayCounter.pay(self, amount: int, method: PaymentMethod) -&gt; str</code>: 반환 형식은 시작 코드와 똑같다(<code>"{label} 결제 {amount}원 + 수수료 {fee}원 = {합계}원"</code>). <b><code>pay()</code> 안에서 결제 수단의 종류를 묻는 분기(<code>if</code>·<code>isinstance</code>)를 쓰지 않는다.</b></li>
+</ul>
+<p class="sub">(2) 기능 추가 <small>5점</small></p>
+<p>새 결제 수단 <code>PointPayment</code>를 추가하시오. label은 <code>"포인트"</code>, 수수료는 <b>결제액의 1%(원 미만 버림), 단 최소 100원</b>입니다. 공개 테스트 5개가 모두 <b>[통과]</b>해야 합니다.</p>
+<p class="sub">답안 코드 작성</p>
+<p>(1)과 (2)의 답을 아래 편집기에 작성하고 <b>실행</b>해 공개 테스트 5개가 모두 <b>[통과]</b>하는지 확인하세요. 편집기의 코드는 자동 저장되고 JSON 제출 파일에 포함됩니다. 처음에는 시작 코드가 들어 있습니다.</p>
 <div class="pyedit" data-name="q4_payment.py"><script type="text/x-python">
 """Q4 시작 코드: 결제 수수료와 영수증 한 줄 (Python 3.12+)
 
@@ -375,24 +465,7 @@ if __name__ == "__main__":
     passed = sum(_check(n, f) for n, f in tests)
     print(f"공개 테스트 {passed}/{len(tests)} 통과")
 </script></div>
-<p>시작 코드 실행 결과(공개 테스트는 아직 모두 실패하는 것이 정상):</p>
-<pre><code class="out">현재 동작: 카드 결제 12345원 + 수수료 246원 = 12591원
-[실패] 카드 수수료 -&gt; NameError: name 'CardPayment' is not defined
-[실패] 계좌이체·휴대폰 수수료 -&gt; NameError: name 'BankTransfer' is not defined
-[실패] 추상 클래스 구조 -&gt; NameError: name 'PaymentMethod' is not defined
-[실패] 포인트 결제 추가 -&gt; NameError: name 'PointPayment' is not defined
-[실패] PayCounter 수정 없이 새 수단 -&gt; NameError: name 'PaymentMethod' is not defined
-공개 테스트 0/5 통과</code></pre>
 
-<p class="sub">(1) 리팩터링 <small>10점</small></p>
-<p>다음 이름과 규칙을 <b>그대로</b> 지켜 코드를 바꾸시오.</p>
-<ul>
-  <li><code>PaymentMethod</code>: <code>abc.ABC</code>를 상속한 추상 클래스. 표시 이름 <code>label</code>(문자열)을 갖고, 추상 메서드 <code>fee(self, amount: int) -&gt; int</code>를 선언한다.</li>
-  <li><code>CardPayment</code>(label <code>"카드"</code>, 결제액의 2%·원 미만 버림), <code>BankTransfer</code>(label <code>"계좌이체"</code>, 500원 고정), <code>PhonePayment</code>(label <code>"휴대폰"</code>, 결제액의 5%·원 미만 버림): 모두 <code>PaymentMethod</code>를 상속한다.</li>
-  <li><code>PayCounter.pay(self, amount: int, method: PaymentMethod) -&gt; str</code>: 반환 형식은 시작 코드와 똑같다(<code>"{label} 결제 {amount}원 + 수수료 {fee}원 = {합계}원"</code>). <b><code>pay()</code> 안에서 결제 수단의 종류를 묻는 분기(<code>if</code>·<code>isinstance</code>)를 쓰지 않는다.</b></li>
-</ul>
-<p class="sub">(2) 기능 추가 <small>5점</small></p>
-<p>새 결제 수단 <code>PointPayment</code>를 추가하시오. label은 <code>"포인트"</code>, 수수료는 <b>결제액의 1%(원 미만 버림), 단 최소 100원</b>입니다. 공개 테스트 5개가 모두 <b>[통과]</b>해야 합니다.</p>
 <p class="sub">(3) (2)를 하면서 <b>이미 있던 클래스 안을 고친 곳</b>과 <b>새로 추가한 곳</b>을 구분해 쓰고, 이것이 OCP의 '확장에는 열려 있고 변경에는 닫혀 있다'를 어떻게 보여 주는지 2문장으로 설명하시오. <small>5점</small></p>
 <p class="sub" style="margin-bottom:0">고친 곳</p>
 <textarea class="" data-k="q4-3-changed"></textarea>
@@ -407,7 +480,7 @@ if __name__ == "__main__":
 <section class="qsec activity" id="q5">
 <h2>문항 5. 배달 로봇 배차 — 분석하고 다시 짜기 <span class="pts">(25점)</span></h2>
 <div class="meta"><span class="tag ab">[코드 분석 + 구현]</span><span class="tag">[ISP·DIP]</span><span class="tag">어려움</span><span class="tag pts">25점</span></div>
-<p><a class="hintlink" href="hints.html#h5">힌트 보기 →</a> · <a class="filelink" href="code/q5_delivery_robot.py" download>시작 코드 내려받기</a></p>
+<p><a class="hintlink" href="hints.html#h5">힌트 보기 →</a></p>
 <div class="situation"><b>상황</b>: 캠퍼스 배달 로봇은 두 종류입니다. <b>인도 로봇</b>(<code>SidewalkRobot</code>)은 실외 인도만 다니고, <b>건물 로봇</b>(<code>BuildingRobot</code>)은 승강기를 타고 건물 안 층까지 갑니다. 배차 담당 <code>Dispatcher</code>는 경로를 받아 로봇을 움직이고, 층이 지정되면 승강기를 태운 뒤 보관함을 엽니다. 각 줄 끝의 <code># 숫자</code>는 줄 번호입니다.</div>
 <div class="pyedit" data-name="q5_delivery_robot.py"><script type="text/x-python">
 """Q5 시작 코드: 캠퍼스 배달 로봇 배차 (Python 3.12+)
