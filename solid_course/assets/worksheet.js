@@ -22,21 +22,29 @@
     if (s) s.textContent = "자동 저장됨 " + new Date().toLocaleTimeString("ko-KR");
   }
   function load() {
+    let restored = 0;
     fields().forEach((el, i) => {
       try {
         const raw = localStorage.getItem(key(el, i));
         if (raw === null) return;
+        restored++;
         const v = JSON.parse(raw);
         if (el.type === "checkbox" || el.type === "radio") el.checked = !!v; else el.value = v;
       } catch (e) {}
     });
     growAll();
+    if (restored) { const s = document.querySelector(".saved"); if (s) s.textContent = "이전에 임시 저장된 입력을 복구했습니다"; }
   }
   const page = location.pathname.split("/").pop() || "index.html";
   const val = el => (el.type === "checkbox" || el.type === "radio") ? el.checked : el.value;
   const setVal = (el, v) => { if (el.type === "checkbox" || el.type === "radio") el.checked = !!v; else el.value = v == null ? "" : v; };
   // JSON 내보내기: { format, page, savedAt, fields: { 입력칸키: 값 } }
   function exportJson() {
+    // 평가 페이지(body[data-require-id])는 학번·성명이 있어야 저장한다.
+    if (document.body.dataset.requireId !== undefined) {
+      const miss = ["id-no", "id-name"].map(id => document.getElementById(id)).find(el => el && !el.value.trim());
+      if (miss) { alert("답안을 저장하려면 학번과 성명을 먼저 입력하세요."); miss.focus(); return; }
+    }
     const data = { format: "solid-worksheet", version: 1, page: page, savedAt: new Date().toISOString(), fields: {} };
     fields().forEach((el, i) => { data.fields[el.dataset.k || el.name || String(i)] = val(el); });
     // 파일명은 고정(학습지당 파일 하나): session_1_학번_이름.json. 다시 저장하면 같은 이름으로 내려받는다.
@@ -80,6 +88,10 @@
     window.addEventListener("resize", growAll);
     window.addEventListener("load", growAll);
     document.addEventListener("change", save);
+    // 임시 저장 보강: 30초마다, 탭을 가리거나 닫을 때도 저장한다(입력 이벤트 저장과 별개).
+    setInterval(save, 30000);
+    document.addEventListener("visibilitychange", () => { if (document.hidden) save(); });
+    window.addEventListener("pagehide", save);
     const bar = document.createElement("div");
     bar.className = "ws-tools";
     bar.innerHTML = '<span class="saved"></span><button type="button" id="ws-export">💾 JSON 저장</button><button type="button" id="ws-import">📂 JSON 불러오기</button><input type="file" id="ws-file" accept="application/json,.json" hidden><button type="button" id="ws-print">🖨 인쇄/PDF</button><button type="button" id="ws-reset">입력 지우기</button>';

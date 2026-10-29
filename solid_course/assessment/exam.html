@@ -38,7 +38,7 @@
   }
 </style>
 </head>
-<body>
+<body data-require-id>
 <header class="top">
   <nav>
     <a href="hints.html">문제 해결 도움 자료(힌트)</a>
@@ -61,7 +61,7 @@
     <ul>
       <li>실행: 문항 4·5는 편집기의 <b>실행</b> 버튼을 누릅니다. 시작 코드는 그대로 실행됩니다(구현 문항은 처음에 공개 테스트가 <b>[실패]</b>로 나오는 것이 정상).</li>
       <li>구현 문항(4, 5)은 파일 맨 아래 <b>공개 테스트는 고치지 말고</b> 모두 <b>[통과]</b>가 나오게 만드세요. 공개 테스트를 통과해도 <b>구체 클래스 이름으로 분기</b>하거나 <b>결과를 그대로 적어 넣은</b> 답은 감점됩니다. 채점할 때 공개되지 않은 테스트를 더 돌립니다.</li>
-      <li>답은 아래 칸에 직접 입력하거나 고르세요. 입력 내용은 이 브라우저에 자동 저장되고, 아래쪽 <b>💾 JSON 저장</b>으로 파일을 내려받아 제출할 수 있습니다. 구현 문항(4, 5)은 아래 편집기에서 코드를 고치고 <b>실행</b>해 공개 테스트를 확인하세요.</li>
+      <li>답은 아래 칸에 직접 입력하거나 고르세요. <b>학번과 성명</b>을 맨 위에 먼저 입력하세요. 입력 내용은 이 브라우저에 <b>임시 저장</b>됩니다(입력할 때마다, 30초마다). 새로고침·브라우저 오류·실수로 닫은 뒤에도 같은 브라우저로 이 페이지를 다시 열면 복구됩니다. 단, 다른 컴퓨터나 브라우저 데이터 삭제 후에는 복구되지 않으니, 중간중간 아래쪽 <b>💾 JSON 저장</b>으로 파일을 내려받아 두고 문제가 생기면 <b>📂 JSON 불러오기</b>로 되살리세요. 최종 제출은 JSON 파일입니다(학번과 성명이 비어 있으면 저장되지 않습니다). 구현 문항(4, 5)은 아래 편집기에서 코드를 고치고 <b>실행</b>해 공개 테스트를 확인하세요.</li>
       <li>문항 3 (1)은 <b>실행하지 말고</b> 먼저 예측해서 쓰세요.</li>
     </ul>
   </div>
@@ -71,8 +71,8 @@
 <main>
 <section id="ws-id">
   <div class="ws-id">
-    <div><label for="id-name">이름</label><input id="id-name" type="text" data-k="id-name"></div>
-    <div><label for="id-no">학번</label><input id="id-no" type="text" data-k="id-no"></div>
+    <div><label for="id-name">성명 (필수)</label><input id="id-name" type="text" data-k="id-name" autocomplete="off"></div>
+    <div><label for="id-no">학번 (필수)</label><input id="id-no" type="text" data-k="id-no" inputmode="numeric" autocomplete="off"></div>
   </div>
 </section>
 
