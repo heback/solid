@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SOLID 수업자료 디자인 시스템</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/worksheet.css">
+<script src="assets/highlight.js" defer></script>
+<style>
+  .sw-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:var(--s-3);margin:var(--s-3) 0}
+  .sw{border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden;background:var(--surface);box-shadow:var(--sh-1);font-size:var(--fs-xs)}
+  .sw i{display:block;height:54px;border-bottom:1px solid var(--line)}
+  .sw span{display:block;padding:var(--s-2) var(--s-3);line-height:1.4}
+  .sw b{display:block;font-size:var(--fs-sm)}
+  .spec{display:grid;gap:var(--s-2);margin:var(--s-3) 0}
+  .spec>div{display:flex;align-items:baseline;gap:var(--s-4);padding:var(--s-2) 0;border-bottom:1px solid var(--line)}
+  .spec code{flex:none;min-width:130px}
+  .bar-s{display:inline-block;height:12px;background:var(--brand);border-radius:3px;vertical-align:middle}
+  .demo{padding:var(--s-4);border:1px dashed var(--line-strong);border-radius:var(--r-lg);margin:var(--s-3) 0;background:var(--paper)}
+  .demo .row{display:flex;flex-wrap:wrap;gap:var(--s-2);align-items:center;margin:var(--s-2) 0}
+  .rad{width:72px;height:48px;background:var(--brand-soft);border:1px solid var(--brand)}
+  .shd{width:110px;height:56px;background:var(--surface);border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;font-size:var(--fs-xs)}
+  .pill-btn{cursor:pointer;border:1px solid var(--line-strong);background:var(--surface);color:var(--ink);padding:var(--s-1) var(--s-3);border-radius:var(--r-pill);font:inherit;font-size:var(--fs-sm);font-weight:var(--fw-medium)}
+  .pill-btn.primary{background:var(--brand);border-color:var(--brand);color:var(--on-brand);font-weight:var(--fw-bold)}
+  .rule{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-3)}
+  @media (max-width:640px){.rule{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="top">
+  <nav><a href="index.html">목차</a><a href="worksheets/session_1.html">학습지 예시</a></nav>
+  <h1>디자인 시스템</h1>
+  <p class="lead">파이썬 SOLID 수업자료 전체(학습지·교재·평가·교사용 문서)가 같은 규칙으로 보이도록, 색·글자·간격·모서리·그림자를 <b>토큰</b>으로 정의하고 컴포넌트가 토큰만 쓰게 한 약속입니다. 목표는 <b>가독성</b>(긴 글과 코드를 편하게 읽기), <b>절제된 품격</b>(종이 질감의 바탕, 남색 하나의 강조색), <b>일관성</b>(같은 역할은 같은 모양)입니다.</p>
+</header>
+<main>
+
+<section id="principles">
+  <h2>설계 원칙</h2>
+  <div class="rule">
+    <div class="box concept"><h4>1 · 읽기 먼저</h4><p>본문 16px·줄 간격 1.78, 한 줄 약 62자 이내, 한글 어절 단위 줄바꿈(<code>word-break: keep-all</code>). 장식보다 위계(크기·굵기·여백)로 구분합니다.</p></div>
+    <div class="box concept"><h4>2 · 색은 의미로만</h4><p>남색은 "행동·강조", 초록은 "맞음·관찰", 빨강은 "위험·논쟁", 금색은 "예측·주의"에만 씁니다. 장식용 색은 만들지 않습니다.</p></div>
+    <div class="box concept"><h4>3 · 토큰만 사용</h4><p>컴포넌트 CSS에 <code>#hex</code>·임의 <code>px</code>를 쓰지 않고 <code>var(--…)</code>만 씁니다. 다크 모드와 인쇄가 토큰 교체로 자동 해결됩니다.</p></div>
+    <div class="box concept"><h4>4 · 접근성</h4><p>본문 대비 4.5:1 이상, 키보드 초점 링(<code>:focus-visible</code>), 움직임 줄이기(<code>prefers-reduced-motion</code>), 색만으로 의미를 전달하지 않기(배지에 글자).</p></div>
+  </div>
+</section>
+
+<section id="color">
+  <h2>색 토큰</h2>
+  <h3>바탕 · 글자 · 선</h3>
+  <div class="sw-grid">
+    <div class="sw"><i style="background:var(--paper)"></i><span><b>--paper</b>페이지 바탕</span></div>
+    <div class="sw"><i style="background:var(--surface)"></i><span><b>--surface</b>카드·입력칸</span></div>
+    <div class="sw"><i style="background:var(--surface-2)"></i><span><b>--surface-2</b>표 머리·코드 바탕</span></div>
+    <div class="sw"><i style="background:var(--ink)"></i><span><b>--ink</b>본문</span></div>
+    <div class="sw"><i style="background:var(--ink-2)"></i><span><b>--ink-2</b>보조 글</span></div>
+    <div class="sw"><i style="background:var(--ink-3)"></i><span><b>--ink-3</b>흐린 글(≥5:1)</span></div>
+    <div class="sw"><i style="background:var(--line)"></i><span><b>--line</b>얇은 구분선</span></div>
+    <div class="sw"><i style="background:var(--line-strong)"></i><span><b>--line-strong</b>입력칸 테두리</span></div>
+  </div>
+  <h3>브랜드 · 의미</h3>
+  <div class="sw-grid">
+    <div class="sw"><i style="background:var(--brand)"></i><span><b>--brand</b>강조·링크·주 버튼</span></div>
+    <div class="sw"><i style="background:var(--brand-strong)"></i><span><b>--brand-strong</b>눌림·hover</span></div>
+    <div class="sw"><i style="background:var(--brand-soft)"></i><span><b>--brand-soft</b>개념 상자 면</span></div>
+    <div class="sw"><i style="background:var(--ok)"></i><span><b>--ok</b>(+ -soft) 맞음·개선</span></div>
+    <div class="sw"><i style="background:var(--danger)"></i><span><b>--danger</b>(+ -soft) 위험·나쁜 예</span></div>
+    <div class="sw"><i style="background:var(--warn)"></i><span><b>--warn</b>(+ -soft) 팁·힌트</span></div>
+  </div>
+  <h3>활동 유형(학습지 카드 윗띠)</h3>
+  <div class="sw-grid">
+    <div class="sw"><i style="background:var(--t-predict)"></i><span><b>--t-predict</b>예측하기</span></div>
+    <div class="sw"><i style="background:var(--t-observe)"></i><span><b>--t-observe</b>관찰·코드 실습</span></div>
+    <div class="sw"><i style="background:var(--t-sort)"></i><span><b>--t-sort</b>분류·짝 활동</span></div>
+    <div class="sw"><i style="background:var(--t-debate)"></i><span><b>--t-debate</b>토론</span></div>
+    <div class="sw"><i style="background:var(--t-generalize)"></i><span><b>--t-generalize</b>일반화</span></div>
+    <div class="sw"><i style="background:var(--t-transfer)"></i><span><b>--t-transfer</b>전이·성찰</span></div>
+  </div>
+  <p class="k"><small>라이트/다크는 <code>prefers-color-scheme</code>을 따르며, <code>&lt;html data-theme="light|dark"&gt;</code>로 고정할 수 있습니다. 구버전 이름(<code>--bg --fg --card --accent …</code>)은 별칭으로 남아 있어 기존 페이지가 그대로 동작합니다.</small></p>
+</section>
+
+<section id="type">
+  <h2>글자</h2>
+  <p>본문 <code>--font-sans</code>(Pretendard Variable → Noto Sans KR → 시스템), 코드 <code>--font-mono</code>. 크기는 1.2 배율, 제목은 자간을 살짝 좁힙니다(<code>letter-spacing</code> −.01~−.02em).</p>
+  <div class="spec">
+    <div><code>--fs-3xl</code><span style="font-size:var(--fs-3xl);font-weight:700;line-height:1.2;letter-spacing:-.02em">페이지 제목 h1</span></div>
+    <div><code>--fs-xl</code><span style="font-size:var(--fs-xl);font-weight:700">단계 제목 h2</span></div>
+    <div><code>--fs-lg</code><span style="font-size:var(--fs-lg);font-weight:600">활동 제목 h3</span></div>
+    <div><code>--fs-md</code><span style="font-size:var(--fs-md)">리드 문장·강조 본문</span></div>
+    <div><code>--fs-base</code><span>본문 16px — 설명과 문제는 이 크기로 읽습니다.</span></div>
+    <div><code>--fs-sm</code><span style="font-size:var(--fs-sm)">표·보조 설명·버튼</span></div>
+    <div><code>--fs-xs</code><span style="font-size:var(--fs-xs)">칩·배지·도구 모음 안내</span></div>
+  </div>
+</section>
+
+<section id="space">
+  <h2>간격 · 모서리 · 그림자</h2>
+  <div class="spec">
+    <div><code>--s-1</code><span class="bar-s" style="width:4px"></span> 4px — 아이콘·글자 사이</div>
+    <div><code>--s-2</code><span class="bar-s" style="width:8px"></span> 8px — 칩 안쪽, 관련 요소</div>
+    <div><code>--s-3</code><span class="bar-s" style="width:12px"></span> 12px — 입력칸 안쪽</div>
+    <div><code>--s-4</code><span class="bar-s" style="width:16px"></span> 16px — 카드 안쪽, 문단 묶음</div>
+    <div><code>--s-5</code><span class="bar-s" style="width:24px"></span> 24px — 카드 가로 안쪽, 구역</div>
+    <div><code>--s-6</code><span class="bar-s" style="width:32px"></span> 32px — 활동 카드 사이</div>
+    <div><code>--s-7</code><span class="bar-s" style="width:48px"></span> 48px — 단계(h2) 앞 여백</div>
+  </div>
+  <div class="demo">
+    <div class="row"><div class="rad" style="border-radius:var(--r-sm)"></div><code>--r-sm 6</code><div class="rad" style="border-radius:var(--r-md)"></div><code>--r-md 10</code><div class="rad" style="border-radius:var(--r-lg)"></div><code>--r-lg 16</code><div class="rad" style="border-radius:var(--r-pill)"></div><code>--r-pill</code></div>
+    <div class="row"><div class="shd" style="box-shadow:var(--sh-1)">--sh-1 카드·표</div><div class="shd" style="box-shadow:var(--sh-2)">--sh-2 활동 카드</div><div class="shd" style="box-shadow:var(--sh-3)">--sh-3 떠 있는 것</div></div>
+  </div>
+  <p>페이지 폭은 <code>--w-page</code>(880px). 좁은 화면(≤720px)에서는 카드 안쪽 여백을 줄이고 표를 가로로 밀어서 봅니다.</p>
+</section>
+
+<section id="components">
+  <h2>컴포넌트</h2>
+
+  <h3>활동 카드 <small>.activity[data-type]</small></h3>
+  <p>학습지의 기본 단위. 윗띠 색이 활동 유형을 알려 주고, 유형 칩(<code>.t-type</code>)이 같은 색을 씁니다. 활동 하나는 한 장에 나뉘지 않게(<code>break-inside: avoid</code>) 인쇄됩니다.</p>
+  <section class="activity" data-type="predict" style="margin-top:var(--s-3)">
+    <h3>활동 1-1. 어디를 고치게 될까? 먼저 예측하기</h3>
+    <div class="tags"><span class="t-type">예측하기</span><span>7분</span><span>개인</span><span>목표 1-a</span></div>
+    <p><span class="q-level fact">사실</span><span class="q-level concept">개념</span><span class="q-level debate">논쟁</span> 질문 수준 배지는 글자와 색을 함께 씁니다.</p>
+    <textarea placeholder="입력칸: 바탕은 종이색, 초점이 오면 남색 링"></textarea>
+    <details class="hint"><summary>힌트 1단계 (방향)</summary><p>힌트는 앞 단계 답을 확인한 뒤 열어 봅니다.</p></details>
+  </section>
+
+  <h3>콜아웃 <small>.box.concept / .tip / .warn · .situation · .lens</small></h3>
+  <div class="box concept"><h4>개념</h4><p>핵심 정의와 규칙. 남색 띠.</p></div>
+  <div class="box tip"><h4>팁</h4><p>실습 요령이나 주의. 금색 띠.</p></div>
+  <div class="box warn"><h4>주의</h4><p>흔한 오해와 위험. 빨강 띠.</p></div>
+  <div class="situation"><b>상황.</b> 동네 카페 "한입카페"의 주문 프로그램 — 상황 설명은 회색 띠 카드로 구분합니다.</div>
+  <div class="lens"><b>렌즈: 변경(Change)</b> — 수업의 핵심 질문은 렌즈 박스로 한 번만 크게 보여 줍니다.</div>
+
+  <h3>버튼 · 칩</h3>
+  <div class="demo">
+    <div class="row"><button class="pill-btn primary" type="button">주 행동 (실행·제출)</button><button class="pill-btn" type="button">보조 행동</button><span class="tags" style="display:contents"><span class="t-type" style="padding:2px 12px;border-radius:999px;background:var(--brand);color:var(--on-brand);font-size:var(--fs-xs);font-weight:700">유형 칩</span></span></div>
+    <p class="k"><small>버튼은 알약(<code>--r-pill</code>) 모양. 화면당 주 행동은 하나만 채우고 나머지는 흰 바탕 + 테두리로 둡니다.</small></p>
+  </div>
+
+  <h3>코드 · 표</h3>
+<pre><code>class Shape(ABC):
+    @abstractmethod
+    def area(self) -&gt; float: ...</code></pre>
+<pre><code class="out">실행 결과·그림은 code.out — 회색 띠, 하이라이트 없음</code></pre>
+  <table>
+    <thead><tr><th>요청</th><th>요청한 사람</th><th>고쳐야 할 메서드</th></tr></thead>
+    <tbody><tr><td>가</td><td>사장님</td><td>add_item, total</td></tr><tr><td>나</td><td>디자이너</td><td>receipt_text</td></tr></tbody>
+  </table>
+  <p>코드는 <code>highlight.js</code>가 자동으로 색을 입히고(<code>pre &gt; code</code>), 실행 결과는 <code>&lt;code class="out"&gt;</code>로 제외합니다.</p>
+</section>
+
+<section id="rules">
+  <h2>사용 규칙</h2>
+  <div class="rule">
+    <div class="box"><h4>✓ 해야 할 것</h4><ul>
+      <li>새 컴포넌트는 <code>assets/style.css</code>(공통) 또는 <code>worksheet.css</code>(학습지)에 토큰만으로 추가</li>
+      <li>같은 역할은 같은 클래스 — 새 이름을 만들기 전에 위 컴포넌트를 먼저 재사용</li>
+      <li>다크 모드·인쇄 화면에서 한 번씩 확인</li>
+      <li>색만이 아니라 글자·아이콘을 함께 사용</li>
+    </ul></div>
+    <div class="box warn"><h4>✗ 하지 말 것</h4><ul>
+      <li>컴포넌트에 <code>#hex</code>, 임의 <code>px</code>·<code>rem</code> 직접 쓰기</li>
+      <li>활동 유형 색을 장식 목적으로 다른 곳에 쓰기</li>
+      <li>한 화면에 채워진(주) 버튼 둘 이상</li>
+      <li><code>--warn</code>(진한 경고색)과 <code>--warn-soft</code>(연한 면)를 혼동</li>
+    </ul></div>
+  </div>
+</section>
+
+<section id="files">
+  <h2>파일 구성</h2>
+  <table>
+    <thead><tr><th>파일</th><th>역할</th></tr></thead>
+    <tbody>
+      <tr><td><code>assets/tokens.css</code></td><td>디자인 토큰(색·글자·간격·모서리·그림자, 라이트/다크, 구버전 별칭). 값은 여기서만 바꿉니다.</td></tr>
+      <tr><td><code>assets/style.css</code></td><td>기본 요소(제목·본문·코드·표)와 공통 컴포넌트(콜아웃, 퀴즈, 카드 목록, 이동 링크).</td></tr>
+      <tr><td><code>assets/worksheet.css</code></td><td>학습지 컴포넌트(활동 카드, 입력칸, 도구 모음, 파이썬 편집기, 힌트).</td></tr>
+      <tr><td><code>assets/highlight.js</code></td><td>코드 하이라이팅(색 변수 <code>--tk-*</code> 포함).</td></tr>
+      <tr><td><code>assets/teacher.css</code></td><td>교사용 문서 전용(정답 박스·배너).</td></tr>
+    </tbody>
+  </table>
+</section>
+
+</main>
+<nav class="pager"><a href="index.html">← 목차</a><span></span></nav>
+</body>
+</html>

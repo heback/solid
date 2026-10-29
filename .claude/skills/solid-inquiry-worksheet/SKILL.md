@@ -54,3 +54,9 @@ solid-lesson-writing의 "원칙별 오해 주의"를 그대로 따른다. 특히
 - 편집기(`.pyedit`)·💡 예시 코드 팝업도 같은 규칙으로 칠해진다. 새 코드 표시 UI를 만들면 `highlight()`를 거치게 한다.
 - 색은 `highlight.js`가 넣는 `--tk-*` 변수(라이트/다크)로만 바꾼다. `--tk-*` 변수와 토큰 규칙(`KW`, `BUILTIN`, `TOKEN`)은 `highlight.js`에 있다.
 - 새 학습지를 만들거나 코드를 고친 뒤에는 브라우저(또는 헤드리스 Chrome)로 열어 `tk-` 클래스가 적용됐는지 확인한다.
+
+## 디자인 시스템 (필수)
+- 모든 학습지·교재·평가 화면은 `solid_course/assets/tokens.css`의 **디자인 토큰**과 `style.css`(공통)·`worksheet.css`(학습지) 컴포넌트를 쓴다. 규칙 문서는 `solid_course/design-system.html`.
+- 컴포넌트 CSS에는 `#hex`·임의 `px`를 쓰지 않고 `var(--…)` 토큰만 쓴다(다크 모드·인쇄 자동 대응). 새 값이 필요하면 `tokens.css`에 토큰을 먼저 추가한다.
+- 활동 카드는 `.activity[data-type=…]`(윗띠 색 = 활동 유형), 질문 수준은 `.q-level.fact|concept|debate`, 강조는 `.box.concept|tip|warn`·`.situation`·`.lens`를 재사용한다. 새 클래스를 만들기 전에 기존 컴포넌트로 되는지 본다.
+- 한 화면에 채워진(주) 버튼은 하나만 둔다. 색만으로 의미를 전달하지 않는다(배지에 글자). 스타일을 바꾼 뒤 라이트·다크·모바일(≤720px)·인쇄를 확인한다.

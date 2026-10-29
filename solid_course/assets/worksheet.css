@@ -1,73 +1,121 @@
-/* 개념기반탐구학습지 전용 스타일 (style.css 위에 덧입힌다) */
-.ws-meta{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 16px;font-size:14px}
-.ws-meta span{padding:3px 10px;border:1px solid var(--line);border-radius:999px;background:var(--card)}
-.ws-id{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;margin:12px 0}
-.ws-id label{font-size:13px;color:var(--muted);display:block}
-.ws-id input{width:100%;padding:6px 8px;border:0;border-bottom:2px solid var(--line);background:transparent;color:var(--fg);font:inherit}
-.lens{background:var(--concept);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin:16px 0}
-.activity{margin:28px 0;padding:14px 18px 18px;border:2px solid var(--line);border-radius:12px;background:var(--bg);break-inside:avoid}
-.activity>h3{margin:0 0 4px;font-size:18px}
-.activity .tags{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 10px;font-size:12px}
-.activity .tags span{padding:2px 8px;border-radius:999px;background:var(--card);border:1px solid var(--line);color:var(--muted)}
-.activity .tags .t-type{background:var(--accent);color:#fff;border-color:var(--accent)}
-.activity[data-type=predict]{border-left:6px solid #e0a800}
-.activity[data-type=observe],.activity[data-type=code]{border-left:6px solid var(--goodb)}
-.activity[data-type=sort],.activity[data-type=pair]{border-left:6px solid #8a5cf6}
-.activity[data-type=debate]{border-left:6px solid var(--badb)}
-.activity[data-type=generalize]{border-left:6px solid var(--accent)}
-.activity[data-type=transfer],.activity[data-type=reflect]{border-left:6px solid #14a3b8}
-.q-level{display:inline-block;font-size:11px;font-weight:700;padding:1px 7px;border-radius:4px;margin-right:6px;color:#fff;vertical-align:middle}
-.q-level.fact{background:#6b7a99}.q-level.concept{background:var(--accent)}.q-level.debate{background:var(--badb)}
-.activity textarea{width:100%;min-height:130px;margin:6px 0 12px;padding:12px 14px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--fg);font:inherit;line-height:1.6;resize:vertical}
-.activity textarea.tall{min-height:240px}
-.activity textarea.cell{min-height:64px;min-width:200px;margin:0;padding:8px 10px;line-height:1.5}
-.activity textarea.code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13.5px;min-height:300px;white-space:pre}
-.activity input[type=text]{padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:var(--card);color:var(--fg);font:inherit;min-width:180px}
-.activity select{padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:var(--card);color:var(--fg);font:inherit}
-.pool{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
-.card{padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--card);font-size:14px}
+/* 개념기반탐구학습지 전용 컴포넌트 — style.css·tokens.css 위에 덧입힌다. 토큰만 사용한다. */
+
+/* ── 머리말: 메타 칩 · 이름 입력 ───── */
+.ws-meta{display:flex;flex-wrap:wrap;gap:var(--s-2);margin:var(--s-3) 0 var(--s-4);font-size:var(--fs-sm)}
+.ws-meta span{padding:var(--s-1) var(--s-3);border:1px solid var(--line);border-radius:var(--r-md);background:var(--surface);color:var(--ink-2);box-shadow:var(--sh-1)}
+.ws-meta span:first-child{background:var(--brand);border-color:var(--brand);color:var(--on-brand);font-weight:var(--fw-semibold)}
+.ws-meta a{color:inherit}
+#ws-id{margin-top:var(--s-4)}
+.ws-id{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:var(--s-4);margin:0;padding:var(--s-3) var(--s-4) var(--s-4);background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--sh-1)}
+.ws-id label{font-size:var(--fs-xs);font-weight:var(--fw-semibold);letter-spacing:.04em;color:var(--ink-3);display:block}
+.ws-id input{width:100%;padding:var(--s-1) 0;border:0;border-bottom:2px solid var(--line-strong);border-radius:0;background:transparent;color:var(--ink);font:inherit;font-size:var(--fs-md);transition:border-color .15s}
+.ws-id input:focus{outline:none;box-shadow:none;border-bottom-color:var(--brand)}
+
+/* ── 렌즈(핵심 개념 박스) ──────────── */
+.lens{background:linear-gradient(135deg,var(--brand-soft),var(--surface));border:1px solid var(--line);border-left:4px solid var(--brand);border-radius:var(--r-lg);padding:var(--s-4) var(--s-5);margin:var(--s-4) 0;font-size:var(--fs-md);box-shadow:var(--sh-1)}
+.lens b:first-child{color:var(--brand)}
+
+/* ── 활동 카드 ─────────────────────── */
+.activity{--type:var(--brand);margin:var(--s-6) 0;padding:var(--s-4) var(--s-5) var(--s-5);border:1px solid var(--line);border-top:4px solid var(--type);border-radius:var(--r-lg);background:var(--surface);box-shadow:var(--sh-2);break-inside:avoid}
+.activity[data-type=predict]{--type:var(--t-predict)}
+.activity[data-type=observe],.activity[data-type=code]{--type:var(--t-observe)}
+.activity[data-type=sort],.activity[data-type=pair]{--type:var(--t-sort)}
+.activity[data-type=debate]{--type:var(--t-debate)}
+.activity[data-type=generalize]{--type:var(--t-generalize)}
+.activity[data-type=transfer],.activity[data-type=reflect]{--type:var(--t-transfer)}
+.activity>h3{margin:0 0 var(--s-2);font-size:var(--fs-lg);letter-spacing:-.015em}
+.activity .tags{display:flex;flex-wrap:wrap;gap:var(--s-2);margin:0 0 var(--s-4);font-size:var(--fs-xs)}
+.activity .tags span{padding:2px var(--s-3);border-radius:var(--r-pill);background:var(--surface-2);border:1px solid var(--line);color:var(--ink-2);font-weight:var(--fw-medium)}
+.activity .tags .t-type{background:var(--type);border-color:var(--type);color:var(--on-brand);font-weight:var(--fw-bold)}
+.activity>p>b:first-child{color:var(--ink)}
+
+/* 질문 수준 배지: 사실 / 개념 / 논쟁 */
+.q-level{display:inline-block;font-size:var(--fs-xs);font-weight:var(--fw-bold);line-height:1.5;padding:0 var(--s-2);border-radius:var(--r-sm);margin-right:var(--s-2);vertical-align:.08em;letter-spacing:.03em;border:1px solid transparent}
+.q-level.fact{background:var(--surface-2);color:var(--ink-2);border-color:var(--line-strong)}
+.q-level.concept{background:var(--brand-soft);color:var(--brand)}
+.q-level.debate{background:var(--danger-soft);color:var(--danger)}
+
+/* ── 입력 요소 ─────────────────────── */
+.activity textarea{width:100%;min-height:120px;margin:var(--s-2) 0 var(--s-4);padding:var(--s-3) var(--s-4);border:1px solid var(--line-strong);border-radius:var(--r-md);background:var(--paper);color:var(--ink);font:inherit;line-height:1.65;resize:vertical;transition:border-color .15s,box-shadow .15s,background .15s}
+.activity textarea::placeholder,.activity input::placeholder{color:var(--ink-3);opacity:.85}
+.activity textarea:hover,.activity input[type=text]:hover,.activity select:hover{border-color:var(--ink-3)}
+.activity textarea:focus,.activity input[type=text]:focus,.activity select:focus{outline:none;border-color:var(--brand);box-shadow:var(--ring);background:var(--surface)}
+.activity textarea.tall{min-height:220px}
+.activity textarea.cell{min-height:64px;min-width:150px;margin:0;padding:var(--s-2) var(--s-3);line-height:1.5}
+.activity textarea.code{font-family:var(--font-mono);font-size:.84rem;min-height:300px;white-space:pre}
+.activity input[type=text]{padding:var(--s-2) var(--s-3);border:1px solid var(--line-strong);border-radius:var(--r-sm);background:var(--paper);color:var(--ink);font:inherit;min-width:180px;transition:border-color .15s,box-shadow .15s}
+.activity select{padding:var(--s-1) var(--s-2);border:1px solid var(--line-strong);border-radius:var(--r-sm);background:var(--paper);color:var(--ink);font:inherit}
+.check{display:block;margin:var(--s-2) 0;cursor:pointer}
+.check input,.scale input{accent-color:var(--brand);margin-right:var(--s-2)}
+.scale{display:flex;gap:var(--s-4);flex-wrap:wrap}
+
+/* ── 카드 풀 · 분류표 ──────────────── */
+.pool{display:flex;flex-wrap:wrap;gap:var(--s-2);margin:var(--s-3) 0}
+.card{padding:var(--s-2) var(--s-3);border:1px solid var(--line-strong);border-radius:var(--r-md);background:var(--surface);font-size:var(--fs-sm);box-shadow:var(--sh-1)}
 .sort-table td{min-width:120px}
-details.hint{margin:8px 0;padding:6px 12px;border:1px dashed var(--line);border-radius:8px;background:var(--card)}
-details.hint summary{cursor:pointer;color:var(--accent);font-size:14px}
-details.defs{margin:10px 0;padding:8px 12px;border:1px solid var(--line);border-radius:8px}
-details.defs > summary{cursor:pointer;color:var(--accent)}
-.check{display:block;margin:6px 0}
-.scale{display:flex;gap:14px;flex-wrap:wrap}
-.ws-tools{position:sticky;bottom:0;display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;padding:8px 16px;background:var(--bg);border-top:1px solid var(--line)}
-.ws-tools button{cursor:pointer;border:1px solid var(--accent);background:transparent;color:var(--accent);padding:6px 12px;border-radius:6px;font:inherit;font-size:14px}
-.saved{font-size:12px;color:var(--muted);align-self:center}
-@media print{
-  .ws-tools,header.top nav,details.hint{display:none}
-  details.defs > summary{display:none}
-  .activity{border:1px solid #888;page-break-inside:avoid}
-  .activity textarea{border:1px solid #888;background:#fff;color:#000;resize:none}
-  .activity textarea.code{min-height:300px}
-  body{font-size:13px}
-}
-/* 파이썬 편집기(pyedit.js) */
-.pyedit{margin:10px 0;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--card)}
-.pyedit-bar{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:6px 10px;border-bottom:1px solid var(--line)}
-.pyedit-name{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;margin-right:auto}
-.pyedit-bar button{cursor:pointer;border:1px solid var(--accent);background:transparent;color:var(--accent);padding:3px 10px;border-radius:6px;font:inherit;font-size:13px}
-.pyedit-bar button[data-a=run]{background:var(--accent);color:#fff}
+
+/* ── 열어 보는 상자: 힌트·정의 ────── */
+details.hint,details.defs{margin:var(--s-3) 0;padding:var(--s-2) var(--s-4);border-radius:var(--r-md)}
+details.hint{border:1px dashed var(--line-strong);background:var(--warn-soft)}
+details.hint summary{color:var(--warn)}
+details.defs{border:1px solid var(--line);background:var(--brand-soft)}
+details.defs>summary{color:var(--brand)}
+details>summary{cursor:pointer;font-size:var(--fs-sm);font-weight:var(--fw-semibold);list-style:none;padding:var(--s-1) 0}
+details>summary::-webkit-details-marker{display:none}
+details>summary::before{content:"▸";display:inline-block;width:1.1em;transition:transform .15s}
+details[open]>summary::before{transform:rotate(90deg)}
+details[open]>summary{margin-bottom:var(--s-1)}
+
+/* ── 하단 도구 모음 ────────────────── */
+.ws-tools{position:sticky;bottom:var(--s-3);z-index:20;display:flex;flex-wrap:wrap;gap:var(--s-2);justify-content:flex-end;align-items:center;width:fit-content;max-width:calc(100% - var(--s-4));margin:var(--s-5) var(--s-3) var(--s-3) auto;padding:var(--s-2) var(--s-3);background:color-mix(in srgb,var(--surface) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--sh-3)}
+.ws-tools button{cursor:pointer;border:1px solid var(--line-strong);background:var(--surface);color:var(--ink);padding:var(--s-1) var(--s-3);border-radius:var(--r-pill);font:inherit;font-size:var(--fs-sm);font-weight:var(--fw-medium);transition:border-color .15s,background .15s}
+.ws-tools button:hover{border-color:var(--brand);background:var(--brand-soft);color:var(--brand)}
+.ws-tools button#ws-submit{background:var(--brand)!important;border-color:var(--brand);color:var(--on-brand)!important;font-weight:var(--fw-bold)}
+.ws-tools button#ws-submit:hover{background:var(--brand-strong)!important}
+.saved{font-size:var(--fs-xs);color:var(--ink-3);align-self:center;padding:0 var(--s-1)}
+
+/* ── 파이썬 편집기(pyedit.js) ──────── */
+.pyedit{margin:var(--s-3) 0;border:1px solid var(--line-strong);border-radius:var(--r-md);overflow:hidden;background:var(--surface);box-shadow:var(--sh-1)}
+.pyedit-bar{display:flex;flex-wrap:wrap;gap:var(--s-2);align-items:center;padding:var(--s-2) var(--s-3);border-bottom:1px solid var(--line);background:var(--surface-2)}
+.pyedit-name{font-family:var(--font-mono);font-size:var(--fs-xs);font-weight:var(--fw-semibold);color:var(--ink-2);margin-right:auto}
+.pyedit-name::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--t-observe);margin-right:var(--s-2)}
+.pyedit-bar button{cursor:pointer;border:1px solid var(--line-strong);background:var(--surface);color:var(--ink-2);padding:2px var(--s-3);border-radius:var(--r-pill);font:inherit;font-size:var(--fs-xs);font-weight:var(--fw-medium);transition:border-color .15s,background .15s}
+.pyedit-bar button:hover{border-color:var(--brand);color:var(--brand)}
+.pyedit-bar button[data-a=run]{background:var(--brand);border-color:var(--brand);color:var(--on-brand);font-weight:var(--fw-bold)}
+.pyedit-bar button[data-a=run]:hover{background:var(--brand-strong);color:var(--on-brand)}
 .pyedit-bar button:disabled{opacity:.5;cursor:wait}
-.pyedit-status{font-size:12px;color:var(--muted)}
-.activity textarea.pyedit-code{position:relative;display:block;width:100%;box-sizing:border-box;padding:10px 12px;background:transparent;color:transparent;caret-color:var(--fg);-webkit-text-fill-color:transparent;margin:0;border:0;border-radius:0;min-height:200px;max-height:560px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13.5px;line-height:1.55;white-space:pre;overflow:auto;tab-size:4;resize:vertical}
-.pyedit-out{margin:0;padding:8px 12px;min-height:44px;max-height:320px;overflow:auto;border-top:1px solid var(--line);background:#111827;color:#e5e7eb;font-size:13px;white-space:pre-wrap}
-.pyedit-out.err{color:#fca5a5}
-@media print{.pyedit-bar,.pyedit-out{display:none}.pyedit{border:0}}
-.pyedit-pop{width:min(900px,94vw);max-height:88vh;padding:0;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--fg);box-shadow:0 12px 40px rgba(0,0,0,.35)}
-.pyedit-pop::backdrop{background:rgba(0,0,0,.5)}
+.pyedit-status{font-size:var(--fs-xs);color:var(--ink-3)}
+.activity textarea.pyedit-code{position:relative;display:block;width:100%;box-sizing:border-box;padding:var(--s-3) var(--s-4);background:transparent;color:transparent;caret-color:var(--ink);-webkit-text-fill-color:transparent;margin:0;border:0;border-radius:0;min-height:200px;max-height:560px;font-family:var(--font-mono);font-size:.84rem;line-height:1.6;white-space:pre;overflow:auto;tab-size:4;resize:vertical;box-shadow:none}
+.activity textarea.pyedit-code:focus{background:transparent;box-shadow:none}
+.pyedit-out{margin:0;padding:var(--s-3) var(--s-4);min-height:44px;max-height:320px;overflow:auto;border:0;border-top:1px solid var(--line);border-radius:0;background:var(--console-bg);color:var(--console-fg);font-size:.82rem;white-space:pre-wrap;box-shadow:none}
+.pyedit-out.err{color:var(--console-err)}
+.pyedit-pop{width:min(900px,94vw);max-height:88vh;padding:0;border:1px solid var(--line);border-radius:var(--r-lg);background:var(--surface);color:var(--ink);box-shadow:var(--sh-3)}
+.pyedit-pop::backdrop{background:rgba(12,15,23,.55);backdrop-filter:blur(2px)}
 .pyedit-pop[open]{display:flex;flex-direction:column}
-.pyedit-pop-head{display:flex;gap:8px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg)}
+.pyedit-pop-head{display:flex;gap:var(--s-2);align-items:center;padding:var(--s-3) var(--s-4);border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--surface)}
 .pyedit-pop-head b{margin-right:auto}
-.pyedit-pop-head button{cursor:pointer;border:1px solid var(--accent);background:transparent;color:var(--accent);padding:3px 12px;border-radius:6px;font:inherit;font-size:13px}
-.pyedit-pop-head button[data-a=close]{background:var(--accent);color:#fff}
-.pyedit-pop-note{margin:8px 14px 0;font-size:13px;color:var(--muted)}
-.pyedit-pop pre{margin:8px 14px 14px;overflow:auto;font-size:13px;white-space:pre}
-@media print{.pyedit-pop{display:none!important}}
+.pyedit-pop-head button{cursor:pointer;border:1px solid var(--line-strong);background:var(--surface);color:var(--ink-2);padding:2px var(--s-3);border-radius:var(--r-pill);font:inherit;font-size:var(--fs-xs);font-weight:var(--fw-medium)}
+.pyedit-pop-head button[data-a=close]{background:var(--brand);border-color:var(--brand);color:var(--on-brand);font-weight:var(--fw-bold)}
+.pyedit-pop-note{margin:var(--s-2) var(--s-4) 0;font-size:var(--fs-xs);color:var(--ink-3)}
+.pyedit-pop pre{margin:var(--s-2) var(--s-4) var(--s-4);overflow:auto;font-size:.8rem;white-space:pre}
 /* 신택스 하이라이팅 색은 assets/highlight.js 가 넣는다 */
 .pyedit-wrap{position:relative}
-.pyedit-hl{position:absolute;inset:0;margin:0;padding:10px 12px;border:0;border-radius:0;background:transparent;overflow:hidden;pointer-events:none;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13.5px;line-height:1.55;white-space:pre;tab-size:4;color:var(--fg)}
+.pyedit-hl{position:absolute;inset:0;margin:0;padding:var(--s-3) var(--s-4);border:0;border-radius:0;background:transparent;box-shadow:none;overflow:hidden;pointer-events:none;font-family:var(--font-mono);font-size:.84rem;line-height:1.6;white-space:pre;tab-size:4;color:var(--ink)}
 .pyedit-pop pre,.pyedit-hl{font-variant-ligatures:none}
-@media print{.pyedit-hl{display:none}.activity textarea.pyedit-code{color:#000;-webkit-text-fill-color:#000;background:#fff}}
+
+/* ── 좁은 화면: 표는 가로로 밀어서 본다 ── */
+@media (max-width:720px){.ws-tools{width:auto;max-width:none;margin:var(--s-4) var(--s-2) var(--s-2);padding:var(--s-2);gap:var(--s-1);justify-content:center;bottom:var(--s-2)}.ws-tools button{padding:2px var(--s-2);font-size:var(--fs-xs)}.ws-tools .saved{display:none}.activity{padding:var(--s-3) var(--s-3) var(--s-4)}.activity table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}}
+
+/* ── 인쇄 ──────────────────────────── */
+@media print{
+  .ws-tools,header.top nav,details.hint{display:none}
+  details.defs>summary{display:none}
+  .activity{border:1px solid #888;border-top:3px solid #555;box-shadow:none;page-break-inside:avoid}
+  .activity textarea{border:1px solid #888;background:#fff;color:#000;resize:none}
+  .activity textarea.code{min-height:300px}
+  .lens,.ws-id,.ws-meta span{box-shadow:none}
+  body{font-size:13px}
+  .pyedit-bar,.pyedit-out,.pyedit-hl,.pyedit-pop{display:none!important}
+  .pyedit{border:0;box-shadow:none}
+  .activity textarea.pyedit-code{color:#000;-webkit-text-fill-color:#000;background:#fff}
+}

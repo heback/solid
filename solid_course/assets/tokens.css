@@ -1,0 +1,84 @@
+/* ============================================================
+   SOLID 수업자료 디자인 토큰 (Design Tokens)
+   - 모든 색·글자·간격·모서리·그림자는 여기서만 정의한다. 컴포넌트는 토큰만 쓴다.
+   - 라이트/다크: prefers-color-scheme 기본, <html data-theme="light|dark">로 고정 가능.
+   - 구버전 이름(--bg --fg --card --accent …)은 별칭으로 남겨 기존 페이지가 그대로 동작한다.
+   ============================================================ */
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+
+:root{
+  /* ── 글꼴 ───────────────────────────── */
+  --font-sans:"Pretendard Variable",Pretendard,"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",-apple-system,"Segoe UI",sans-serif;
+  --font-mono:ui-monospace,"JetBrains Mono","SF Mono",Menlo,Consolas,"D2Coding",monospace;
+
+  /* ── 글자 크기(1.2 배율) · 줄 간격 ──── */
+  --fs-xs:.78rem; --fs-sm:.875rem; --fs-base:1rem; --fs-md:1.0625rem;
+  --fs-lg:1.25rem; --fs-xl:1.5rem; --fs-2xl:1.875rem; --fs-3xl:clamp(1.9rem,1.4rem + 2vw,2.6rem);
+  --lh-tight:1.3; --lh-snug:1.5; --lh-body:1.78;
+  --fw-regular:400; --fw-medium:500; --fw-semibold:600; --fw-bold:700;
+
+  /* ── 간격(4px 기준) ─────────────────── */
+  --s-1:4px; --s-2:8px; --s-3:12px; --s-4:16px; --s-5:24px; --s-6:32px; --s-7:48px; --s-8:72px;
+
+  /* ── 모서리 · 그림자 · 폭 ───────────── */
+  --r-sm:6px; --r-md:10px; --r-lg:16px; --r-pill:999px;
+  --sh-1:0 1px 2px rgba(28,32,48,.05),0 1px 1px rgba(28,32,48,.03);
+  --sh-2:0 4px 16px rgba(28,32,48,.07),0 1px 3px rgba(28,32,48,.05);
+  --sh-3:0 18px 48px rgba(28,32,48,.18);
+  --w-page:880px;
+  --ring:0 0 0 3px var(--brand-ring);
+
+  /* ── 색: 바탕·글자·선 ───────────────── */
+  --paper:#faf9f6;          /* 페이지 바탕(따뜻한 종이색) */
+  --surface:#ffffff;        /* 카드·입력칸 */
+  --surface-2:#f3f1ec;      /* 보조 면(표 머리, 코드 바탕) */
+  --ink:#1b1f2b;            /* 본문 */
+  --ink-2:#434a5c;          /* 보조 글 */
+  --ink-3:#5f6677;          /* 흐린 글(대비 5:1 이상) */
+  --line:#e6e3dc;           /* 얇은 선 */
+  --line-strong:#cdc9be;    /* 입력칸 테두리 */
+
+  /* ── 색: 브랜드(남색) ───────────────── */
+  --brand:#2b3a8f; --brand-strong:#1e2a70; --brand-soft:#eceefa; --brand-ring:rgba(43,58,143,.22);
+  --on-brand:#ffffff;
+
+  /* ── 색: 의미(성공·위험·주의) ───────── */
+  --ok:#2c7a57;  --ok-soft:#e9f4ee;
+  --danger:#b3443a; --danger-soft:#fbeeec;
+  --warn:#a06a12;   --warn-soft:#fcf5e3;
+
+  /* ── 색: 활동 유형(학습지 카드의 색띠) ─ */
+  --t-predict:#b0801f; --t-observe:#2c7a57; --t-sort:#6a4cc2;
+  --t-debate:#b3443a;  --t-generalize:#2b3a8f; --t-transfer:#1b7a90;
+
+  /* ── 색: 콘솔(실행 결과) ────────────── */
+  --console-bg:#141824; --console-fg:#e6e9f2; --console-err:#ff9d94;
+
+  /* ── 구버전 이름 별칭(삭제 금지) ────── */
+  --bg:var(--paper); --fg:var(--ink); --muted:var(--ink-3); --card:var(--surface-2);
+  --accent:var(--brand); --code:var(--surface-2); --concept:var(--brand-soft);
+  --tip:var(--warn-soft); --good:var(--ok-soft); --goodb:var(--ok);
+  --bad:var(--danger-soft); --badb:var(--danger);
+  /* --warn 은 아래 새 의미색(진한 색)으로 쓰고, 옛 '연한 경고 면'은 --warn-soft 로 옮겼다. */
+}
+
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme=light]){ --dark-tokens:1;
+    --paper:#12141b; --surface:#191d27; --surface-2:#1f2431; --ink:#e9ebf2; --ink-2:#b9bfce; --ink-3:#98a0b3;
+    --line:#2a3040; --line-strong:#3a4256;
+    --brand:#8da2ff; --brand-strong:#b3c1ff; --brand-soft:#1d2447; --brand-ring:rgba(141,162,255,.3); --on-brand:#0f1430;
+    --ok:#52c68d; --ok-soft:#14261d; --danger:#ff8478; --danger-soft:#2c1b1a; --warn:#e3ad54; --warn-soft:#2a2414;
+    --t-predict:#e3ad54; --t-observe:#52c68d; --t-sort:#a994ff; --t-debate:#ff8478; --t-generalize:#8da2ff; --t-transfer:#4fc1d6;
+    --console-bg:#0c0f17;
+    --sh-1:0 1px 2px rgba(0,0,0,.4); --sh-2:0 4px 16px rgba(0,0,0,.4); --sh-3:0 18px 48px rgba(0,0,0,.6);
+  }
+}
+:root[data-theme=dark]{
+  --paper:#12141b; --surface:#191d27; --surface-2:#1f2431; --ink:#e9ebf2; --ink-2:#b9bfce; --ink-3:#98a0b3;
+  --line:#2a3040; --line-strong:#3a4256;
+  --brand:#8da2ff; --brand-strong:#b3c1ff; --brand-soft:#1d2447; --brand-ring:rgba(141,162,255,.3); --on-brand:#0f1430;
+  --ok:#52c68d; --ok-soft:#14261d; --danger:#ff8478; --danger-soft:#2c1b1a; --warn:#e3ad54; --warn-soft:#2a2414;
+  --t-predict:#e3ad54; --t-observe:#52c68d; --t-sort:#a994ff; --t-debate:#ff8478; --t-generalize:#8da2ff; --t-transfer:#4fc1d6;
+  --console-bg:#0c0f17;
+  --sh-1:0 1px 2px rgba(0,0,0,.4); --sh-2:0 4px 16px rgba(0,0,0,.4); --sh-3:0 18px 48px rgba(0,0,0,.6);
+}
