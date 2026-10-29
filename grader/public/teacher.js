@@ -1,5 +1,5 @@
 import { collection, doc, updateDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-firestore.js";
-import { $, esc, fmtDate, millis, db, call, start, isTeacher } from "./common.js";
+import { $, esc, fmtDate, millis, db, call, start, isTeacher, highlightAll } from "./common.js";
 
 const gradeFn = call("gradeExam", 190000), sendFn = call("sendFeedback", 120000), fileFn = call("getSubmission"), rubricFn = call("getRubric");
 let rubric = null;   // { items:{id: 모범 답·기준}, solutions:{문항: 모범 코드} } (처음 열 때 한 번만 받는다)
@@ -115,12 +115,12 @@ async function openDetail(x) {
   if (!rubric) {
     try {
       const d = (await rubricFn()).data;
-      rubric = { items: Object.fromEntries(d.items.map(i => [i.id, i.answerKey])), solutions: d.solutions, questions: d.questions };
+      rubric = { items: Object.fromEntries(d.items.map(i => [i.id, i.answerHtml])), questions: d.questions };
     } catch (e) { $("#dMsg").textContent = "모범 답을 불러오지 못했습니다: " + (e.message || e.code); }
   }
-  const ans = id => rubric?.items[id] ? `<details class="raw"><summary>모범 답·채점 기준</summary><pre>${esc(rubric.items[id])}</pre></details>` : "";
-  const qtext = q => rubric?.questions[q] ? `<details class="raw"><summary>문항 ${q} 문제</summary><pre>${esc(rubric.questions[q])}</pre></details>` : "";
-  const sol = q => rubric?.solutions[q] ? `<details class="raw"><summary>문항 ${q} 모범 코드</summary><pre>${esc(rubric.solutions[q])}</pre></details>` : "";
+  const ans = id => rubric?.items[id] ? `<details class="raw"><summary>모범 답·채점 기준</summary><div class="doc">${rubric.items[id]}</div></details>` : "";
+  const qtext = q => rubric?.questions[q] ? `<details class="raw"><summary>문항 ${q} 문제</summary><div class="doc">${rubric.questions[q].html}</div></details>` : "";
+  const sol = q => rubric?.questions[q]?.solution ? `<details class="raw"><summary>문항 ${q} 모범 코드</summary><div class="doc"><pre><code>${esc(rubric.questions[q].solution)}</code></pre></div></details>` : "";
   const byQ = {};
   d.items.forEach((it, i) => (byQ[it.q] ||= []).push([it, i]));
   $("#dBody").innerHTML = `<p>총점 <b id="dTotal">${total(d)}</b> / 100 <small class="mute">(${esc(d.model)})</small></p>` +
@@ -131,6 +131,7 @@ async function openDetail(x) {
     `<div class="item"><h3>종합 평가</h3><textarea id="dOverall" aria-label="종합 평가">${esc(d.overall)}</textarea></div>
      <details class="raw" id="raw"><summary>학생 답안 원문 보기</summary><div id="rawBody" class="mute">불러오는 중…</div></details>`;
   $("#detail").showModal();
+  highlightAll($("#dBody"));
   $("#raw").addEventListener("toggle", loadRaw, { once: true });
 }
 async function loadRaw() {

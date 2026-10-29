@@ -81,14 +81,13 @@ exports.submitExam = onCall({ region: REGION, memory: "256MiB", maxInstances: 10
   return { ok: true };
 });
 
-// [교사] 모범 답·채점 기준(교사 화면에 표시)
+// [교사] 문제·모범 답·채점 기준·모범 코드(교사 화면에 표시). HTML 조각은 저장소 파일에서 만든 것이다.
 exports.getRubric = onCall({ region: REGION }, async req => {
   checkTeacher(req.auth);
   const r = require("./rubric/exam.json");
   return {
-    items: r.items.map(({ id, q, label, max, answerKey }) => ({ id, q, label, max, answerKey })),
-    questions: Object.fromEntries(Object.entries(r.questions).map(([q, v]) => [q, v.text])),
-    solutions: Object.fromEntries(Object.entries(r.questions).filter(([, v]) => v.shownSolution).map(([q, v]) => [q, v.shownSolution])),
+    items: r.items.map(({ id, q, label, max, answerHtml }) => ({ id, q, label, max, answerHtml })),
+    questions: Object.fromEntries(Object.entries(r.questions).map(([q, v]) => [q, { title: v.title, tags: v.tags, html: v.html, solution: v.shownSolution }])),
   };
 });
 

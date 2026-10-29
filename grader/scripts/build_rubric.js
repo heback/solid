@@ -32,6 +32,17 @@ const SPEC = {
   5: [["5-1", "(1)", "ISP·DIP 위반 분석", 8], ["5-2", "(2)", "구현(코드)", 14], ["5-3", "(3)", "DIP 서술", 3]],
 };
 
+// 교사 화면 표시용 HTML(우리 저장소의 파일에서 만든 것이며 교사 계정만 받는다).
+const questionHtml = qsec => qsec
+  .replace(/<h2[\s\S]*?<\/h2>/, "")
+  .replace(/<div class="meta">[\s\S]*?<\/div>/, "")
+  .replace(/<p><a class="hintlink"[\s\S]*?<\/p>/, "")
+  .replace(/<p class="sub">답안 코드 작성<\/p>\s*<p>[\s\S]*?<\/p>/g, "")
+  .replace(/<div class="pyedit"[\s\S]*?<\/script><\/div>/g, "")
+  .replace(/<p class="k"[^>]*>제출:[\s\S]*?<\/p>/g, "")
+  .replace(/<textarea[^>]*><\/textarea>|<input[^>]*>|<select[\s\S]*?<\/select>/g, "")
+  .replace(/<script[\s\S]*?<\/script>/g, "")
+  .trim();
 const items = [];
 const questions = {};
 let total = 0;
@@ -43,7 +54,9 @@ for (const q of [1, 2, 3, 4, 5]) {
   const starter = CODE[q] ? fs.readFileSync(path.join(ROOT, "code", CODE[q]), "utf8") : "";
   const solution = CODE[q] ? fs.readFileSync(path.join(ROOT, "code/solutions", CODE[q]), "utf8") : "";
   // solutionCode는 AI 채점 프롬프트용(구현 문항만), shownSolution은 교사 화면에 보여 줄 모범 코드(코드가 있는 모든 문항)
-  questions[q] = { text: text(qsec), starterCode: q === 2 || q === 3 ? starter : "", solutionCode: q >= 4 ? solution : "", shownSolution: solution };
+  const h2 = qsec.match(/<h2[^>]*>([\s\S]*?)<\/h2>/)[1];
+  const tags = [...qsec.matchAll(/<span class="tag[^"]*">([^<]*)<\/span>/g)].map(x => x[1]).filter(t => !/점$/.test(t));
+  questions[q] = { title: text(h2.replace(/<span class="pts">[\s\S]*?<\/span>/, "")).replace(/^문항 \d+\.\s*/, ""), tags, html: questionHtml(qsec), text: text(qsec), starterCode: q === 2 || q === 3 ? starter : "", solutionCode: q >= 4 ? solution : "", shownSolution: solution };
   for (const [id, prefix, label, max] of SPEC[q]) {
     // "(1)"이 "(1)(2)"와 헷갈리지 않도록 접두어 바로 뒤가 공백인 h3만 고른다.
     const part = parts.find(p => { const h = text(p.match(/<h3>([\s\S]*?)<\/h3>/)[1]); return h.startsWith(prefix + " "); });
@@ -51,7 +64,7 @@ for (const q of [1, 2, 3, 4, 5]) {
     const n = prefix[1]; // "(3)" -> 3. 입력칸 키는 q{문항}-{소문항}으로 시작한다.
     const own = id === "4-1" ? ["py-q4_payment.py"] : id === "5-2" ? ["py-q5_delivery_robot.py"]
       : keys.filter(k => k === `q${q}-${n}` || k.startsWith(`q${q}-${n}-`));
-    items.push({ id, q, label, max, keys: own, answerKey: text(part) });
+    items.push({ id, q, label, max, keys: own, answerKey: text(part), answerHtml: part.replace(/^<h3>[\s\S]*?<\/h3>/, "").replace(/<!--[\s\S]*?-->/g, "").trim() });
     total += max;
   }
 }

@@ -16,6 +16,11 @@ export const db = getFirestore(app);
 export const call = (name, timeout = 60000) => httpsCallable(getFunctions(app, "asia-northeast3"), name, { timeout });
 export const isTeacher = user => !!user && TEACHER_EMAILS.includes((user.email || "").toLowerCase());
 
+// 코드 블록에 파이썬 색을 입힌다(highlight.js 가 먼저 불러와져 있으면).
+export const highlightAll = root => root.querySelectorAll("pre > code:not(.out)").forEach(c => {
+  if (window.pyHighlight && !c.dataset.hl) { c.innerHTML = window.pyHighlight(c.textContent); c.dataset.hl = "1"; }
+});
+
 // 로그인 화면(#login)과 앱 화면(#app)을 전환한다. onUser(user|null)는 로그인·로그아웃 때마다 불린다.
 export function start(onUser) {
   $("#loginBtn").onclick = async () => {

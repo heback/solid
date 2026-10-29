@@ -1,5 +1,5 @@
-:root{--bg:#f6f7f9;--fg:#1c2330;--card:#fff;--line:#d9dde5;--accent:#2f5fd0;--ok:#1f8a4c;--bad:#c0392b;--warn:#b7791f;--mute:#6b7280}
-@media (prefers-color-scheme:dark){:root{--bg:#14171d;--fg:#e6e9ef;--card:#1d222b;--line:#323947;--accent:#7aa2ff;--ok:#4cc38a;--bad:#ff7a6b;--warn:#e0a84c;--mute:#98a2b3}}
+:root{--c-code:#f3f5f9;--c-good:#effaf3;--c-goodb:#2e9d5b;--c-bad:#fff3f1;--c-badb:#e5533d;--c-concept:#eef3ff;--c-tip:#fff9e6;--bg:#f6f7f9;--fg:#1c2330;--card:#fff;--line:#d9dde5;--accent:#2f5fd0;--ok:#1f8a4c;--bad:#c0392b;--warn:#b7791f;--mute:#6b7280}
+@media (prefers-color-scheme:dark){:root{--c-code:#1b2030;--c-good:#16261d;--c-goodb:#4cc77f;--c-bad:#2a1b1b;--c-badb:#ff7a66;--c-concept:#1a2340;--c-tip:#2a2615;--bg:#14171d;--fg:#e6e9ef;--card:#1d222b;--line:#323947;--accent:#7aa2ff;--ok:#4cc38a;--bad:#ff7a6b;--warn:#e0a84c;--mute:#98a2b3}}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 "Pretendard","Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif}
@@ -44,3 +44,27 @@ details.raw dd{margin:0 0 4px}
 .report .ov{margin-top:14px;padding:10px 14px;background:var(--bg);border-radius:8px;white-space:pre-wrap}
 @media (max-width:760px){.hide-s{display:none}}
 @media print{header,.bar,.noprint{display:none!important}body{background:#fff;color:#000}.report{border:0;padding:0}tr{break-inside:avoid}}
+
+/* 문제·정답 HTML(.doc): 평가 문제 화면과 같은 모양으로 보여 준다 */
+.doc{line-height:1.75;font-size:.96rem}
+.doc p{margin:.5em 0}
+.doc code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.9em;background:var(--c-code);padding:1px 5px;border-radius:4px}
+.doc pre{margin:10px 0;padding:12px 14px;overflow:auto;border-radius:8px;background:var(--c-code);border-left:4px solid var(--line);line-height:1.55;max-height:520px}
+.doc pre code{background:none;padding:0;font-size:.84rem}
+.doc pre:has(code.out){border-left-color:var(--accent)}
+.doc table{margin:10px 0;font-size:.9rem}
+.doc th,.doc td{border:1px solid var(--line);vertical-align:top;background:transparent}
+.doc th{background:var(--bg)}
+.doc .situation{background:var(--c-concept);border-left:4px solid var(--accent);border-radius:8px;padding:10px 14px;margin:10px 0}
+.doc .sub{margin:16px 0 4px;font-weight:700}
+.doc .sub small{font-weight:400;color:var(--mute)}
+.doc .answer{margin:10px 0;padding:10px 14px;border-left:5px solid var(--c-goodb);background:var(--c-good);border-radius:6px}
+.doc .answer h4{margin:0 0 4px;font-size:.95rem}
+.doc .misc{margin:10px 0;padding:10px 14px;border-left:5px solid var(--c-badb);background:var(--c-bad);border-radius:6px}
+.doc .k{font-size:.86rem;color:var(--mute)}
+.doc .box{margin:10px 0;padding:10px 14px;border-radius:8px;border:1px solid var(--line)}
+.doc details{margin:8px 0}
+.doc summary{cursor:pointer;color:var(--accent)}
+.doc ol,.doc ul{padding-left:1.4em}
+.doc .rubric th:first-child{width:22%}
+details.raw .doc pre{white-space:pre}

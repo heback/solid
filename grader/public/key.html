@@ -5,19 +5,41 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>SOLID 평가 문제·정답 (교사)</title>
 <link rel="stylesheet" href="style.css">
+<script src="highlight.js" defer></script>
 <style>
-  .qbox{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin-bottom:20px}
-  .qbox h2{font-size:1.1rem;margin:0 0 8px;color:var(--accent)}
-  .qbox pre{white-space:pre-wrap;word-break:break-word;font:inherit;font-size:.93rem;margin:6px 0 12px;background:var(--bg);padding:10px 12px;border-radius:8px}
-  .qbox pre.code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85rem;white-space:pre;overflow:auto;max-height:480px}
-  .qbox h3{font-size:.98rem;margin:14px 0 2px}
-  .qbox .lbl{font-size:.85rem;color:var(--mute);margin:8px 0 0}
-  .toc{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+  .banner{background:#b3261e;color:#fff;text-align:center;padding:6px 12px;font-weight:700;font-size:14px}
+  .navchips{position:sticky;top:0;z-index:5;display:flex;gap:8px;flex-wrap:wrap;padding:10px 16px;background:var(--card);border-bottom:1px solid var(--line)}
+  .navchips a{padding:4px 14px;border:1px solid var(--line);border-radius:999px;color:var(--accent);text-decoration:none;font-size:.92rem;background:var(--bg)}
+  .navchips a:hover{border-color:var(--accent)}
+  .hero{margin:6px 0 18px}
+  .hero h2{font-size:1.5rem;margin:0}
+  .hero p{margin:4px 0;color:var(--mute)}
+  .qcard{background:var(--card);border:1px solid var(--line);border-radius:14px;margin:0 0 28px;overflow:hidden;scroll-margin-top:64px}
+  .qhead{display:flex;align-items:center;gap:14px;padding:14px 20px;background:var(--c-concept);border-bottom:1px solid var(--line)}
+  .qnum{flex:none;width:44px;height:44px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.2rem}
+  .qhead h2{font-size:1.15rem;margin:0}
+  .qhead .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+  .tagp{font-size:.8rem;padding:1px 9px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--mute)}
+  .qpts{margin-left:auto;font-weight:800;font-size:1.15rem;color:var(--accent);white-space:nowrap}
+  .blk{padding:6px 20px 14px}
+  .blk>h3{display:flex;align-items:center;gap:8px;font-size:.95rem;margin:14px 0 4px;color:var(--mute);text-transform:none}
+  .blk>h3::before{content:"";width:5px;height:18px;border-radius:3px;background:var(--accent)}
+  .blk.sol>h3::before{background:var(--c-goodb)}
+  .blk.ans>h3::before{background:var(--c-badb)}
+  .sitem{border:1px solid var(--line);border-radius:10px;margin:12px 0;background:var(--bg)}
+  .sitem>header{display:flex;align-items:center;gap:10px;padding:8px 14px;border-bottom:1px solid var(--line);background:transparent}
+  .sitem>header b{font-size:.98rem}
+  .pill{margin-left:auto;font-size:.82rem;font-weight:700;padding:2px 10px;border-radius:999px;background:var(--c-good);color:var(--c-goodb);border:1px solid var(--c-goodb)}
+  .sitem>.doc{padding:2px 14px 10px}
+  .sum{margin:0 0 22px}
+  .sum td,.sum th{font-size:.9rem}
+  @media print{.navchips,.banner{display:none}.qcard{break-inside:auto;border:1px solid #999}}
 </style>
 </head>
 <body>
+<div class="banner">교사 전용 · 문제와 모범 정답 · 학생 화면 공유·배포 금지</div>
 <header>
-  <h1>SOLID 평가 문제·정답 · 교사</h1>
+  <h1>SOLID 평가 문제·정답</h1>
   <div id="user" hidden><a class="btn ghost sm noprint" href="teacher.html">← 채점 화면</a><button id="print" type="button" class="ghost sm noprint">인쇄</button><span id="who"></span><button id="logout" type="button" class="ghost">로그아웃</button></div>
 </header>
 <main id="login" hidden>
@@ -25,11 +47,10 @@
   <button id="loginBtn" type="button">Google로 로그인</button>
   <p id="loginMsg" class="err" role="alert"></p>
 </main>
-<main id="app" hidden>
-  <p class="note">교사 전용 화면입니다. 학생에게 보여 주거나 공유하지 마세요.</p>
-  <div id="toc" class="toc"></div>
-  <div id="body"><p class="mute">불러오는 중…</p></div>
-</main>
+<div id="app" hidden>
+  <nav id="toc" class="navchips noprint" aria-label="문항"></nav>
+  <main id="body"><p class="mute">불러오는 중…</p></main>
+</div>
 <script type="module" src="key.js"></script>
 </body>
 </html>
