@@ -5,7 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SOLID 평가 문제</title>
 <link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/worksheet.css">
 <script src="../assets/highlight.js" defer></script>
+<script src="../assets/pyedit.js" defer></script>
+<script src="../assets/worksheet.js" defer></script>
 <style>
   .toc{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
   .toc a{padding:4px 12px;border:1px solid var(--line);border-radius:999px;color:var(--accent);text-decoration:none;font-size:14px}
@@ -21,6 +24,9 @@
   .filelink{font-size:14px}
   td.blank{min-width:70px}
   h2 .pts{font-size:15px;font-weight:400;color:var(--muted)}
+  .qsec.activity{border:0;padding:0;margin:28px 0;break-inside:auto}
+  .qsec textarea.cell{min-width:0}
+  .qsec input.num{min-width:60px;width:100%}
   @media print{
     header.top nav,.hintlink,.toc{display:none}
     body{font-size:13px;line-height:1.6;background:#fff;color:#000}
@@ -57,6 +63,7 @@
       <li>시작 코드는 아래 본문에 있고, 파일로도 받을 수 있습니다: <a class="filelink" href="code/q2_log_collector.py" download>q2_log_collector.py</a> · <a class="filelink" href="code/q3_game_skills.py" download>q3_game_skills.py</a> · <a class="filelink" href="code/q4_payment.py" download>q4_payment.py</a> · <a class="filelink" href="code/q5_delivery_robot.py" download>q5_delivery_robot.py</a></li>
       <li>실행: 터미널에서 <code>python3 q4_payment.py</code>. 시작 코드는 그대로 실행됩니다(구현 문항은 처음에 공개 테스트가 <b>[실패]</b>로 나오는 것이 정상).</li>
       <li>구현 문항(4, 5)은 파일 맨 아래 <b>공개 테스트는 고치지 말고</b> 모두 <b>[통과]</b>가 나오게 만드세요. 공개 테스트를 통과해도 <b>구체 클래스 이름으로 분기</b>하거나 <b>결과를 그대로 적어 넣은</b> 답은 감점됩니다. 채점할 때 공개되지 않은 테스트를 더 돌립니다.</li>
+      <li>답은 아래 칸에 직접 입력하거나 고르세요. 입력 내용은 이 브라우저에 자동 저장되고, 아래쪽 <b>💾 JSON 저장</b>으로 파일을 내려받아 제출할 수 있습니다. 구현 문항(4, 5)은 아래 편집기에서 코드를 고치고 <b>실행</b>해 공개 테스트를 확인하세요.</li>
       <li>문항 3 (1)은 <b>실행하지 말고</b> 먼저 예측해서 쓰세요.</li>
     </ul>
   </div>
@@ -64,9 +71,15 @@
 </header>
 
 <main>
+<section id="ws-id">
+  <div class="ws-id">
+    <div><label for="id-name">이름</label><input id="id-name" type="text" data-k="id-name"></div>
+    <div><label for="id-no">학번</label><input id="id-no" type="text" data-k="id-no"></div>
+  </div>
+</section>
 
 <!-- ============================================================ Q1 -->
-<section class="qsec" id="q1">
+<section class="qsec activity" id="q1">
 <h2>문항 1. 상황에서 원칙 판단하기 <span class="pts">(15점)</span></h2>
 <div class="meta"><span class="tag ab">[개념 이해]</span><span class="tag">[SRP·OCP·LSP·ISP·DIP]</span><span class="tag">쉬움</span><span class="tag pts">15점</span></div>
 <p><a class="hintlink" href="hints.html#h1">힌트 보기 →</a></p>
@@ -83,22 +96,23 @@
 <table>
   <thead><tr><th style="width:8%">상황</th><th style="width:16%">원칙</th><th>판단 근거(한 문장)</th></tr></thead>
   <tbody>
-    <tr><td>A</td><td class="blank"></td><td></td></tr>
-    <tr><td>B</td><td class="blank"></td><td></td></tr>
-    <tr><td>C</td><td class="blank"></td><td></td></tr>
-    <tr><td>D</td><td class="blank"></td><td></td></tr>
-    <tr><td>E</td><td class="blank"></td><td></td></tr>
+    <tr><td>A</td><td class="blank"><select data-k="q1-1-A-p"><option value=""></option><option>SRP</option><option>OCP</option><option>LSP</option><option>ISP</option><option>DIP</option></select></td><td><textarea class="cell" data-k="q1-1-A-why"></textarea></td></tr>
+    <tr><td>B</td><td class="blank"><select data-k="q1-1-B-p"><option value=""></option><option>SRP</option><option>OCP</option><option>LSP</option><option>ISP</option><option>DIP</option></select></td><td><textarea class="cell" data-k="q1-1-B-why"></textarea></td></tr>
+    <tr><td>C</td><td class="blank"><select data-k="q1-1-C-p"><option value=""></option><option>SRP</option><option>OCP</option><option>LSP</option><option>ISP</option><option>DIP</option></select></td><td><textarea class="cell" data-k="q1-1-C-why"></textarea></td></tr>
+    <tr><td>D</td><td class="blank"><select data-k="q1-1-D-p"><option value=""></option><option>SRP</option><option>OCP</option><option>LSP</option><option>ISP</option><option>DIP</option></select></td><td><textarea class="cell" data-k="q1-1-D-why"></textarea></td></tr>
+    <tr><td>E</td><td class="blank"><select data-k="q1-1-E-p"><option value=""></option><option>SRP</option><option>OCP</option><option>LSP</option><option>ISP</option><option>DIP</option></select></td><td><textarea class="cell" data-k="q1-1-E-why"></textarea></td></tr>
   </tbody>
 </table>
 
 <p class="sub">(2) 과잉 적용 판단 <small>5점</small></p>
 <p>신입 개발자가 이렇게 제안했습니다. "학기 초에 한 번만 돌리는 30줄짜리 <b>수강 인원 집계 스크립트</b>(입력은 CSV 파일 하나, 출력은 화면에 한 줄, 지난 3년간 한 번도 바뀐 적 없음)도 SOLID를 지켜야 하니까 <code>Reader</code>·<code>Counter</code>·<code>Printer</code> 추상 클래스 3개와 구현 클래스 3개로 나눕시다."</p>
 <p>이 제안에 대한 당신의 판단(찬성 / 반대 / 조건부 찬성)과 근거를 2~3문장으로 쓰시오. 근거에는 <b>'변경' 또는 '확장'</b>의 관점이 들어가야 합니다.</p>
-<div class="write">판단:　　　　　 근거:</div>
+<p>판단: <select data-k="q1-2-j"><option value=""></option><option>찬성</option><option>반대</option><option>조건부 찬성</option></select></p>
+<textarea class="" data-k="q1-2-why" placeholder="근거를 2~3문장으로 쓰세요(‘변경’ 또는 ‘확장’의 관점 포함)"></textarea>
 </section>
 
 <!-- ============================================================ Q2 -->
-<section class="qsec" id="q2">
+<section class="qsec activity" id="q2">
 <h2>문항 2. 로그 수집기의 변경 이유와 영향 범위 <span class="pts">(20점)</span></h2>
 <div class="meta"><span class="tag ab">[코드 분석]</span><span class="tag">[SRP·DIP]</span><span class="tag">보통</span><span class="tag pts">20점</span></div>
 <p><a class="hintlink" href="hints.html#h2">힌트 보기 →</a> · <a class="filelink" href="code/q2_log_collector.py" download>시작 코드 내려받기</a></p>
@@ -163,7 +177,7 @@ db-2: 디스크 부족</code></pre>
 <p class="sub">(1) 이 클래스를 바꾸게 만드는 이유(요청하는 사람·팀이 다른 것)를 <b>3가지</b> 찾아, 각각 해당하는 줄 번호 범위를 쓰시오. <small>6점</small></p>
 <table>
   <thead><tr><th style="width:8%"></th><th>바꾸게 만드는 이유(누가, 무엇을)</th><th style="width:22%">줄 번호</th></tr></thead>
-  <tbody><tr><td>①</td><td></td><td></td></tr><tr><td>②</td><td></td><td></td></tr><tr><td>③</td><td></td><td></td></tr></tbody>
+  <tbody><tr><td>①</td><td><textarea class="cell" data-k="q2-1-1-why"></textarea></td><td><input type="text" data-k="q2-1-1-lines" placeholder="예: 7~9"></td></tr><tr><td>②</td><td><textarea class="cell" data-k="q2-1-2-why"></textarea></td><td><input type="text" data-k="q2-1-2-lines" placeholder="예: 7~9"></td></tr><tr><td>③</td><td><textarea class="cell" data-k="q2-1-3-why"></textarea></td><td><input type="text" data-k="q2-1-3-lines" placeholder="예: 7~9"></td></tr></tbody>
 </table>
 
 <p class="sub">(2) 변경 영향 추적 <small>8점</small></p>
@@ -173,14 +187,19 @@ db-2: 디스크 부족</code></pre>
   <li><b>[2점]</b> 오류 로그를 파일이 아니라 사내 로그 서버(네트워크)로 보내기로 했습니다. 고쳐야 할 메서드는 무엇이고, 그 수정 때문에 함께 다시 확인(테스트)해야 하는 범위는 어디까지인지 쓰시오.</li>
   <li><b>[3점]</b> 테스트 담당자가 "<code>save()</code>가 올바른 줄을 쓰는지 파일을 만들지 않고 확인하고 싶다"고 합니다. 지금 구조로 가능한지, 불가능하다면 어떤 줄 때문인지 쓰시오.</li>
 </ol>
-<div class="write tall">a)<br><br>b)<br><br>c)</div>
+<p class="sub" style="margin-bottom:0">a)</p>
+<textarea class="" data-k="q2-2-a"></textarea>
+<p class="sub" style="margin-bottom:0">b)</p>
+<textarea class="" data-k="q2-2-b"></textarea>
+<p class="sub" style="margin-bottom:0">c)</p>
+<textarea class="" data-k="q2-2-c"></textarea>
 
 <p class="sub">(3) <code>save()</code>의 문제를 DIP 관점에서 <b>'상위 정책', '하위 세부', '추상화'</b> 세 단어를 모두 써서 설명하고, 개선된 구조를 클래스 이름과 각 클래스의 역할 수준으로 제안하시오(코드 작성은 필요 없음). <small>6점</small></p>
-<div class="write tall"></div>
+<textarea class="tall" data-k="q2-3"></textarea>
 </section>
 
 <!-- ============================================================ Q3 -->
-<section class="qsec" id="q3">
+<section class="qsec activity" id="q3">
 <h2>문항 3. 스킬의 약속과 자동 전투 <span class="pts">(20점)</span></h2>
 <div class="meta"><span class="tag ab">[코드 분석]</span><span class="tag">[LSP]</span><span class="tag">보통</span><span class="tag pts">20점</span></div>
 <p><a class="hintlink" href="hints.html#h3">힌트 보기 →</a> · <a class="filelink" href="code/q3_game_skills.py" download>시작 코드 내려받기</a></p>
@@ -259,31 +278,32 @@ if __name__ == "__main__":
 <table>
   <thead><tr><th>출력 순서</th><th>피해</th><th>보스 hp</th><th>린 hp</th><th>린 mp</th></tr></thead>
   <tbody>
-    <tr><td>화염구</td><td></td><td></td><td></td><td></td></tr>
-    <tr><td>흡수</td><td></td><td></td><td></td><td></td></tr>
-    <tr><td>광폭</td><td></td><td></td><td></td><td></td></tr>
-    <tr><td>베기</td><td></td><td></td><td></td><td></td></tr>
-    <tr><td>남은 보스 hp</td><td colspan="4"></td></tr>
+    <tr><td>화염구</td><td><input type="text" data-k="q3-1-fire-dmg" class="num" placeholder="숫자"></td><td><input type="text" data-k="q3-1-fire-boss" class="num" placeholder="숫자"></td><td><input type="text" data-k="q3-1-fire-hp" class="num" placeholder="숫자"></td><td><input type="text" data-k="q3-1-fire-mp" class="num" placeholder="숫자"></td></tr>
+    <tr><td>흡수</td><td><input type="text" data-k="q3-1-drain-dmg" class="num" placeholder="숫자"></td><td><input type="text" data-k="q3-1-drain-boss" class="num" placeholder="숫자"></td><td><input type="text" data-k="q3-1-drain-hp" class="num" placeholder="숫자"></td><td><input type="text" data-k="q3-1-drain-mp" class="num" placeholder="숫자"></td></tr>
+    <tr><td>광폭</td><td><input type="text" data-k="q3-1-berserk-dmg" class="num" placeholder="숫자"></td><td><input type="text" data-k="q3-1-berserk-boss" class="num" placeholder="숫자"></td><td><input type="text" data-k="q3-1-berserk-hp" class="num" placeholder="숫자"></td><td><input type="text" data-k="q3-1-berserk-mp" class="num" placeholder="숫자"></td></tr>
+    <tr><td>베기</td><td><input type="text" data-k="q3-1-slash-dmg" class="num" placeholder="숫자"></td><td><input type="text" data-k="q3-1-slash-boss" class="num" placeholder="숫자"></td><td><input type="text" data-k="q3-1-slash-hp" class="num" placeholder="숫자"></td><td><input type="text" data-k="q3-1-slash-mp" class="num" placeholder="숫자"></td></tr>
+    <tr><td>남은 보스 hp</td><td colspan="4"><input type="text" data-k="q3-1-left" class="num" placeholder="숫자"></td></tr>
   </tbody>
 </table>
 
 <p class="sub">(2) <code>Fireball</code>, <code>Drain</code>, <code>Berserk</code> 각각이 <code>Skill</code>의 약속 ①②③을 지키는지 판단하시오. 어긴다면 <b>어긴 약속 번호</b>와 <b>근거가 되는 코드</b>를 쓰시오. <small>8점</small></p>
 <table>
   <thead><tr><th style="width:14%">클래스</th><th style="width:18%">지킴 / 어김</th><th style="width:18%">어긴 약속 번호</th><th>근거(코드와 그 결과)</th></tr></thead>
-  <tbody><tr><td>Fireball</td><td></td><td></td><td></td></tr><tr><td>Drain</td><td></td><td></td><td></td></tr><tr><td>Berserk</td><td></td><td></td><td></td></tr></tbody>
+  <tbody><tr><td>Fireball</td><td><select data-k="q3-2-fireball-ok"><option value=""></option><option>지킴</option><option>어김</option></select></td><td><input type="text" data-k="q3-2-fireball-no" class="num" placeholder="예: ②"></td><td><textarea class="cell" data-k="q3-2-fireball-why"></textarea></td></tr><tr><td>Drain</td><td><select data-k="q3-2-drain-ok"><option value=""></option><option>지킴</option><option>어김</option></select></td><td><input type="text" data-k="q3-2-drain-no" class="num" placeholder="예: ②"></td><td><textarea class="cell" data-k="q3-2-drain-why"></textarea></td></tr><tr><td>Berserk</td><td><select data-k="q3-2-berserk-ok"><option value=""></option><option>지킴</option><option>어김</option></select></td><td><input type="text" data-k="q3-2-berserk-no" class="num" placeholder="예: ②"></td><td><textarea class="cell" data-k="q3-2-berserk-why"></textarea></td></tr></tbody>
 </table>
 
 <p class="sub">(3) 전투 담당 개발자가 "흡수 때문에 보스 hp가 늘어나니 <code>auto_battle</code>에 <code>if isinstance(skill, Drain): damage = 0</code>을 넣자"고 합니다. 이 방법이 좋지 않은 이유와 더 나은 대안 1가지를 쓰시오. <small>4점</small></p>
-<div class="write"></div>
+<textarea class="" data-k="q3-3"></textarea>
 </section>
 
 <!-- ============================================================ Q4 -->
-<section class="qsec" id="q4">
+<section class="qsec activity" id="q4">
 <h2>문항 4. 결제 수단을 고치지 않고 늘리기 <span class="pts">(20점)</span></h2>
 <div class="meta"><span class="tag ab">[구현]</span><span class="tag">[OCP]</span><span class="tag">보통</span><span class="tag pts">20점</span></div>
 <p><a class="hintlink" href="hints.html#h4">힌트 보기 →</a> · <a class="filelink" href="code/q4_payment.py" download>시작 코드 내려받기</a></p>
 <div class="situation"><b>상황</b>: 결제 창구 <code>PayCounter</code>는 결제 수단별 수수료를 붙여 영수증 한 줄을 만듭니다. 결제 수단이 문자열이라 새 수단이 생길 때마다 <code>pay()</code> 안의 <code>if-elif</code>를 고쳐야 합니다.</div>
-<pre><code>"""Q4 시작 코드: 결제 수수료와 영수증 한 줄 (Python 3.12+)
+<div class="pyedit" data-name="q4_payment.py"><script type="text/x-python">
+"""Q4 시작 코드: 결제 수수료와 영수증 한 줄 (Python 3.12+)
 
 지금은 결제 수단이 문자열이고, 새 수단이 생길 때마다 PayCounter.pay 안의
 if-elif를 고쳐야 한다. 문제의 요구대로 리팩터링하라.
@@ -313,7 +333,7 @@ def _check(name, fn):
         print(f"[통과] {name}")
         return True
     except Exception as e:  # 실패해도 다음 테스트를 계속 실행
-        print(f"[실패] {name} -&gt; {type(e).__name__}: {e}")
+        print(f"[실패] {name} -> {type(e).__name__}: {e}")
         return False
 
 
@@ -353,7 +373,8 @@ if __name__ == "__main__":
              ("추상 클래스 구조", t3_abstract), ("포인트 결제 추가", t4_point),
              ("PayCounter 수정 없이 새 수단", t5_new_method_without_edit)]
     passed = sum(_check(n, f) for n, f in tests)
-    print(f"공개 테스트 {passed}/{len(tests)} 통과")</code></pre>
+    print(f"공개 테스트 {passed}/{len(tests)} 통과")
+</script></div>
 <p>시작 코드 실행 결과(공개 테스트는 아직 모두 실패하는 것이 정상):</p>
 <pre><code class="out">현재 동작: 카드 결제 12345원 + 수수료 246원 = 12591원
 [실패] 카드 수수료 -&gt; NameError: name 'CardPayment' is not defined
@@ -373,17 +394,23 @@ if __name__ == "__main__":
 <p class="sub">(2) 기능 추가 <small>5점</small></p>
 <p>새 결제 수단 <code>PointPayment</code>를 추가하시오. label은 <code>"포인트"</code>, 수수료는 <b>결제액의 1%(원 미만 버림), 단 최소 100원</b>입니다. 공개 테스트 5개가 모두 <b>[통과]</b>해야 합니다.</p>
 <p class="sub">(3) (2)를 하면서 <b>이미 있던 클래스 안을 고친 곳</b>과 <b>새로 추가한 곳</b>을 구분해 쓰고, 이것이 OCP의 '확장에는 열려 있고 변경에는 닫혀 있다'를 어떻게 보여 주는지 2문장으로 설명하시오. <small>5점</small></p>
-<div class="write">고친 곳:　　　　　 추가한 곳:<br><br>설명:</div>
-<p class="k" style="font-size:14px;color:var(--muted)">제출: 완성한 <code>q4_payment.py</code> 파일과 (3)의 답.</p>
+<p class="sub" style="margin-bottom:0">고친 곳</p>
+<textarea class="" data-k="q4-3-changed"></textarea>
+<p class="sub" style="margin-bottom:0">추가한 곳</p>
+<textarea class="" data-k="q4-3-added"></textarea>
+<p class="sub" style="margin-bottom:0">설명(2문장)</p>
+<textarea class="" data-k="q4-3-why"></textarea>
+<p class="k" style="font-size:14px;color:var(--muted)">제출: 편집기의 코드(JSON에 함께 저장됩니다)와 (3)의 답.</p>
 </section>
 
 <!-- ============================================================ Q5 -->
-<section class="qsec" id="q5">
+<section class="qsec activity" id="q5">
 <h2>문항 5. 배달 로봇 배차 — 분석하고 다시 짜기 <span class="pts">(25점)</span></h2>
 <div class="meta"><span class="tag ab">[코드 분석 + 구현]</span><span class="tag">[ISP·DIP]</span><span class="tag">어려움</span><span class="tag pts">25점</span></div>
 <p><a class="hintlink" href="hints.html#h5">힌트 보기 →</a> · <a class="filelink" href="code/q5_delivery_robot.py" download>시작 코드 내려받기</a></p>
 <div class="situation"><b>상황</b>: 캠퍼스 배달 로봇은 두 종류입니다. <b>인도 로봇</b>(<code>SidewalkRobot</code>)은 실외 인도만 다니고, <b>건물 로봇</b>(<code>BuildingRobot</code>)은 승강기를 타고 건물 안 층까지 갑니다. 배차 담당 <code>Dispatcher</code>는 경로를 받아 로봇을 움직이고, 층이 지정되면 승강기를 태운 뒤 보관함을 엽니다. 각 줄 끝의 <code># 숫자</code>는 줄 번호입니다.</div>
-<pre><code>"""Q5 시작 코드: 캠퍼스 배달 로봇 배차 (Python 3.12+)
+<div class="pyedit" data-name="q5_delivery_robot.py"><script type="text/x-python">
+"""Q5 시작 코드: 캠퍼스 배달 로봇 배차 (Python 3.12+)
 
 인도(실외)만 다니는 로봇과 건물 안까지 들어가는 로봇이 있다.
 배차 담당(Dispatcher)은 경로를 받아 로봇을 움직이고, 필요하면 승강기를 태운 뒤 보관함을 연다.
@@ -456,7 +483,7 @@ def _check(name, fn):
         print(f"[통과] {name}")
         return True
     except Exception as e:  # 실패해도 다음 테스트를 계속 실행
-        print(f"[실패] {name} -&gt; {type(e).__name__}: {e}")
+        print(f"[실패] {name} -> {type(e).__name__}: {e}")
         return False
 
 
@@ -495,7 +522,8 @@ if __name__ == "__main__":
     tests = [("역할 인터페이스 분리", t1_roles), ("경로 계획기 주입", t2_injected_planner),
              ("건물 로봇 층 배달", t3_building_with_floor), ("못 하는 일은 출발 전 거절", t4_refuse_before_moving)]
     passed = sum(_check(n, f) for n, f in tests)
-    print(f"공개 테스트 {passed}/{len(tests)} 통과")</code></pre>
+    print(f"공개 테스트 {passed}/{len(tests)} 통과")
+</script></div>
 
 <p class="sub">(1) 분석 <small>8점</small></p>
 <ol type="a">
@@ -503,7 +531,12 @@ if __name__ == "__main__":
   <li><b>[3점]</b> DIP를 어기는 곳을 줄 번호로 지적하고, 이 때문에 <b>경로 계산 방식을 바꾸거나 테스트할 때</b> 생기는 문제를 쓰시오.</li>
   <li><b>[2점]</b> 시작 코드에서 <code>Dispatcher().deliver(SidewalkRobot(), "정문", "공학관", floor=3)</code>을 실행하면 어떻게 되는지, 그 직후 로봇의 <code>log</code>에는 무엇이 남는지 쓰시오.</li>
 </ol>
-<div class="write tall">a)<br><br>b)<br><br>c)</div>
+<p class="sub" style="margin-bottom:0">a)</p>
+<textarea class="" data-k="q5-1-a"></textarea>
+<p class="sub" style="margin-bottom:0">b)</p>
+<textarea class="" data-k="q5-1-b"></textarea>
+<p class="sub" style="margin-bottom:0">c)</p>
+<textarea class="" data-k="q5-1-c"></textarea>
 
 <p class="sub">(2) 구현 <small>14점</small></p>
 <p>다음 이름과 규칙을 <b>그대로</b> 지켜 코드를 바꾸시오. 로그 문자열 형식(<code>이동:장소</code>, <code>승강기:N층</code>, <code>보관함 열림</code>)과 <code>GpsMap</code>의 경로는 바꾸지 않습니다.</p>
@@ -524,8 +557,8 @@ if __name__ == "__main__":
 공개 테스트 0/4 통과</code></pre>
 
 <p class="sub">(3) 공개 테스트 <code>t2_injected_planner</code>는 실제 지도 없이 <code>FakePlanner</code>로 <code>Dispatcher</code>를 시험합니다. 리팩터링 후에 이것이 가능해진 이유를 DIP로 1~2문장 설명하시오. <small>3점</small></p>
-<div class="write"></div>
-<p class="k" style="font-size:14px;color:var(--muted)">제출: (1)·(3)의 답과 완성한 <code>q5_delivery_robot.py</code> 파일.</p>
+<textarea class="" data-k="q5-3"></textarea>
+<p class="k" style="font-size:14px;color:var(--muted)">제출: (1)·(3)의 답과 편집기의 코드(JSON에 함께 저장됩니다).</p>
 </section>
 
 <nav class="pager" style="padding-left:0;padding-right:0"><a href="#top" onclick="scrollTo(0,0);return false">↑ 맨 위로</a><a href="hints.html">문제 해결 도움 자료 →</a></nav>
